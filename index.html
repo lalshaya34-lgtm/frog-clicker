@@ -2,421 +2,413 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#07140d">
-<meta name="description" content="Frog Clicker - 330 mechanics and 3300 upgrades">
-<title>🐸 Frog Clicker</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07150c">
+<title>🐸 Ultimate Frog Clicker</title>
 
 <style>
-:root {
-  --bg: #07140d;
-  --bg2: #0b1e13;
-  --panel: #10291b;
-  --panel2: #0c2116;
-  --border: #2f6d49;
-  --green: #72e6a1;
-  --green2: #3dbb70;
-  --gold: #ffd76a;
-  --red: #ff7d7d;
-  --blue: #77c9ff;
-  --purple: #d19aff;
-  --text: #eaffef;
-  --muted: #9bc1a7;
-  --shadow: rgba(0,0,0,.35);
+*{box-sizing:border-box}
+
+:root{
+  --bg:#061009;
+  --bg2:#0a1b10;
+  --panel:#0d2416;
+  --panel2:#102d1b;
+  --border:#2d7045;
+  --green:#6df09b;
+  --green2:#2dbb63;
+  --gold:#ffd65a;
+  --blue:#6bbcff;
+  --purple:#bd8cff;
+  --red:#ff7373;
+  --text:#effff4;
+  --muted:#9dbca7;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
+html,body{
+  margin:0;
+  min-height:100%;
   background:
-    radial-gradient(
-      circle at 50% -10%,
-      #1b5134 0,
-      var(--bg) 45%
-    );
-  color: var(--text);
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+    radial-gradient(circle at 50% -10%,#1c5732 0,#07130b 42%,#030806 100%);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-button {
-  min-height: 42px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--panel);
-  color: var(--text);
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: 600;
+button{
+  font:inherit;
 }
 
-button:hover {
-  background: #1a4830;
+button:not(:disabled){
+  cursor:pointer;
 }
 
-button:active {
-  transform: translateY(1px);
+button:disabled{
+  cursor:not-allowed;
+  opacity:.38;
 }
 
-button:disabled {
-  opacity: .4;
-  cursor: not-allowed;
-}
-
-button.active {
-  background: #286342;
-  border-color: var(--green);
-}
-
-.app {
-  width: min(1450px, 100%);
-  margin: auto;
-  padding: 8px;
+.app{
+  width:min(1550px,100%);
+  margin:auto;
+  padding:8px;
 }
 
 /* TOP BAR */
 
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(7,20,13,.96);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 8px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 30px var(--shadow);
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(5,16,9,.96);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:8px;
+  backdrop-filter:blur(15px);
+  box-shadow:0 10px 35px #0008;
 }
 
-.mechanics {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 7px;
-  scrollbar-width: thin;
+.category-tabs{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  padding-bottom:6px;
 }
 
-.mechanics button {
-  flex: 0 0 auto;
-  min-height: 36px;
-  padding: 6px 9px;
-  font-size: 12px;
+.category-tabs button,
+.mechanic-tabs button{
+  flex:0 0 auto;
+  color:var(--text);
+  background:#0a1d11;
+  border:1px solid #285e3d;
+  border-radius:8px;
+  padding:7px 9px;
+  font-size:11px;
+  font-weight:800;
 }
 
-.stats {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+.category-tabs button.active,
+.mechanic-tabs button.active{
+  background:#25633b;
+  border-color:var(--green);
+  color:white;
 }
 
-.stat {
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 7px 10px;
-  font-size: 12px;
+.mechanic-tabs{
+  display:flex;
+  gap:4px;
+  overflow-x:auto;
+  padding:3px 0 7px;
 }
 
-.stat b {
-  color: var(--green);
+.mechanic-tabs button{
+  font-size:10px;
+  padding:6px 8px;
+}
+
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.stat{
+  border:1px solid #275d3b;
+  background:#091b10;
+  border-radius:8px;
+  padding:7px 10px;
+  font-size:12px;
+}
+
+.stat strong{
+  color:var(--green);
+}
+
+.top-button{
+  border:1px solid #39794f;
+  background:#12351f;
+  color:white;
+  border-radius:8px;
+  padding:7px 10px;
+  font-weight:800;
 }
 
 /* MAIN */
 
-.main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 410px;
-  gap: 12px;
-  margin-top: 12px;
+.main{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 470px;
+  gap:12px;
+  margin-top:12px;
 }
 
-.card {
-  background: rgba(10,31,20,.96);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 14px;
-  box-shadow: 0 8px 25px rgba(0,0,0,.15);
+.card{
+  background:rgba(9,29,17,.96);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:13px;
+  box-shadow:0 8px 25px #0004;
 }
 
 /* FROG */
 
-.frog-area {
-  height: 430px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-
+.frog-card{
+  min-height:480px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
   background:
-    radial-gradient(
-      circle at 50% 55%,
-      #225b39 0,
-      #123a25 30%,
-      #081810 70%
-    );
+    radial-gradient(circle at 50% 42%,#2a7545 0,#153d25 35%,#07130b 76%);
 }
 
-.frog-area::before {
-  content: "🌿   🪷   🌿   🪷   🌿";
-  position: absolute;
-  bottom: 20px;
-  width: 100%;
-  text-align: center;
-  font-size: 34px;
-  opacity: .8;
+.frog-card::before{
+  content:"🪷   🌿   🪷   🌿   🪷";
+  position:absolute;
+  bottom:25px;
+  font-size:35px;
+  opacity:.8;
+  white-space:nowrap;
 }
 
-.frog {
-  position: relative;
-  z-index: 2;
-  font-size: 160px;
-  user-select: none;
-  cursor: pointer;
-  transition:
-    transform .08s,
-    filter .2s;
-  filter: drop-shadow(0 20px 18px rgba(0,0,0,.45));
+.frog{
+  position:relative;
+  z-index:2;
+  font-size:165px;
+  line-height:1;
+  user-select:none;
+  cursor:pointer;
+  filter:drop-shadow(0 20px 15px #0008);
+  transition:transform .06s;
 }
 
-.frog:hover {
-  filter:
-    drop-shadow(0 20px 18px rgba(0,0,0,.45))
-    brightness(1.1);
+.frog:hover{
+  transform:scale(1.04);
 }
 
-.frog:active {
-  transform: scale(.88) rotate(-4deg);
+.frog:active{
+  transform:scale(.88) rotate(-4deg);
+}
+
+/* BARS */
+
+.bar-title{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+  font-size:12px;
+}
+
+.bar{
+  width:100%;
+  height:13px;
+  background:#020603;
+  border-radius:100px;
+  overflow:hidden;
+  border:1px solid #183b25;
+}
+
+.fill{
+  height:100%;
+  width:0%;
+  transition:width .15s;
+}
+
+.energy-fill{
+  background:linear-gradient(90deg,#25b85e,#b9f271);
+}
+
+.xp-fill{
+  background:linear-gradient(90deg,#755cff,#d49aff);
+}
+
+.boss-fill{
+  background:linear-gradient(90deg,#d94c4c,#ffb15e);
+}
+
+/* BUTTONS */
+
+.action-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:10px;
+}
+
+.action{
+  border:1px solid #34774c;
+  border-radius:9px;
+  background:#12351f;
+  color:white;
+  padding:9px 12px;
+  font-weight:800;
+}
+
+.action:hover{
+  background:#1d5130;
+}
+
+.action.gold{
+  border-color:#92752a;
+  background:#403414;
+}
+
+.action.red{
+  border-color:#873d3d;
+  background:#3b1717;
+}
+
+/* UPGRADE PANEL */
+
+.panel-heading{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.panel-heading h2{
+  margin:0;
+  color:var(--green);
+  font-size:20px;
+}
+
+.panel-description{
+  color:var(--muted);
+  font-size:12px;
+  margin:6px 0 12px;
+}
+
+.upgrades{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  max-height:640px;
+  overflow-y:auto;
+  padding-right:3px;
+}
+
+.upgrade{
+  border:1px solid #245d39;
+  border-radius:10px;
+  background:#081a0f;
+  padding:9px;
+}
+
+.upgrade:hover{
+  border-color:#4d9c68;
+}
+
+.upgrade-name{
+  color:#80eea4;
+  font-weight:900;
+  font-size:12px;
+}
+
+.upgrade-description{
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+  min-height:30px;
+  margin:4px 0;
+}
+
+.upgrade-meta{
+  color:#c4dfcb;
+  font-size:10px;
+  margin-bottom:6px;
+}
+
+.buy{
+  width:100%;
+  border:1px solid #32744b;
+  background:#123820;
+  color:white;
+  border-radius:7px;
+  padding:7px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.buy:hover:not(:disabled){
+  background:#205b34;
+}
+
+/* LOG */
+
+.log{
+  max-height:170px;
+  overflow:auto;
+  font-size:11px;
+  color:var(--muted);
+}
+
+.log div{
+  padding:4px 0;
+  border-bottom:1px solid #ffffff09;
 }
 
 /* FLOATING NUMBERS */
 
-.float {
-  position: absolute;
-  z-index: 10;
-  color: var(--gold);
-  font-size: 20px;
-  font-weight: 900;
-  pointer-events: none;
-  animation: floatUp .8s ease-out forwards;
+.float{
+  position:absolute;
+  z-index:30;
+  pointer-events:none;
+  color:var(--gold);
+  font-size:21px;
+  font-weight:1000;
+  text-shadow:0 2px 5px #000;
+  animation:floatUp .8s ease-out forwards;
 }
 
-@keyframes floatUp {
-  from {
-    transform:
-      translateY(0)
-      scale(1);
-    opacity: 1;
+@keyframes floatUp{
+  from{
+    opacity:1;
+    transform:translateY(0) scale(1);
   }
-
-  to {
-    transform:
-      translateY(-100px)
-      scale(1.15);
-    opacity: 0;
+  to{
+    opacity:0;
+    transform:translateY(-100px) scale(1.2);
   }
 }
 
-/* ENERGY */
+/* TOAST */
 
-.energy-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
+.toast{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  z-index:99999;
+  max-width:330px;
+  padding:11px 15px;
+  background:#143b24;
+  border:1px solid var(--green);
+  border-radius:10px;
+  box-shadow:0 10px 35px #0009;
+  font-size:13px;
+  font-weight:800;
 }
 
-.energy-bar,
-.xp-bar {
-  height: 11px;
-  background: #050d08;
-  border-radius: 99px;
-  overflow: hidden;
-}
+/* RESPONSIVE */
 
-.energy-fill {
-  width: 100%;
-  height: 100%;
-  background:
-    linear-gradient(
-      90deg,
-      #35bd6c,
-      #b7ed72
-    );
-}
-
-.xp-fill {
-  width: 0;
-  height: 100%;
-  background:
-    linear-gradient(
-      90deg,
-      #8d6aff,
-      #d8a0ff
-    );
-}
-
-/* ACTIONS */
-
-.actions {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-/* ITEMS */
-
-.items {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  max-height: 560px;
-  overflow-y: auto;
-}
-
-.item {
-  background: #0b2015;
-  border: 1px solid #24583a;
-  border-radius: 10px;
-  padding: 9px;
-}
-
-.item-name {
-  color: var(--green);
-  font-weight: 800;
-  font-size: 13px;
-}
-
-.item-info {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.4;
-  margin: 5px 0 7px;
-}
-
-/* ACTIVITY */
-
-.activity {
-  max-height: 150px;
-  overflow-y: auto;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.activity div {
-  padding: 3px 0;
-  border-bottom: 1px solid rgba(255,255,255,.03);
-}
-
-/* PANEL */
-
-.panel-title {
-  margin: 0 0 4px;
-}
-
-.description {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.section-title {
-  margin-top: 0;
-}
-
-/* NOTIFICATIONS */
-
-.toast {
-  position: fixed;
-  right: 15px;
-  bottom: 15px;
-  z-index: 999;
-  background: #173b28;
-  border: 1px solid var(--green);
-  border-radius: 10px;
-  padding: 10px 14px;
-  max-width: 320px;
-  box-shadow: 0 8px 25px #0008;
-  animation: toastIn .25s ease-out;
-}
-
-@keyframes toastIn {
-  from {
-    transform: translateY(15px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
+@media(max-width:1000px){
+  .main{
+    grid-template-columns:1fr;
   }
 }
 
-/* BADGES */
-
-.badge {
-  display: inline-block;
-  padding: 3px 7px;
-  border-radius: 99px;
-  background: var(--gold);
-  color: #171207;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-/* MOBILE */
-
-@media (max-width: 900px) {
-  .main {
-    grid-template-columns: 1fr;
+@media(max-width:600px){
+  .frog{
+    font-size:115px;
   }
 
-  .items {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 550px) {
-  .app {
-    padding: 4px;
+  .frog-card{
+    min-height:350px;
   }
 
-  .frog-area {
-    height: 330px;
-  }
-
-  .frog {
-    font-size: 115px;
-  }
-
-  .items {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    font-size: 11px;
-    padding: 6px 7px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto !important;
-  }
-
-  .float,
-  .frog {
-    animation: none !important;
-    transition: none !important;
+  .upgrades{
+    grid-template-columns:1fr;
+    max-height:600px;
   }
 }
 </style>
@@ -426,211 +418,223 @@ button.active {
 
 <div class="app">
 
-  <!-- ================================================
-       TOP MECHANICS BAR
-  ================================================= -->
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
 
-  <header class="topbar">
+<header class="topbar">
+
+  <div
+    class="category-tabs"
+    id="categoryTabs">
+  </div>
+
+  <div
+    class="mechanic-tabs"
+    id="mechanicTabs">
+  </div>
+
+  <div class="stats">
+
+    <div class="stat">
+      🌿 <strong id="coins">0</strong>
+    </div>
+
+    <div class="stat">
+      💰/sec <strong id="income">0</strong>
+    </div>
+
+    <div class="stat">
+      🖱️ <strong id="clicks">0</strong>
+    </div>
+
+    <div class="stat">
+      ⭐ Lv <strong id="level">1</strong>
+    </div>
+
+    <div class="stat">
+      ⚡ <strong id="energy">100/100</strong>
+    </div>
+
+    <div class="stat">
+      🔥 Combo <strong id="combo">0</strong>
+    </div>
+
+    <div class="stat">
+      ♻️ <strong id="rebirths">0</strong>
+    </div>
+
+    <button
+      class="top-button"
+      id="saveButton">
+      💾 Save
+    </button>
+
+    <button
+      class="top-button"
+      id="resetButton">
+      🔄 Reset
+    </button>
+
+  </div>
+
+</header>
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<section>
+
+  <div
+    class="card frog-card"
+    id="frogArea">
 
     <div
-      class="mechanics"
-      id="mechanicsBar"
-      aria-label="Game mechanics"
-    ></div>
+      class="frog"
+      id="frog"
+      tabindex="0"
+      role="button"
+      aria-label="Click frog">
+      🐸
+    </div>
 
-    <div class="stats">
+  </div>
 
-      <div class="stat">
-        🌿 Lily:
-        <b id="coins">0</b>
+  <div
+    class="card"
+    style="margin-top:12px">
+
+    <div class="bar-title">
+      <b>⚡ Frog Energy</b>
+      <span id="energyText">100%</span>
+    </div>
+
+    <div class="bar">
+      <div
+        class="fill energy-fill"
+        id="energyFill">
       </div>
+    </div>
 
-      <div class="stat">
-        💰/sec:
-        <b id="income">0</b>
-      </div>
+    <div class="action-row">
 
-      <div class="stat">
-        🖱️ Clicks:
-        <b id="clicks">0</b>
-      </div>
-
-      <div class="stat">
-        ⭐ Level:
-        <b id="level">1</b>
-      </div>
-
-      <div class="stat">
-        ⚡ Energy:
-        <b id="energy">100/100</b>
-      </div>
-
-      <div class="stat">
-        ♻️ Rebirths:
-        <b id="rebirths">0</b>
-      </div>
-
-      <div class="stat">
-        🏆 Achievements:
-        <b id="achievementCount">0</b>
-      </div>
-
-      <button id="saveButton">
-        💾 Save
+      <button
+        class="action"
+        id="megaButton">
+        🐸 Mega Croak ×25
       </button>
 
-      <button id="resetButton">
-        🔄 Reset
+      <button
+        class="action gold"
+        id="criticalButton">
+        💥 Critical Croak
+      </button>
+
+      <button
+        class="action red"
+        id="rebirthButton">
+        ♻️ Rebirth
       </button>
 
     </div>
 
-  </header>
+  </div>
 
-  <!-- ================================================
-       MAIN GAME
-  ================================================= -->
+  <div
+    class="card"
+    style="margin-top:12px">
 
-  <main class="main">
+    <div class="bar-title">
+      <b>⭐ Frog XP</b>
+      <span id="xpText">0 / 100</span>
+    </div>
 
-    <section>
-
-      <!-- FROG -->
-
+    <div class="bar">
       <div
-        class="card frog-area"
-        id="frogArea"
-      >
-
-        <div
-          class="frog"
-          id="frog"
-          tabindex="0"
-          role="button"
-          aria-label="Click frog"
-        >
-          🐸
-        </div>
-
+        class="fill xp-fill"
+        id="xpFill">
       </div>
+    </div>
 
-      <!-- ENERGY -->
+  </div>
 
+  <div
+    class="card"
+    style="margin-top:12px">
+
+    <div class="bar-title">
+      <b>👹 Pond Boss</b>
+      <span id="bossText">Ready</span>
+    </div>
+
+    <div class="bar">
       <div
-        class="card"
-        style="margin-top:12px"
-      >
-
-        <div class="energy-header">
-
-          <b>⚡ Frog Energy</b>
-
-          <span id="energyPercent">
-            100%
-          </span>
-
-        </div>
-
-        <div class="energy-bar">
-
-          <div
-            class="energy-fill"
-            id="energyFill"
-          ></div>
-
-        </div>
-
-        <div class="actions">
-
-          <button id="megaClick">
-            🐸 Mega Croak ×25
-          </button>
-
-          <button id="rebirthButton">
-            ♻️ Pond Rebirth
-          </button>
-
-          <button id="critButton">
-            💥 Critical Croak
-          </button>
-
-        </div>
-
+        class="fill boss-fill"
+        id="bossFill">
       </div>
+    </div>
 
-      <!-- XP -->
+    <div class="action-row">
 
-      <div
-        class="card"
-        style="margin-top:12px"
-      >
+      <button
+        class="action red"
+        id="bossButton">
+        ⚔️ Attack Boss
+      </button>
 
-        <div class="energy-header">
+    </div>
 
-          <b>⭐ Frog XP</b>
+  </div>
 
-          <span id="xpText">
-            0 / 100
-          </span>
+  <div
+    class="card"
+    style="margin-top:12px">
 
-        </div>
+    <b>📜 Frog Activity</b>
 
-        <div class="xp-bar">
+    <div
+      class="log"
+      id="log">
+    </div>
 
-          <div
-            class="xp-fill"
-            id="xpFill"
-          ></div>
+  </div>
 
-        </div>
+</section>
 
-      </div>
+<!-- =====================================================
+     UPGRADE PANEL
+===================================================== -->
 
-      <!-- ACTIVITY -->
+<aside class="card">
 
-      <div
-        class="card"
-        style="margin-top:12px"
-      >
+  <div class="panel-heading">
 
-        <b>📜 Activity</b>
+    <h2 id="mechanicTitle">
+      Click Power
+    </h2>
 
-        <div
-          class="activity"
-          id="activity"
-          aria-live="polite"
-        ></div>
+    <span id="upgradeCount">
+      30
+    </span>
 
-      </div>
+  </div>
 
-    </section>
+  <p
+    class="panel-description"
+    id="mechanicDescription">
+  </p>
 
-    <!-- UPGRADE PANEL -->
+  <div
+    class="upgrades"
+    id="upgrades">
+  </div>
 
-    <aside class="card">
+</aside>
 
-      <h2
-        class="panel-title"
-        id="mechanicTitle"
-      >
-        Click Power
-      </h2>
-
-      <p
-        class="description"
-        id="mechanicDescription"
-      >
-        Increase the amount of Lily earned per click.
-      </p>
-
-      <div
-        class="items"
-        id="items"
-      ></div>
-
-    </aside>
-
-  </main>
+</main>
 
 </div>
 
@@ -638,16 +642,13 @@ button.active {
 "use strict";
 
 /* =========================================================
-   330 GAME MECHANICS
+   30 CATEGORIES
 ========================================================= */
 
-const mechanics = [
-
-  /* ORIGINAL 30 */
-
-  "Click Power",
+const categories = [
+  "Clicking",
   "Energy",
-  "Auto-Click",
+  "Automation",
   "Lily Pads",
   "Mutations",
   "Magic",
@@ -660,469 +661,124 @@ const mechanics = [
   "Artifacts",
   "Potions",
   "Weather",
-  "Day/Night",
+  "Day Night",
   "Prestige",
   "Skins",
   "Events",
-  "Frog Friends",
+  "Companions",
   "Predators",
   "Treasures",
   "Jumping",
   "Swimming",
-  "Hopping",
   "Croaks",
-  "Decor",
-  "Companions",
-  "Cosmetics",
+  "Decorations",
   "Mastery",
-
-  /* 100 ADDITIONAL */
-
-  "Frog Levels",
-  "Frog XP",
-  "Critical Croaks",
-  "Combo System",
-  "Combo Multiplier",
-  "Golden Frogs",
-  "Rare Frogs",
-  "Epic Frogs",
-  "Legendary Frogs",
-  "Mythic Frogs",
-
-  "Frog Classes",
-  "Frog Skills",
-  "Skill Trees",
-  "Skill Points",
-  "Ultimate Abilities",
-  "Cooldowns",
-  "Buffs",
-  "Debuffs",
-  "Status Effects",
-  "Damage System",
-
-  "Boss Fights",
-  "Boss Rewards",
-  "Boss Rush",
-  "Enemy Waves",
-  "Enemy Levels",
-  "Enemy Loot",
-  "Enemy Armor",
-  "Enemy Weaknesses",
-  "Enemy Types",
-  "Enemy Spawns",
-
-  "Pond Levels",
-  "Pond XP",
-  "Pond Expansion",
-  "Pond Buildings",
-  "Pond Workers",
-  "Pond Population",
-  "Pond Happiness",
-  "Pond Cleanliness",
-  "Pond Temperature",
-  "Pond Water Quality",
-
-  "Fishing",
-  "Fishing Rods",
-  "Fish Collection",
-  "Fish Breeding",
-  "Fish Farming",
-  "Insect Catching",
-  "Bug Collection",
-  "Bug Breeding",
-  "Bug Farming",
-  "Food Production",
-
-  "Frog Farming",
-  "Frog Ranch",
-  "Egg Collection",
-  "Egg Incubation",
-  "Egg Hatching",
-  "Frog Genetics",
-  "Genetic Traits",
-  "Trait Fusion",
-  "Trait Rarity",
-  "Trait Research",
-
   "Research",
-  "Research Points",
-  "Research Labs",
-  "Technology Tree",
-  "Technology Levels",
-  "Science Bonuses",
-  "Discovery System",
-  "Ancient Research",
-  "Modern Research",
-  "Secret Research",
-
   "Exploration",
-  "Exploration Energy",
-  "Exploration Maps",
-  "Hidden Areas",
-  "Secret Caves",
-  "Lost Temples",
-  "Ancient Ruins",
-  "Treasure Maps",
-  "Discovery Rewards",
-  "Exploration Milestones",
-
-  "Trading",
-  "Market Prices",
-  "Market Orders",
-  "Frog Merchants",
-  "Rare Trading",
-  "Item Trading",
-  "Resource Trading",
-  "Daily Deals",
-  "Black Market",
-  "Merchant Reputation",
-
-  /* 200 MORE */
-
-  "Frog Ascension",
-  "Frog Reincarnation",
-  "Frog Souls",
-  "Soul Collection",
-  "Soul Upgrades",
-  "Soul Fusion",
-  "Soul Levels",
-  "Soul Skills",
-  "Soul Bonuses",
-  "Soul Mastery",
-
-  "Croak Resonance",
-  "Croak Chains",
-  "Croak Combos",
-  "Croak Mastery",
-  "Croak Evolution",
-  "Croak Range",
-  "Croak Frequency",
-  "Croak Damage",
-  "Croak Accuracy",
-  "Croak Criticals",
-
-  "Tongue Power",
-  "Tongue Range",
-  "Tongue Speed",
-  "Tongue Accuracy",
-  "Tongue Combos",
-  "Tongue Upgrades",
-  "Tongue Abilities",
-  "Tongue Mastery",
-  "Tongue Criticals",
-  "Tongue Evolution",
-
-  "Jump Charge",
-  "Jump Distance",
-  "Jump Height",
-  "Jump Speed",
-  "Jump Combos",
-  "Jump Criticals",
-  "Jump Mastery",
-  "Jump Training",
-  "Jump Challenges",
-  "Jump Records",
-
-  "Swimming Speed",
-  "Swimming Stamina",
-  "Swimming Depth",
-  "Swimming Tricks",
-  "Swimming Combos",
-  "Swimming Training",
-  "Swimming Mastery",
-  "Swimming Races",
-  "Swimming Challenges",
-  "Swimming Records",
-
-  "Weather Control",
-  "Rain Power",
-  "Storm Power",
-  "Lightning Power",
-  "Wind Power",
-  "Fog Power",
-  "Snow Power",
-  "Heat Waves",
-  "Weather Forecast",
-  "Weather Predictions",
-
-  "Moon Phases",
-  "Moon Bonuses",
-  "Full Moon Events",
-  "New Moon Events",
-  "Eclipse Events",
-  "Meteor Showers",
-  "Aurora Events",
-  "Starfall Events",
-  "Constellations",
-  "Astronomy",
-
-  "Sun Power",
-  "Sunlight Collection",
-  "Solar Energy",
-  "Solar Upgrades",
-  "Sunrise Bonuses",
-  "Sunset Bonuses",
-  "Golden Hour",
-  "Heat Resistance",
-  "Sun Gardens",
-  "Solar Mastery",
-
-  "Pond Seasons",
-  "Spring Growth",
-  "Summer Heat",
-  "Autumn Harvest",
-  "Winter Frost",
-  "Seasonal Crops",
-  "Seasonal Frogs",
-  "Seasonal Enemies",
-  "Seasonal Quests",
-  "Seasonal Bosses",
-
-  "Pond Economy",
-  "Pond Currency",
-  "Currency Exchange",
-  "Inflation",
-  "Deflation",
-  "Supply And Demand",
-  "Pond Tax",
-  "Pond Investments",
-  "Pond Banking",
-  "Pond Interest",
-
-  "Frog Banking",
-  "Frog Wallet",
-  "Frog Savings",
-  "Frog Loans",
-  "Frog Interest",
-  "Frog Investments",
-  "Frog Stocks",
-  "Frog Bonds",
-  "Frog Dividends",
-  "Frog Wealth",
-
-  "Crafting",
-  "Crafting Recipes",
-  "Crafting Levels",
-  "Crafting XP",
-  "Crafting Quality",
-  "Crafting Rarity",
-  "Crafting Materials",
-  "Crafting Stations",
-  "Advanced Crafting",
-  "Master Crafting",
-
-  "Blacksmithing",
-  "Alchemy",
-  "Cooking",
-  "Tailoring",
-  "Carpentry",
-  "Gardening",
-  "Mining",
-  "Fishing Mastery",
-  "Cooking Mastery",
-  "Alchemy Mastery",
-
-  "Resource Gathering",
-  "Wood Gathering",
-  "Stone Gathering",
-  "Metal Gathering",
-  "Crystal Gathering",
-  "Herb Gathering",
-  "Mushroom Gathering",
-  "Flower Gathering",
-  "Fruit Gathering",
-  "Rare Resource Gathering",
-
-  "Resource Storage",
-  "Storage Upgrades",
-  "Storage Expansion",
-  "Resource Compression",
-  "Resource Conversion",
-  "Resource Refining",
-  "Resource Recycling",
-  "Resource Automation",
-  "Resource Efficiency",
-  "Resource Mastery",
-
-  "Frog Villages",
-  "Frog Houses",
-  "Frog Shops",
-  "Frog Schools",
-  "Frog Hospitals",
-  "Frog Libraries",
-  "Frog Temples",
-  "Frog Workshops",
-  "Frog Farms",
-  "Frog Markets",
-
-  "Frog Citizens",
-  "Citizen Happiness",
-  "Citizen Jobs",
-  "Citizen Skills",
-  "Citizen Levels",
-  "Citizen Families",
-  "Citizen Housing",
-  "Citizen Needs",
-  "Citizen Events",
-  "Citizen Loyalty",
-
-  "Frog Government",
-  "Frog Laws",
-  "Frog Policies",
-  "Frog Elections",
-  "Frog Council",
-  "Frog Leaders",
-  "Frog Reputation",
-  "Frog Diplomacy",
-  "Frog Alliances",
-  "Frog Treaties",
-
-  "Frog Festivals",
-  "Croak Festival",
-  "Lily Festival",
-  "Rain Festival",
-  "Moon Festival",
-  "Harvest Festival",
-  "Spring Festival",
-  "Summer Festival",
-  "Winter Festival",
-  "Frog Carnival",
-
-  "Race Events",
-  "Jumping Races",
-  "Swimming Races",
-  "Tongue Races",
-  "Obstacle Races",
-  "Endurance Races",
-  "Speed Trials",
-  "Time Trials",
-  "Tournament Mode",
-  "Championship Mode",
-
-  "Arena Mode",
-  "Survival Mode",
-  "Endless Mode",
-  "Challenge Mode",
-  "Hard Mode",
-  "Nightmare Mode",
-  "Chaos Mode",
-  "Speedrun Mode",
-  "Iron Frog Mode",
-  "Randomizer Mode",
-
-  "Achievement Tiers",
-  "Bronze Achievements",
-  "Silver Achievements",
-  "Gold Achievements",
-  "Diamond Achievements",
-  "Secret Achievements",
-  "Hidden Achievements",
-  "Challenge Achievements",
-  "Speed Achievements",
-  "Collection Achievements"
+  "Village"
 ];
 
 /* =========================================================
-   VERIFY 330
+   20 MECHANICS PER CATEGORY
+   30 × 20 = 600 MECHANICS
 ========================================================= */
 
-if (mechanics.length !== 330) {
-  console.error(
-    "Expected 330 mechanics but found:",
-    mechanics.length
-  );
+const mechanicWords = [
+  "Power",
+  "Speed",
+  "Capacity",
+  "Efficiency",
+  "Criticals",
+  "Combos",
+  "Mastery",
+  "Training",
+  "Levels",
+  "Experience",
+  "Rewards",
+  "Bonuses",
+  "Research",
+  "Evolution",
+  "Automation",
+  "Rare Finds",
+  "Lucky Chance",
+  "Multiplier",
+  "Challenges",
+  "Ultimate"
+];
+
+const mechanics = [];
+
+for(let c=0;c<categories.length;c++){
+  for(let m=0;m<mechanicWords.length;m++){
+    mechanics.push(
+      categories[c]+" "+mechanicWords[m]
+    );
+  }
 }
 
 /* =========================================================
-   ITEM PREFIXES
+   30 UPGRADES PER CATEGORY
+   30 × 30 = 900 UPGRADES
 ========================================================= */
 
-const prefixes = [
+const upgradeAdjectives = [
   "Tiny",
   "Mossy",
   "Swift",
   "Golden",
-  "Moonlit",
   "Royal",
-  "Spotted",
   "Crystal",
   "Ancient",
   "Lucky",
   "Bubble",
-  "Stormy",
+  "Storm",
   "Sunny",
   "Shadow",
   "Emerald",
-  "Velvet",
   "Cosmic",
   "Neon",
   "Marsh",
   "River",
   "Jungle",
   "Frost",
-  "Rainy",
+  "Rain",
   "Solar",
   "Turbo",
   "Mystic",
   "Wild",
   "Giant",
   "Pocket",
-  "Legendary"
+  "Legendary",
+  "Mythic",
+  "Ultimate",
+  "Infinite"
 ];
 
-/* =========================================================
-   3300 ITEMS
-   330 MECHANICS × 10 ITEMS
-========================================================= */
+const upgrades = [];
 
-const items = [];
+for(let c=0;c<categories.length;c++){
 
-for (
-  let i = 0;
-  i < mechanics.length * 10;
-  i++
-) {
+  for(let u=0;u<30;u++){
 
-  const category =
-    Math.floor(i / 10);
+    upgrades.push({
+      id:upgrades.length,
+      category:c,
+      level:u+1,
+      name:
+        upgradeAdjectives[u]+" "+
+        categories[c]+" "+
+        (u+1),
 
-  const level =
-    (i % 10) + 1;
+      power:
+        1+(u+1)*1.5,
 
-  items.push({
-
-    id: i,
-
-    category,
-
-    level,
-
-    name:
-      prefixes[i % prefixes.length] +
-      " " +
-      mechanics[category] +
-      " " +
-      level,
-
-    baseCost:
-      Math.max(
-        10,
+      baseCost:
         Math.floor(
-          20 *
-          Math.pow(
-            1.045,
-            i
-          )
+          25*
+          Math.pow(1.065,c*30+u)
         )
-      ),
-
-    power:
-      1 + (i % 10),
-
-    owned: 0
-
-  });
-
+    });
+  }
 }
 
 /* =========================================================
@@ -1130,1282 +786,1433 @@ for (
 ========================================================= */
 
 const state = {
+  coins:0,
+  clicks:0,
 
-  coins: 0,
+  energy:100,
+  maxEnergy:100,
 
-  clicks: 0,
+  level:1,
+  xp:0,
+  xpNeeded:100,
 
-  energy: 100,
+  multiplier:1,
 
-  maxEnergy: 100,
+  combo:0,
+  bestCombo:0,
 
-  multiplier: 1,
+  rebirths:0,
+  criticals:0,
 
-  rebirths: 0,
+  activeCategory:0,
+  activeMechanic:0,
 
-  level: 1,
+  owned:Array(upgrades.length).fill(0),
 
-  xp: 0,
+  bossHP:1000,
+  bossMaxHP:1000,
+  bossesDefeated:0,
 
-  xpNeeded: 100,
-
-  activeMechanic: 0,
-
-  combo: 0,
-
-  maxCombo: 0,
-
-  criticals: 0,
-
-  achievements: 0,
-
-  totalPlayTime: 0,
-
-  lastSave: Date.now(),
-
-  owned:
-    Array(
-      mechanics.length * 10
-    ).fill(0)
-
+  totalPlayTime:0
 };
 
 /* =========================================================
-   DOM HELPERS
+   DOM HELPER
 ========================================================= */
 
-const $ = id =>
-  document.getElementById(id);
+function $(id){
+  return document.getElementById(id);
+}
 
 /* =========================================================
-   NUMBER FORMAT
+   NUMBER FORMATTER
 ========================================================= */
 
-function formatNumber(value) {
+function formatNumber(value){
 
-  if (
-    !Number.isFinite(value)
-  ) {
+  if(!Number.isFinite(value)){
     return "0";
   }
 
-  if (
-    value >= 1e18
-  ) {
-    return (
-      (value / 1e18)
-        .toFixed(2) +
-      "Qi"
-    );
+  const units=[
+    ["Qi",1e18],
+    ["Qa",1e15],
+    ["T",1e12],
+    ["B",1e9],
+    ["M",1e6],
+    ["K",1e3]
+  ];
+
+  for(const [name,size] of units){
+
+    if(Math.abs(value)>=size){
+
+      return (
+        value/size
+      ).toFixed(2)+name;
+    }
   }
 
-  if (
-    value >= 1e15
-  ) {
-    return (
-      (value / 1e15)
-        .toFixed(2) +
-      "Qa"
-    );
-  }
-
-  if (
-    value >= 1e12
-  ) {
-    return (
-      (value / 1e12)
-        .toFixed(2) +
-      "T"
-    );
-  }
-
-  if (
-    value >= 1e9
-  ) {
-    return (
-      (value / 1e9)
-        .toFixed(2) +
-      "B"
-    );
-  }
-
-  if (
-    value >= 1e6
-  ) {
-    return (
-      (value / 1e6)
-        .toFixed(2) +
-      "M"
-    );
-  }
-
-  if (
-    value >= 1000
-  ) {
-    return (
-      (value / 1000)
-        .toFixed(2) +
-      "K"
-    );
-  }
-
-  return Math.floor(value)
-    .toString();
+  return Math.floor(value).toString();
 }
 
 /* =========================================================
    LOG
 ========================================================= */
 
-function log(message) {
+function addLog(message){
 
-  const activity =
-    $("activity");
-
-  const line =
+  const line=
     document.createElement("div");
 
-  line.textContent =
-    message;
+  line.textContent=message;
 
-  activity.prepend(line);
+  $("log").prepend(line);
 
-  while (
-    activity.children.length >
-    40
-  ) {
-    activity.lastChild.remove();
+  while(
+    $("log").children.length>50
+  ){
+    $("log").lastChild.remove();
   }
-
 }
 
 /* =========================================================
    TOAST
 ========================================================= */
 
-function toast(message) {
+function toast(message){
 
-  const old =
-    document.querySelector(
-      ".toast"
-    );
+  document
+    .querySelectorAll(".toast")
+    .forEach(x=>x.remove());
 
-  if (old) {
-    old.remove();
-  }
-
-  const element =
+  const element=
     document.createElement("div");
 
-  element.className =
-    "toast";
+  element.className="toast";
+  element.textContent=message;
 
-  element.textContent =
-    message;
-
-  document.body.appendChild(
-    element
-  );
+  document.body.appendChild(element);
 
   setTimeout(
-    () => element.remove(),
+    ()=>element.remove(),
     2200
   );
-
 }
 
 /* =========================================================
    INCOME
 ========================================================= */
 
-function getIncomePerSecond() {
+function getIncomePerSecond(){
 
-  let income = 0;
+  let total=0;
 
-  for (
-    let i = 0;
-    i < items.length;
-    i++
-  ) {
+  /*
+    Only iterate over owned upgrades.
+    This remains fast even with 900 upgrades.
+  */
 
-    const item =
-      items[i];
+  for(let i=0;i<upgrades.length;i++){
 
-    income +=
-      state.owned[i] *
-      item.power *
-      (1 +
-        item.category *
-        0.002);
+    const amount=state.owned[i];
 
+    if(amount<=0){
+      continue;
+    }
+
+    total+=
+      amount*
+      upgrades[i].power;
   }
 
-  const comboBonus =
-    1 +
+  const categoryBonus=
+    1+
+    state.activeCategory*.01;
+
+  const rebirthBonus=
+    1+
+    state.rebirths*.25;
+
+  const comboBonus=
+    1+
     Math.min(
       state.combo,
       100
-    ) *
-    0.005;
+    )*.005;
 
   return (
-    income *
-    state.multiplier *
-    (1 +
-      state.rebirths *
-      0.2) *
+    total*
+    state.multiplier*
+    categoryBonus*
+    rebirthBonus*
     comboBonus
   );
-
 }
 
 /* =========================================================
-   CLICK VALUE
+   CLICK POWER
 ========================================================= */
 
-function getClickValue(
-  basePower = 1
-) {
+function getClickPower(multiplier=1){
 
-  const comboBonus =
-    1 +
-    Math.min(
-      state.combo,
-      100
-    ) *
-    0.01;
+  let power=1;
+
+  const start=
+    state.activeCategory*30;
+
+  const end=
+    start+30;
+
+  /*
+    Active category upgrades contribute to clicks.
+  */
+
+  for(let i=start;i<end;i++){
+
+    if(state.owned[i]>0){
+
+      power+=
+        state.owned[i]*
+        upgrades[i].power*
+        .15;
+    }
+  }
 
   return (
-    basePower *
-    state.multiplier *
-    comboBonus *
-    (1 +
-      state.rebirths *
-      0.2)
+    power*
+    multiplier*
+    state.multiplier*
+    (1+state.rebirths*.25)*
+    (1+Math.min(state.combo,100)*.01)
   );
-
 }
 
 /* =========================================================
    XP
 ========================================================= */
 
-function addXP(amount) {
+function addXP(amount){
 
-  state.xp += amount;
+  if(!Number.isFinite(amount)){
+    return;
+  }
 
-  while (
-    state.xp >=
-    state.xpNeeded
-  ) {
+  state.xp+=Math.max(0,amount);
 
-    state.xp -=
-      state.xpNeeded;
+  while(
+    state.xp>=state.xpNeeded
+  ){
+
+    state.xp-=state.xpNeeded;
 
     state.level++;
 
-    state.xpNeeded =
+    state.xpNeeded=
       Math.floor(
-        state.xpNeeded *
-        1.18
+        state.xpNeeded*1.18
       );
 
-    state.maxEnergy += 5;
+    state.maxEnergy+=5;
 
-    state.energy =
+    state.energy=
       state.maxEnergy;
 
     toast(
-      "⭐ Frog reached Level " +
-      state.level + "!"
+      "⭐ Frog Level "+state.level+"!"
     );
 
-    log(
-      "⭐ Level up! Frog is now level " +
+    addLog(
+      "⭐ Reached Frog Level "+
       state.level
     );
-
   }
-
 }
 
 /* =========================================================
-   CLICK FROG
+   FROG CLICK
 ========================================================= */
 
-function clickFrog(
-  power = 1
-) {
+function clickFrog(multiplier=1){
 
-  if (
-    state.energy < 1
-  ) {
+  if(state.energy<1){
 
-    log(
-      "⚡ Your frog needs energy."
-    );
-
+    toast("⚡ Frog needs energy!");
     return;
-
   }
 
-  state.energy =
-    Math.max(
-      0,
-      state.energy - 1
-    );
+  state.energy--;
 
   state.clicks++;
 
   state.combo++;
 
-  state.maxCombo =
+  state.bestCombo=
     Math.max(
-      state.maxCombo,
+      state.bestCombo,
       state.combo
     );
 
-  const gain =
-    getClickValue(
-      power
+  const amount=
+    getClickPower(multiplier);
+
+  state.coins+=amount;
+
+  addXP(
+    Math.max(
+      1,
+      Math.floor(multiplier)
+    )
+  );
+
+  floatingNumber(
+    "+"+
+    formatNumber(amount)+
+    " 🌿"
+  );
+
+  updateStats();
+  updateButtonStates();
+}
+
+/* =========================================================
+   FLOATING NUMBER
+========================================================= */
+
+function floatingNumber(text){
+
+  const element=
+    document.createElement("div");
+
+  element.className="float";
+  element.textContent=text;
+
+  element.style.left=
+    (40+Math.random()*20)+"%";
+
+  element.style.top=
+    (35+Math.random()*20)+"%";
+
+  $("frogArea").appendChild(element);
+
+  setTimeout(
+    ()=>element.remove(),
+    800
+  );
+}
+
+/* =========================================================
+   CATEGORY BAR
+========================================================= */
+
+function renderCategories(){
+
+  const bar=
+    $("categoryTabs");
+
+  bar.innerHTML="";
+
+  categories.forEach(
+    (category,index)=>{
+
+      const button=
+        document.createElement("button");
+
+      button.type="button";
+
+      button.textContent=
+        (index+1)+". "+category;
+
+      if(
+        index===
+        state.activeCategory
+      ){
+        button.classList.add("active");
+      }
+
+      button.addEventListener(
+        "click",
+        ()=>{
+          selectCategory(index);
+        }
+      );
+
+      bar.appendChild(button);
+    }
+  );
+}
+
+/* =========================================================
+   MECHANIC BAR
+========================================================= */
+
+function renderMechanics(){
+
+  const bar=
+    $("mechanicTabs");
+
+  bar.innerHTML="";
+
+  const start=
+    state.activeCategory*20;
+
+  const end=
+    start+20;
+
+  for(
+    let i=start;
+    i<end;
+    i++
+  ){
+
+    const button=
+      document.createElement("button");
+
+    button.type="button";
+
+    button.textContent=
+      mechanics[i];
+
+    if(
+      i===
+      state.activeMechanic
+    ){
+      button.classList.add("active");
+    }
+
+    const mechanicIndex=i;
+
+    button.addEventListener(
+      "click",
+      ()=>{
+        state.activeMechanic=
+          mechanicIndex;
+
+        renderMechanics();
+        renderUpgrades();
+      }
     );
 
-  state.coins +=
-    gain;
+    bar.appendChild(button);
+  }
+}
+
+/* =========================================================
+   SELECT CATEGORY
+========================================================= */
+
+function selectCategory(index){
+
+  if(
+    index<0 ||
+    index>=categories.length
+  ){
+    return;
+  }
+
+  state.activeCategory=index;
+
+  state.activeMechanic=
+    index*20;
+
+  renderCategories();
+  renderMechanics();
+  renderUpgrades();
+}
+
+/* =========================================================
+   RENDER UPGRADES
+========================================================= */
+
+function renderUpgrades(){
+
+  const panel=
+    $("upgrades");
+
+  panel.innerHTML="";
+
+  const start=
+    state.activeCategory*30;
+
+  const end=
+    start+30;
+
+  $("mechanicTitle").textContent=
+    mechanics[state.activeMechanic];
+
+  $("mechanicDescription").textContent=
+    categories[state.activeCategory]+
+    " system • "+
+    mechanics[state.activeMechanic]+
+    " • 30 upgrades available.";
+
+  $("upgradeCount").textContent=
+    "30 Upgrades";
+
+  for(
+    let i=start;
+    i<end;
+    i++
+  ){
+
+    const upgrade=
+      upgrades[i];
+
+    const owned=
+      state.owned[i];
+
+    const cost=
+      getUpgradeCost(i);
+
+    const card=
+      document.createElement("div");
+
+    card.className="upgrade";
+
+    const name=
+      document.createElement("div");
+
+    name.className="upgrade-name";
+
+    name.textContent=
+      "Lv."+
+      upgrade.level+
+      " "+
+      upgrade.name;
+
+    const description=
+      document.createElement("div");
+
+    description.className=
+      "upgrade-description";
+
+    description.textContent=
+      "Increases this system by "+
+      formatNumber(upgrade.power)+
+      " power per level.";
+
+    const meta=
+      document.createElement("div");
+
+    meta.className="upgrade-meta";
+
+    meta.textContent=
+      "Owned: "+
+      owned+
+      " • Cost: "+
+      formatNumber(cost)+
+      " 🌿";
+
+    const button=
+      document.createElement("button");
+
+    button.className="buy";
+    button.type="button";
+
+    /*
+      IMPORTANT BUG FIX:
+      This constant captures the correct
+      upgrade ID for this particular button.
+    */
+
+    const upgradeIndex=i;
+
+    button.dataset.upgrade=
+      String(upgradeIndex);
+
+    button.addEventListener(
+      "click",
+      event=>{
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        buyUpgrade(upgradeIndex);
+      }
+    );
+
+    card.appendChild(name);
+    card.appendChild(description);
+    card.appendChild(meta);
+    card.appendChild(button);
+
+    panel.appendChild(card);
+  }
+
+  updateButtonStates();
+}
+
+/* =========================================================
+   UPGRADE COST
+========================================================= */
+
+function getUpgradeCost(index){
+
+  const upgrade=
+    upgrades[index];
+
+  if(!upgrade){
+    return Infinity;
+  }
+
+  const owned=
+    state.owned[index];
+
+  const cost=
+    upgrade.baseCost*
+    Math.pow(
+      1.13,
+      owned
+    );
+
+  return Number.isFinite(cost)
+    ? cost
+    : Infinity;
+}
+
+/* =========================================================
+   UPDATE BUTTON STATES
+========================================================= */
+
+function updateButtonStates(){
+
+  const buttons=
+    $("upgrades")
+      .querySelectorAll(
+        "button[data-upgrade]"
+      );
+
+  buttons.forEach(
+    button=>{
+
+      const index=
+        Number(
+          button.dataset.upgrade
+        );
+
+      if(
+        !Number.isInteger(index) ||
+        !upgrades[index]
+      ){
+        button.disabled=true;
+        return;
+      }
+
+      const cost=
+        getUpgradeCost(index);
+
+      const owned=
+        state.owned[index];
+
+      button.disabled=
+        !Number.isFinite(cost) ||
+        state.coins<cost;
+
+      button.textContent=
+        "Buy • "+
+        formatNumber(cost)+
+        " 🌿 • Lv "+
+        owned;
+    }
+  );
+}
+
+/* =========================================================
+   BUY UPGRADE
+========================================================= */
+
+function buyUpgrade(index){
+
+  /*
+    Defensive validation.
+  */
+
+  if(
+    !Number.isInteger(index) ||
+    index<0 ||
+    index>=upgrades.length
+  ){
+
+    console.error(
+      "Invalid upgrade:",
+      index
+    );
+
+    return;
+  }
+
+  const upgrade=
+    upgrades[index];
+
+  const cost=
+    getUpgradeCost(index);
+
+  if(
+    !Number.isFinite(cost)
+  ){
+    toast("❌ Invalid upgrade cost.");
+    return;
+  }
+
+  if(
+    state.coins<cost
+  ){
+
+    toast(
+      "🌿 Need "+
+      formatNumber(
+        cost-state.coins
+      )+
+      " more Lily."
+    );
+
+    return;
+  }
+
+  state.coins-=cost;
+
+  state.owned[index]++;
 
   addXP(
     Math.max(
       1,
       Math.floor(
-        power
+        upgrade.power*2
       )
     )
   );
 
-  createFloat(
-    "+" +
-    formatNumber(
-      gain
-    ) +
-    " 🌿"
+  addLog(
+    "🛒 Bought "+
+    upgrade.name
   );
 
-  updateStats();
+  /*
+    Rebuild ONLY after an actual purchase.
+    Never rebuild from the animation loop.
+  */
 
+  renderUpgrades();
+  updateStats();
 }
 
 /* =========================================================
-   CRITICAL CLICK
+   CRITICAL CROAK
 ========================================================= */
 
-function criticalCroak() {
+function criticalCroak(){
 
-  if (
-    state.energy < 5
-  ) {
+  if(state.energy<5){
 
-    log(
-      "⚡ Need 5 energy."
-    );
-
+    toast("⚡ Need 5 energy!");
     return;
-
   }
 
-  state.energy -= 5;
+  state.energy-=5;
 
   state.criticals++;
 
-  state.combo += 5;
+  state.combo+=5;
 
-  const gain =
-    getClickValue(100) *
-    10;
+  const amount=
+    getClickPower(100)*10;
 
-  state.coins +=
-    gain;
+  state.coins+=amount;
 
   addXP(50);
 
-  createFloat(
-    "💥 CRITICAL +" +
-    formatNumber(
-      gain
+  floatingNumber(
+    "💥 +"+
+    formatNumber(amount)
+  );
+
+  toast("💥 CRITICAL CROAK!");
+
+  updateStats();
+  updateButtonStates();
+}
+
+/* =========================================================
+   MEGA CROAK
+========================================================= */
+
+function megaCroak(){
+
+  if(state.energy<10){
+
+    toast("⚡ Need 10 energy!");
+    return;
+  }
+
+  state.energy-=10;
+
+  state.combo+=10;
+
+  const amount=
+    getClickPower(25);
+
+  state.coins+=amount;
+
+  addXP(25);
+
+  floatingNumber(
+    "🐸 +"+
+    formatNumber(amount)
+  );
+
+  toast("🐸 MEGA CROAK!");
+
+  updateStats();
+  updateButtonStates();
+}
+
+/* =========================================================
+   BOSS
+========================================================= */
+
+function attackBoss(){
+
+  if(state.energy<3){
+
+    toast("⚡ Need 3 energy!");
+    return;
+  }
+
+  state.energy-=3;
+
+  const damage=
+    Math.max(
+      1,
+      getClickPower(5)
+    );
+
+  state.bossHP-=damage;
+
+  addXP(
+    Math.max(
+      1,
+      Math.floor(damage/10)
     )
   );
 
-  toast(
-    "💥 Critical Croak!"
+  floatingNumber(
+    "⚔️ -"+
+    formatNumber(damage)
   );
+
+  if(state.bossHP<=0){
+
+    state.bossHP=0;
+
+    state.bossesDefeated++;
+
+    const reward=
+      Math.max(
+        1000,
+        state.bossMaxHP*2
+      );
+
+    state.coins+=reward;
+
+    addXP(100);
+
+    toast(
+      "👹 BOSS DEFEATED! +"+
+      formatNumber(reward)+
+      " 🌿"
+    );
+
+    addLog(
+      "🏆 Defeated Pond Boss #"+
+      state.bossesDefeated
+    );
+
+    setTimeout(
+      spawnBoss,
+      500
+    );
+  }
 
   updateStats();
-
+  updateBoss();
+  updateButtonStates();
 }
 
 /* =========================================================
-   FLOATING TEXT
+   SPAWN BOSS
 ========================================================= */
 
-function createFloat(text) {
+function spawnBoss(){
 
-  const element =
-    document.createElement(
-      "div"
-    );
-
-  element.className =
-    "float";
-
-  element.textContent =
-    text;
-
-  element.style.left =
-    (
-      40 +
-      Math.random() *
-      20
-    ) + "%";
-
-  element.style.top =
-    (
-      35 +
-      Math.random() *
-      25
-    ) + "%";
-
-  $("frogArea")
-    .appendChild(
-      element
-    );
-
-  setTimeout(
-    () => element.remove(),
-    800
-  );
-
-}
-
-/* =========================================================
-   MECHANICS BAR
-========================================================= */
-
-function renderMechanics() {
-
-  const bar =
-    $("mechanicsBar");
-
-  bar.innerHTML = "";
-
-  mechanics.forEach(
-    (
-      mechanic,
-      index
-    ) => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-      button.type =
-        "button";
-
-      button.textContent =
-        mechanic;
-
-      if (
-        index ===
-        state.activeMechanic
-      ) {
-
-        button.classList.add(
-          "active"
-        );
-
-      }
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          state.activeMechanic =
-            index;
-
-          render();
-
-        }
-      );
-
-      bar.appendChild(
-        button
-      );
-
-    }
-  );
-
-}
-
-/* =========================================================
-   ITEM PANEL
-========================================================= */
-
-function renderItems() {
-
-  const panel =
-    $("items");
-
-  panel.innerHTML = "";
-
-  const start =
-    state.activeMechanic *
-    10;
-
-  const end =
-    start + 10;
-
-  for (
-    let i = start;
-    i < end;
-    i++
-  ) {
-
-    const item =
-      items[i];
-
-    if (!item) {
-      continue;
-    }
-
-    const cost =
-      item.baseCost *
+  state.bossMaxHP=
+    Math.floor(
+      1000*
       Math.pow(
-        1.12,
-        state.owned[i]
-      );
-
-    const box =
-      document.createElement(
-        "div"
-      );
-
-    box.className =
-      "item";
-
-    const name =
-      document.createElement(
-        "div"
-      );
-
-    name.className =
-      "item-name";
-
-    name.textContent =
-      item.name;
-
-    const info =
-      document.createElement(
-        "div"
-      );
-
-    info.className =
-      "item-info";
-
-    info.textContent =
-      "Power +" +
-      item.power +
-      " • Owned " +
-      state.owned[i] +
-      " • Cost " +
-      formatNumber(cost) +
-      " 🌿";
-
-    const buy =
-      document.createElement(
-        "button"
-      );
-
-    buy.textContent =
-      "Buy";
-
-    buy.style.width =
-      "100%";
-
-    buy.disabled =
-      state.coins <
-      cost;
-
-    buy.addEventListener(
-      "click",
-      () => {
-
-        buyItem(i);
-
-      }
+        1.55,
+        state.bossesDefeated
+      )
     );
 
-    box.appendChild(
-      name
-    );
+  state.bossHP=
+    state.bossMaxHP;
 
-    box.appendChild(
-      info
-    );
-
-    box.appendChild(
-      buy
-    );
-
-    panel.appendChild(
-      box
-    );
-
-  }
-
-  $("mechanicTitle")
-    .textContent =
-    mechanics[
-      state.activeMechanic
-    ];
-
-  $("mechanicDescription")
-    .textContent =
-    "Upgrade " +
-    mechanics[
-      state.activeMechanic
-    ] +
-    " using these 10 upgrades.";
-
+  updateBoss();
 }
 
 /* =========================================================
-   BUY
+   BOSS DISPLAY
 ========================================================= */
 
-function buyItem(index) {
+function updateBoss(){
 
-  const item =
-    items[index];
-
-  const cost =
-    item.baseCost *
-    Math.pow(
-      1.12,
-      state.owned[index]
+  const percent=
+    Math.max(
+      0,
+      Math.min(
+        100,
+        state.bossHP/
+        state.bossMaxHP*
+        100
+      )
     );
 
-  if (
-    state.coins <
-    cost
-  ) {
+  $("bossFill").style.width=
+    percent+"%";
 
-    return;
-
-  }
-
-  state.coins -=
-    cost;
-
-  state.owned[index]++;
-
-  addXP(
-    item.power * 2
-  );
-
-  log(
-    "🛒 Bought " +
-    item.name
-  );
-
-  render();
-
+  $("bossText").textContent=
+    formatNumber(state.bossHP)+
+    " / "+
+    formatNumber(state.bossMaxHP);
 }
 
 /* =========================================================
    REBIRTH
 ========================================================= */
 
-function rebirth() {
+function rebirth(){
 
-  const requirement =
-    1000000 *
+  const requirement=
+    1000000*
     Math.pow(
       3,
       state.rebirths
     );
 
-  if (
-    state.coins <
-    requirement
-  ) {
+  if(
+    state.coins<requirement
+  ){
 
     toast(
-      "Need " +
-      formatNumber(
-        requirement
-      ) +
-      " Lily."
+      "♻️ Need "+
+      formatNumber(requirement)+
+      " Lily to rebirth."
     );
 
     return;
-
   }
 
   state.rebirths++;
 
-  state.coins = 0;
+  state.coins=0;
 
   state.owned.fill(0);
 
-  state.combo = 0;
+  state.combo=0;
 
-  state.multiplier =
-    1 +
-    state.rebirths *
-    0.2;
+  state.multiplier=
+    1+
+    state.rebirths*.25;
 
-  state.energy =
+  state.energy=
     state.maxEnergy;
 
+  addLog(
+    "♻️ Pond Rebirth #"+
+    state.rebirths
+  );
+
   toast(
-    "♻️ Pond Rebirth!"
+    "♻️ REBIRTH "+
+    state.rebirths+
+    "!"
   );
 
-  log(
-    "♻️ Rebirth " +
-    state.rebirths +
-    " complete."
-  );
-
-  render();
-
-}
-
-/* =========================================================
-   SAVE
-========================================================= */
-
-function saveGame(
-  showMessage = true
-) {
-
-  const save = {
-
-    version: 2,
-
-    coins:
-      state.coins,
-
-    clicks:
-      state.clicks,
-
-    energy:
-      state.energy,
-
-    maxEnergy:
-      state.maxEnergy,
-
-    multiplier:
-      state.multiplier,
-
-    rebirths:
-      state.rebirths,
-
-    level:
-      state.level,
-
-    xp:
-      state.xp,
-
-    xpNeeded:
-      state.xpNeeded,
-
-    activeMechanic:
-      state.activeMechanic,
-
-    combo:
-      state.combo,
-
-    maxCombo:
-      state.maxCombo,
-
-    criticals:
-      state.criticals,
-
-    achievements:
-      state.achievements,
-
-    totalPlayTime:
-      state.totalPlayTime,
-
-    owned:
-      state.owned,
-
-    savedAt:
-      Date.now()
-
-  };
-
-  try {
-
-    localStorage.setItem(
-      "frog-clicker-save",
-      JSON.stringify(save)
-    );
-
-    state.lastSave =
-      Date.now();
-
-    if (showMessage) {
-
-      toast(
-        "💾 Game saved!"
-      );
-
-    }
-
-  } catch (error) {
-
-    log(
-      "❌ Could not save game."
-    );
-
-  }
-
-}
-
-/* =========================================================
-   LOAD
-========================================================= */
-
-function loadGame() {
-
-  try {
-
-    const raw =
-      localStorage.getItem(
-        "frog-clicker-save"
-      );
-
-    if (!raw) {
-      return;
-    }
-
-    const save =
-      JSON.parse(raw);
-
-    if (
-      !save ||
-      !Array.isArray(
-        save.owned
-      ) ||
-      save.owned.length !==
-        mechanics.length * 10
-    ) {
-
-      return;
-
-    }
-
-    state.coins =
-      Math.max(
-        0,
-        Number(save.coins) || 0
-      );
-
-    state.clicks =
-      Math.max(
-        0,
-        Number(save.clicks) || 0
-      );
-
-    state.maxEnergy =
-      Math.max(
-        100,
-        Number(
-          save.maxEnergy
-        ) || 100
-      );
-
-    state.energy =
-      Math.max(
-        0,
-        Math.min(
-          state.maxEnergy,
-          Number(save.energy) ||
-          0
-        )
-      );
-
-    state.multiplier =
-      Math.max(
-        1,
-        Number(
-          save.multiplier
-        ) || 1
-      );
-
-    state.rebirths =
-      Math.max(
-        0,
-        Math.floor(
-          Number(
-            save.rebirths
-          ) || 0
-        )
-      );
-
-    state.level =
-      Math.max(
-        1,
-        Math.floor(
-          Number(
-            save.level
-          ) || 1
-        )
-      );
-
-    state.xp =
-      Math.max(
-        0,
-        Number(
-          save.xp
-        ) || 0
-      );
-
-    state.xpNeeded =
-      Math.max(
-        100,
-        Number(
-          save.xpNeeded
-        ) || 100
-      );
-
-    state.activeMechanic =
-      Math.max(
-        0,
-        Math.min(
-          mechanics.length - 1,
-          Math.floor(
-            Number(
-              save.activeMechanic
-            ) || 0
-          )
-        )
-      );
-
-    state.combo =
-      Math.max(
-        0,
-        Number(
-          save.combo
-        ) || 0
-      );
-
-    state.maxCombo =
-      Math.max(
-        0,
-        Number(
-          save.maxCombo
-        ) || 0
-      );
-
-    state.criticals =
-      Math.max(
-        0,
-        Number(
-          save.criticals
-        ) || 0
-      );
-
-    state.totalPlayTime =
-      Math.max(
-        0,
-        Number(
-          save.totalPlayTime
-        ) || 0
-      );
-
-    state.owned =
-      save.owned.map(
-        value =>
-          Math.max(
-            0,
-            Math.floor(
-              Number(value) || 0
-            )
-          )
-      );
-
-    /* OFFLINE EARNINGS */
-
-    if (
-      Number.isFinite(
-        save.savedAt
-      )
-    ) {
-
-      const offlineSeconds =
-        Math.min(
-          60 * 60 * 12,
-          Math.max(
-            0,
-            (Date.now() -
-              save.savedAt) /
-              1000
-          )
-        );
-
-      const offlineIncome =
-        getIncomePerSecond() *
-        offlineSeconds *
-        0.5;
-
-      if (
-        offlineIncome > 0
-      ) {
-
-        state.coins +=
-          offlineIncome;
-
-        log(
-          "🌙 Offline earnings: +" +
-          formatNumber(
-            offlineIncome
-          ) +
-          " Lily"
-        );
-
-      }
-
-    }
-
-  } catch (error) {
-
-    console.warn(
-      "Save could not be loaded.",
-      error
-    );
-
-  }
-
-}
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function resetGame() {
-
-  if (
-    !confirm(
-      "Reset ALL Frog Clicker progress?"
-    )
-  ) {
-
-    return;
-
-  }
-
-  try {
-
-    localStorage.removeItem(
-      "frog-clicker-save"
-    );
-
-  } catch (error) {}
-
-  location.reload();
-
+  renderUpgrades();
+  updateStats();
 }
 
 /* =========================================================
    STATS
 ========================================================= */
 
-function updateStats() {
+function updateStats(){
 
-  const income =
-    getIncomePerSecond();
+  $("coins").textContent=
+    formatNumber(state.coins);
 
-  $("coins")
-    .textContent =
+  $("income").textContent=
     formatNumber(
-      state.coins
+      getIncomePerSecond()
     );
 
-  $("income")
-    .textContent =
-    formatNumber(
-      income
-    );
+  $("clicks").textContent=
+    formatNumber(state.clicks);
 
-  $("clicks")
-    .textContent =
-    formatNumber(
-      state.clicks
-    );
-
-  $("level")
-    .textContent =
+  $("level").textContent=
     state.level;
 
-  $("rebirths")
-    .textContent =
-    state.rebirths;
-
-  $("energy")
-    .textContent =
-    Math.floor(
-      state.energy
-    ) +
-    "/" +
+  $("energy").textContent=
+    Math.floor(state.energy)+
+    "/"+
     state.maxEnergy;
 
-  const energyPercent =
+  $("combo").textContent=
+    state.combo;
+
+  $("rebirths").textContent=
+    state.rebirths;
+
+  const energyPercent=
     Math.max(
       0,
       Math.min(
         100,
-        state.energy /
-        state.maxEnergy *
+        state.energy/
+        state.maxEnergy*
         100
       )
     );
 
-  $("energyFill")
-    .style.width =
-    energyPercent +
-    "%";
+  $("energyFill").style.width=
+    energyPercent+"%";
 
-  $("energyPercent")
-    .textContent =
+  $("energyText").textContent=
     Math.floor(
       energyPercent
-    ) +
-    "%";
+    )+"%";
 
-  $("xpText")
-    .textContent =
-    formatNumber(
-      state.xp
-    ) +
-    " / " +
-    formatNumber(
-      state.xpNeeded
+  const xpPercent=
+    Math.max(
+      0,
+      Math.min(
+        100,
+        state.xp/
+        state.xpNeeded*
+        100
+      )
     );
 
-  $("xpFill")
-    .style.width =
-    Math.min(
-      100,
-      state.xp /
-      state.xpNeeded *
-      100
-    ) +
-    "%";
+  $("xpFill").style.width=
+    xpPercent+"%";
 
-  $("achievementCount")
-    .textContent =
-    state.achievements;
-
+  $("xpText").textContent=
+    formatNumber(state.xp)+
+    " / "+
+    formatNumber(state.xpNeeded);
 }
 
 /* =========================================================
-   RENDER
+   SAVE
 ========================================================= */
 
-function render() {
+function saveGame(showToast=true){
 
-  renderMechanics();
+  const data={
+    version:2,
+    coins:state.coins,
+    clicks:state.clicks,
+    energy:state.energy,
+    maxEnergy:state.maxEnergy,
+    level:state.level,
+    xp:state.xp,
+    xpNeeded:state.xpNeeded,
+    multiplier:state.multiplier,
+    combo:state.combo,
+    bestCombo:state.bestCombo,
+    rebirths:state.rebirths,
+    criticals:state.criticals,
+    activeCategory:state.activeCategory,
+    activeMechanic:state.activeMechanic,
+    owned:state.owned,
+    bossHP:state.bossHP,
+    bossMaxHP:state.bossMaxHP,
+    bossesDefeated:state.bossesDefeated,
+    totalPlayTime:state.totalPlayTime,
+    savedAt:Date.now()
+  };
 
-  renderItems();
+  try{
 
-  updateStats();
+    localStorage.setItem(
+      "ultimate-frog-clicker",
+      JSON.stringify(data)
+    );
 
+    if(showToast){
+      toast("💾 Game saved!");
+    }
+
+  }catch(error){
+
+    console.error(
+      "Save error:",
+      error
+    );
+
+    toast(
+      "❌ Could not save game."
+    );
+  }
 }
 
 /* =========================================================
-   BUTTONS
+   LOAD
 ========================================================= */
 
-$("frog")
-  .addEventListener(
-    "click",
-    () => clickFrog()
-  );
+function loadGame(){
 
-$("frog")
-  .addEventListener(
-    "keydown",
-    event => {
+  try{
 
-      if (
-        event.key === "Enter" ||
-        event.key === " "
-      ) {
+    const raw=
+      localStorage.getItem(
+        "ultimate-frog-clicker"
+      );
 
-        event.preventDefault();
+    if(!raw){
+      return;
+    }
 
-        clickFrog();
+    const data=
+      JSON.parse(raw);
 
+    if(
+      !data ||
+      !Array.isArray(data.owned)
+    ){
+      return;
+    }
+
+    state.coins=
+      Math.max(
+        0,
+        Number(data.coins)||0
+      );
+
+    state.clicks=
+      Math.max(
+        0,
+        Number(data.clicks)||0
+      );
+
+    state.maxEnergy=
+      Math.max(
+        100,
+        Number(data.maxEnergy)||100
+      );
+
+    state.energy=
+      Math.max(
+        0,
+        Math.min(
+          state.maxEnergy,
+          Number(data.energy)||
+          state.maxEnergy
+        )
+      );
+
+    state.level=
+      Math.max(
+        1,
+        Math.floor(
+          Number(data.level)||1
+        )
+      );
+
+    state.xp=
+      Math.max(
+        0,
+        Number(data.xp)||0
+      );
+
+    state.xpNeeded=
+      Math.max(
+        100,
+        Number(data.xpNeeded)||100
+      );
+
+    state.multiplier=
+      Math.max(
+        1,
+        Number(data.multiplier)||1
+      );
+
+    state.combo=
+      Math.max(
+        0,
+        Number(data.combo)||0
+      );
+
+    state.bestCombo=
+      Math.max(
+        0,
+        Number(data.bestCombo)||0
+      );
+
+    state.rebirths=
+      Math.max(
+        0,
+        Math.floor(
+          Number(data.rebirths)||0
+        )
+      );
+
+    state.criticals=
+      Math.max(
+        0,
+        Number(data.criticals)||0
+      );
+
+    state.activeCategory=
+      Math.max(
+        0,
+        Math.min(
+          categories.length-1,
+          Math.floor(
+            Number(data.activeCategory)||0
+          )
+        )
+      );
+
+    state.activeMechanic=
+      Math.max(
+        state.activeCategory*20,
+        Math.min(
+          state.activeCategory*20+19,
+          Math.floor(
+            Number(data.activeMechanic)||
+            state.activeCategory*20
+          )
+        )
+      );
+
+    state.bossMaxHP=
+      Math.max(
+        1000,
+        Number(data.bossMaxHP)||1000
+      );
+
+    state.bossHP=
+      Math.max(
+        0,
+        Math.min(
+          state.bossMaxHP,
+          Number(data.bossHP)||
+          state.bossMaxHP
+        )
+      );
+
+    state.bossesDefeated=
+      Math.max(
+        0,
+        Math.floor(
+          Number(data.bossesDefeated)||0
+        )
+      );
+
+    state.totalPlayTime=
+      Math.max(
+        0,
+        Number(data.totalPlayTime)||0
+      );
+
+    /*
+      Always rebuild the owned array at the
+      exact current upgrade count.
+    */
+
+    state.owned=
+      Array(upgrades.length).fill(0);
+
+    for(
+      let i=0;
+      i<Math.min(
+        upgrades.length,
+        data.owned.length
+      );
+      i++
+    ){
+
+      state.owned[i]=
+        Math.max(
+          0,
+          Math.floor(
+            Number(data.owned[i])||0
+          )
+        );
+    }
+
+    /*
+      Offline earnings.
+      Maximum 12 hours.
+    */
+
+    if(
+      Number.isFinite(
+        Number(data.savedAt)
+      )
+    ){
+
+      const seconds=
+        Math.min(
+          43200,
+          Math.max(
+            0,
+            (Date.now()-
+             Number(data.savedAt))/1000
+          )
+        );
+
+      const offlineIncome=
+        getIncomePerSecond()*
+        seconds*
+        .5;
+
+      if(
+        Number.isFinite(offlineIncome) &&
+        offlineIncome>0
+      ){
+
+        state.coins+=
+          offlineIncome;
+
+        addLog(
+          "🌙 Offline earnings: +"+
+          formatNumber(
+            offlineIncome
+          )+
+          " 🌿"
+        );
       }
-
     }
-  );
 
-$("megaClick")
-  .addEventListener(
-    "click",
-    () => {
+  }catch(error){
 
-      clickFrog(25);
+    console.error(
+      "Load error:",
+      error
+    );
 
-    }
-  );
+    /*
+      Do not leave a corrupted save
+      permanently breaking the game.
+    */
 
-$("critButton")
-  .addEventListener(
-    "click",
-    criticalCroak
-  );
-
-$("rebirthButton")
-  .addEventListener(
-    "click",
-    rebirth
-  );
-
-$("saveButton")
-  .addEventListener(
-    "click",
-    () => saveGame(true)
-  );
-
-$("resetButton")
-  .addEventListener(
-    "click",
-    resetGame
-  );
+    try{
+      localStorage.removeItem(
+        "ultimate-frog-clicker"
+      );
+    }catch(_){}
+  }
+}
 
 /* =========================================================
-   COMBO TIMER
+   RESET
+========================================================= */
+
+function resetGame(){
+
+  const confirmed=
+    window.confirm(
+      "Delete ALL Frog Clicker progress?"
+    );
+
+  if(!confirmed){
+    return;
+  }
+
+  try{
+
+    localStorage.removeItem(
+      "ultimate-frog-clicker"
+    );
+
+  }catch(_){}
+
+  location.reload();
+}
+
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
+
+$("frog").addEventListener(
+  "click",
+  ()=>{
+    clickFrog(1);
+  }
+);
+
+$("frog").addEventListener(
+  "keydown",
+  event=>{
+
+    if(
+      event.key==="Enter" ||
+      event.key===" "
+    ){
+
+      event.preventDefault();
+
+      clickFrog(1);
+    }
+  }
+);
+
+$("megaButton").addEventListener(
+  "click",
+  megaCroak
+);
+
+$("criticalButton").addEventListener(
+  "click",
+  criticalCroak
+);
+
+$("rebirthButton").addEventListener(
+  "click",
+  rebirth
+);
+
+$("bossButton").addEventListener(
+  "click",
+  attackBoss
+);
+
+$("saveButton").addEventListener(
+  "click",
+  ()=>{
+    saveGame(true);
+  }
+);
+
+$("resetButton").addEventListener(
+  "click",
+  resetGame
+);
+
+/* =========================================================
+   COMBO DECAY
 ========================================================= */
 
 setInterval(
-  () => {
-
-    if (
-      state.combo > 0
-    ) {
-
-      state.combo =
+  ()=>{
+    if(state.combo>0){
+      state.combo=
         Math.max(
           0,
-          state.combo - 1
+          state.combo-1
         );
-
     }
-
   },
   1000
 );
@@ -2414,51 +2221,65 @@ setInterval(
    GAME LOOP
 ========================================================= */
 
-let lastTime =
+let lastTime=
   performance.now();
 
-function gameLoop(
-  currentTime
-) {
+function gameLoop(now){
 
-  const delta =
+  /*
+    Clamp delta so the game cannot generate
+    enormous amounts after the browser sleeps.
+  */
+
+  const delta=
     Math.min(
       .25,
       Math.max(
         0,
-        (currentTime -
-          lastTime) /
-          1000
+        (now-lastTime)/1000
       )
     );
 
-  lastTime =
-    currentTime;
+  lastTime=now;
 
-  state.totalPlayTime +=
-    delta;
+  state.totalPlayTime+=delta;
 
-  /* PASSIVE INCOME */
+  /* Passive income */
 
-  state.coins +=
-    getIncomePerSecond() *
-    delta;
+  const income=
+    getIncomePerSecond();
 
-  /* ENERGY */
+  if(
+    Number.isFinite(income) &&
+    income>0
+  ){
 
-  state.energy =
+    state.coins+=
+      income*delta;
+  }
+
+  /* Energy regeneration */
+
+  state.energy=
     Math.min(
       state.maxEnergy,
-      state.energy +
-      delta * 4
+      state.energy+
+      delta*4
     );
 
+  /*
+    IMPORTANT:
+    The game loop ONLY updates values.
+    It NEVER destroys/recreates upgrade buttons.
+  */
+
   updateStats();
+
+  updateButtonStates();
 
   requestAnimationFrame(
     gameLoop
   );
-
 }
 
 requestAnimationFrame(
@@ -2466,161 +2287,154 @@ requestAnimationFrame(
 );
 
 /* =========================================================
-   AUTO SAVE
+   AUTOSAVE
 ========================================================= */
 
 setInterval(
-  () => saveGame(false),
+  ()=>{
+    saveGame(false);
+  },
   10000
 );
 
 /* =========================================================
-   BUG TESTS
-========================================================= */
-
-function runSelfTests() {
-
-  const tests = [
-
-    [
-      "Exactly 330 mechanics",
-      mechanics.length === 330
-    ],
-
-    [
-      "Exactly 3300 items",
-      items.length === 3300
-    ],
-
-    [
-      "10 items per mechanic",
-      items.length ===
-      mechanics.length * 10
-    ],
-
-    [
-      "Owned array matches items",
-      state.owned.length ===
-      items.length
-    ],
-
-    [
-      "All item costs finite",
-      items.every(
-        item =>
-          Number.isFinite(
-            item.baseCost
-          ) &&
-          item.baseCost > 0
-      )
-    ],
-
-    [
-      "All item powers valid",
-      items.every(
-        item =>
-          Number.isFinite(
-            item.power
-          ) &&
-          item.power > 0
-      )
-    ],
-
-    [
-      "Mechanics bar exists",
-      !!$("mechanicsBar")
-    ],
-
-    [
-      "Frog exists",
-      !!$("frog")
-    ],
-
-    [
-      "Items panel exists",
-      !!$("items")
-    ],
-
-    [
-      "Energy system exists",
-      !!$("energyFill")
-    ],
-
-    [
-      "Save button exists",
-      !!$("saveButton")
-    ],
-
-    [
-      "Reset button exists",
-      !!$("resetButton")
-    ]
-
-  ];
-
-  let passed = 0;
-
-  for (
-    const test of tests
-  ) {
-
-    if (
-      test[1]
-    ) {
-
-      passed++;
-
-    } else {
-
-      console.error(
-        "BUG FOUND:",
-        test[0]
-      );
-
-      log(
-        "🐛 BUG: " +
-        test[0]
-      );
-
-    }
-
-  }
-
-  if (
-    passed ===
-    tests.length
-  ) {
-
-    log(
-      "✅ Self-test: " +
-      passed +
-      "/" +
-      tests.length +
-      " tests passed."
-    );
-
-  }
-
-}
-
-/* =========================================================
-   START
+   STARTUP
 ========================================================= */
 
 loadGame();
 
-render();
+renderCategories();
 
-runSelfTests();
+renderMechanics();
 
-log(
-  "🐸 Welcome to Frog Clicker!"
+renderUpgrades();
+
+updateStats();
+
+updateBoss();
+
+addLog(
+  "🐸 Welcome to Ultimate Frog Clicker!"
 );
 
-log(
-  "🧪 330 mechanics and 3300 upgrades loaded."
+addLog(
+  "🌿 "+
+  categories.length+
+  " categories loaded."
 );
 
+addLog(
+  "⚙️ "+
+  mechanics.length+
+  " mechanics loaded."
+);
+
+addLog(
+  "🛒 "+
+  upgrades.length+
+  " upgrades loaded."
+);
+
+/* =========================================================
+   BUILT-IN BUG CHECKS
+========================================================= */
+
+(function runBugChecks(){
+
+  const checks=[];
+
+  checks.push({
+    name:"Categories",
+    pass:
+      categories.length===30
+  });
+
+  checks.push({
+    name:"Mechanics",
+    pass:
+      mechanics.length===600
+  });
+
+  checks.push({
+    name:"Upgrades",
+    pass:
+      upgrades.length===900
+  });
+
+  checks.push({
+    name:"Owned array",
+    pass:
+      state.owned.length===
+      upgrades.length
+  });
+
+  checks.push({
+    name:"Upgrade panel",
+    pass:
+      Boolean($("upgrades"))
+  });
+
+  checks.push({
+    name:"Frog",
+    pass:
+      Boolean($("frog"))
+  });
+
+  checks.push({
+    name:"Category bar",
+    pass:
+      Boolean($("categoryTabs"))
+  });
+
+  checks.push({
+    name:"Mechanic bar",
+    pass:
+      Boolean($("mechanicTabs"))
+  });
+
+  const failed=
+    checks.filter(
+      check=>!check.pass
+    );
+
+  if(failed.length){
+
+    console.error(
+      "🐸 BUG CHECK FAILED:",
+      failed
+    );
+
+  }else{
+
+    console.log(
+      "🐸 BUG CHECK PASSED"
+    );
+
+    console.log(
+      "Categories:",
+      categories.length
+    );
+
+    console.log(
+      "Mechanics:",
+      mechanics.length
+    );
+
+    console.log(
+      "Upgrades:",
+      upgrades.length
+    );
+
+    console.log(
+      "Upgrade buttons use stable IDs."
+    );
+
+    console.log(
+      "Game loop does not rebuild buttons."
+    );
+  }
+
+})();
 </script>
 
 </body>
