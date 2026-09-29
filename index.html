@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frog Clicker: 200 Things</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,sans-serif;color:#17351d;
+  background:linear-gradient(#8ee8a0,#d9f7a8);
+  min-height:100vh;
+}
+header{
+  text-align:center;background:#256b36;color:white;padding:18px;
+  box-shadow:0 4px 15px #0003;
+}
+h1{margin:0 0 8px}
+#stats{font-size:20px}
+main{
+  max-width:1200px;margin:auto;padding:20px;
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+}
+.panel{
+  background:#ffffffd9;border-radius:20px;padding:18px;
+  box-shadow:0 8px 25px #0002;
+}
+#frogArea{text-align:center;grid-row:span 2}
+#frog{
+  width:300px;height:300px;margin:30px auto;
+  border-radius:50%;background:#59c957;
+  border:12px solid #287d32;
+  position:relative;cursor:pointer;
+  box-shadow:inset 0 -20px #42a844,0 15px 30px #0003;
+  transition:.08s;
+}
+#frog:active{transform:scale(.91)}
+.eye{
+  position:absolute;width:75px;height:75px;background:#75df6e;
+  border:7px solid #287d32;border-radius:50%;top:-35px;
+}
+.eye:after{
+  content:"";position:absolute;width:22px;height:35px;
+  background:#111;border-radius:50%;left:20px;top:14px;
+}
+.eye.left{left:35px}.eye.right{right:35px}
+.mouth{
+  position:absolute;width:120px;height:55px;
+  border-bottom:10px solid #194d22;border-radius:50%;
+  left:78px;top:155px;
+}
+button{
+  border:0;border-radius:12px;padding:10px 14px;
+  background:#48ad52;color:white;font-weight:bold;cursor:pointer;
+}
+button:hover{filter:brightness(1.08)}
+button:disabled{background:#aaa;cursor:not-allowed}
+.shop{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  max-height:500px;overflow:auto;
+}
+.item{
+  padding:10px;background:#e8f9dc;border:2px solid #b8dda9;
+  border-radius:12px;
+}
+.item b{display:block}
+.item small{display:block;margin:4px 0}
+#log{
+  height:100px;overflow:auto;background:#17351d;color:#d9ffd9;
+  border-radius:10px;padding:10px;font-family:monospace;
+}
+.badge{
+  display:inline-block;background:#ffd84d;color:#563e00;
+  padding:5px 8px;border-radius:20px;margin:3px;font-size:12px;
+}
+@media(max-width:800px){main{grid-template-columns:1fr}.shop{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🐸 FROG CLICKER 🐸</h1>
+  <div id="stats">🍃 0 flies | 🐸 1 click power | ⚡ 0 frogs/sec</div>
+</header>
+
+<main>
+
+<section class="panel" id="frogArea">
+  <h2>Click the Frog!</h2>
+  <div id="frog">
+    <div class="eye left"></div>
+    <div class="eye right"></div>
+    <div class="mouth"></div>
+  </div>
+  <div id="combo">Combo: x1</div>
+  <div id="log"></div>
+</section>
+
+<section class="panel">
+  <h2>🛒 Shop — 100 Items</h2>
+  <div class="shop" id="shop"></div>
+</section>
+
+<section class="panel">
+  <h2>🏆 100 Achievements</h2>
+  <div id="achievements"></div>
+</section>
+
+</main>
+
+<script>
+/* =========================================================
+   FROG CLICKER
+   200 things:
+   - 100 shop upgrades
+   - 100 achievements
+   ========================================================= */
+
+let flies = 0;
+let power = 1;
+let frogsPerSecond = 0;
+let combo = 1;
+let clicks = 0;
+let bestCombo = 1;
+
+const frog = document.getElementById("frog");
+const stats = document.getElementById("stats");
+const shop = document.getElementById("shop");
+const achievementsBox = document.getElementById("achievements");
+const logBox = document.getElementById("log");
+
+const upgrades = [];
+const achievements = [];
+
+/* -------------------------
+   100 SHOP ITEMS
+------------------------- */
+
+const itemNames = [
+"Fly Snack","Tiny Lily Pad","Lucky Fly","Frog Hat","Mud Pie",
+"Bug Jar","Small Pond","Grass Patch","Dragonfly","Blue Fly",
+"Red Fly","Golden Fly","Fly Sandwich","Mega Lily","Frog Boots",
+"Rain Cloud","Tiny Crown","Mosquito Friend","Worm Buddy","Cricket Buddy",
+"Frog Bell","Pond Rock","Reed Bundle","Bubble Maker","Duck Friend",
+"Water Flower","Mushroom Patch","Cool Sunglasses","Frog Cape","Royal Pad",
+"Magic Fly","Golden Lily","Moon Pond","Sun Pond","Rain Boots",
+"Super Tongue","Turbo Legs","Mega Croak","Frog Radio","Pond DJ",
+"Bug Farm","Fly Factory","Lily Factory","Croak Machine","Mud Factory",
+"Frog Robot","Golden Pond","Rainbow Pond","Cloud Frog","Thunder Frog",
+"Crystal Fly","Crystal Pond","Diamond Lily","Diamond Tongue","Space Frog",
+"Moon Frog","Mars Frog","Alien Fly","UFO Pond","Galaxy Lily",
+"Cosmic Tongue","Star Frog","Black Hole Fly","Nebula Pond","Comet Frog",
+"Time Frog","Future Pond","Robot Fly","Laser Tongue","Cyber Lily",
+"Quantum Frog","Infinity Pond","Infinity Fly","God Frog","Mythic Lily",
+"Ancient Frog","Dragon Frog","Phoenix Frog","Wizard Frog","Ninja Frog",
+"Samurai Frog","Pirate Frog","Knight Frog","King Frog","Emperor Frog",
+"Universe Frog","Multiverse Pond","Reality Tongue","Dimension Fly","Portal Frog",
+"Ultimate Lily","Mega Tongue","Mega Pond","Mega Fly","Frog Empire",
+"Frog Planet","Frog Galaxy","Frog Universe","Frog Multiverse","Frog Forever"
+];
+
+for(let i=0;i<100;i++){
+  upgrades.push({
+    name:itemNames[i],
+    cost:Math.floor(10*Math.pow(1.17,i)),
+    click:i%3===0 ? Math.max(1,Math.floor(i/2)+1) : 0,
+    passive:i%3!==0 ? Math.max(1,Math.floor(i/3)+1) : 0,
+    bought:0
+  });
+}
+
+/* -------------------------
+   100 ACHIEVEMENTS
+------------------------- */
+
+const achievementNames = [
+"First Hop","First Fly","Tiny Frog","Ten Clicks","Twenty Clicks",
+"Thirty Clicks","Forty Clicks","Fifty Clicks","Hundred Clicks","Big Croak",
+"Two Hundred","Three Hundred","Four Hundred","Five Hundred","Thousand Clicks",
+"Two Thousand","Five Thousand","Ten Thousand","Twenty Thousand","Frog Addict",
+"Ten Flies","Hundred Flies","Thousand Flies","Ten Thousand Flies","Fly Collector",
+"Small Fortune","Nice Fortune","Big Fortune","Huge Fortune","Millionaire Frog",
+"First Upgrade","Five Upgrades","Ten Upgrades","Twenty Upgrades","Thirty Upgrades",
+"Forty Upgrades","Fifty Upgrades","Sixty Upgrades","Seventy Upgrades","Eighty Upgrades",
+"Ninety Upgrades","Upgrade Master","Combo 5","Combo 10","Combo 20",
+"Combo 30","Combo 40","Combo 50","Combo 75","Combo 100",
+"Fast Frog","Speedy Frog","Turbo Frog","Rocket Frog","Lightning Frog",
+"Rainy Frog","Sunny Frog","Night Frog","Moon Frog","Star Frog",
+"Golden Frog","Diamond Frog","Crystal Frog","Cosmic Frog","Space Frog",
+"Robot Frog","Wizard Frog","Ninja Frog","Pirate Frog","King Frog",
+"Million Clicks","Two Million","Five Million","Ten Million","Click Legend",
+"100 Frogs/Sec","250 Frogs/Sec","500 Frogs/Sec","1000 Frogs/Sec","5000 Frogs/Sec",
+"Passive Master","Halfway There","Almost There","Upgrade Collector","Shopaholic",
+"All Green","Pond Boss","Mega Croak","Ultra Croak","Supreme Croak",
+"Frog Emperor","Frog God","Frog Universe","Frog Multiverse","Frog Forever"
+];
+
+const achievementThresholds = [
+1,1,5,10,20,30,40,50,100,150,
+200,300,400,500,1000,2000,5000,10000,20000,50000,
+10,100,1000,10000,50000,
+100,1000,10000,100000,1000000,
+1,5,10,20,30,40,50,60,70,80,90,100,
+5,10,20,30,40,50,75,100,
+10,25,50,100,250,
+1,10,25,50,100,
+1,10,25,50,100,
+1,5,10,25,50,
+1000000,2000000,5000000,10000000,50000000,
+100,250,500,1000,5000,
+50,50,90,100,100,
+1,1,1,1,1,
+1,1,1,1,1
+];
+
+for(let i=0;i<100;i++){
+  achievements.push({
+    name:achievementNames[i],
+    target:achievementThresholds[i] || (i+1)*100,
+    unlocked:false
+  });
+}
+
+/* -------------------------
+   CLICKING
+------------------------- */
+
+let lastClick = 0;
+
+frog.onclick = () => {
+  const now = Date.now();
+
+  if(now-lastClick < 800){
+    combo = Math.min(combo+1,100);
+  }else{
+    combo = 1;
+  }
+
+  lastClick = now;
+  bestCombo = Math.max(bestCombo,combo);
+
+  const earned = power * combo;
+  flies += earned;
+  clicks++;
+
+  log("+"+earned+" 🍃");
+  render();
+  checkAchievements();
+};
+
+/* -------------------------
+   SHOP
+------------------------- */
+
+function buy(i){
+  const u = upgrades[i];
+
+  if(flies < u.cost) return;
+
+  flies -= u.cost;
+
+  if(u.click){
+    power += u.click;
+    log("Bought "+u.name+"! +" + u.click + " click power");
+  }
+
+  if(u.passive){
+    frogsPerSecond += u.passive;
+    log("Bought "+u.name+"! +" + u.passive + " frogs/sec");
+  }
+
+  u.bought++;
+  u.cost = Math.floor(u.cost*1.25);
+
+  render();
+  checkAchievements();
+}
+
+function renderShop(){
+  shop.innerHTML="";
+
+  upgrades.forEach((u,i)=>{
+    const div=document.createElement("div");
+    div.className="item";
+
+    div.innerHTML=`
+      <b>${i+1}. ${u.name}</b>
+      <small>
+        ${u.click ? "+"+u.click+" click power" : ""}
+        ${u.passive ? "+"+u.passive+" frogs/sec" : ""}
+      </small>
+      <small>Owned: ${u.bought}</small>
+      <button onclick="buy(${i})">
+        🍃 ${format(u.cost)}
+      </button>
+    `;
+
+    shop.appendChild(div);
+  });
+}
+
+/* -------------------------
+   ACHIEVEMENTS
+------------------------- */
+
+function achievementProgress(i){
+  const a=achievements[i];
+
+  if(i===0) return clicks;
+  if(i>=1 && i<=18) return clicks;
+
+  if(i>=20 && i<=24) return flies;
+
+  if(i>=30 && i<=41)
+    return upgrades.reduce((s,u)=>s+u.bought,0);
+
+  if(i>=42 && i<=50)
+    return bestCombo;
+
+  if(i>=51 && i<=55)
+    return frogsPerSecond;
+
+  if(i>=56 && i<=60)
+    return upgrades.filter(u=>u.bought>0).length;
+
+  if(i>=61 && i<=65)
+    return upgrades.filter(u=>u.bought>0).length;
+
+  if(i>=66 && i<=69)
+    return upgrades.filter(u=>u.bought>0).length;
+
+  if(i>=70 && i<=74)
+    return clicks;
+
+  if(i>=75 && i<=79)
+    return frogsPerSecond;
+
+  if(i>=80 && i<=84)
+    return upgrades.reduce((s,u)=>s+u.bought,0);
+
+  return flies;
+}
+
+function checkAchievements(){
+  achievements.forEach((a,i)=>{
+    if(!a.unlocked && achievementProgress(i)>=a.target){
+      a.unlocked=true;
+      log("🏆 ACHIEVEMENT: "+a.name);
+    }
+  });
+
+  renderAchievements();
+}
+
+function renderAchievements(){
+  achievementsBox.innerHTML="";
+
+  achievements.forEach((a,i)=>{
+    const progress=Math.min(achievementProgress(i),a.target);
+
+    const span=document.createElement("span");
+    span.className="badge";
+    span.style.opacity=a.unlocked?"1":".4";
+
+    span.textContent=
+      (a.unlocked?"🏆 ":"🔒 ")+
+      a.name+" "+
+      format(progress)+"/"+format(a.target);
+
+    achievementsBox.appendChild(span);
+  });
+}
+
+/* -------------------------
+   PASSIVE INCOME
+------------------------- */
+
+setInterval(()=>{
+  if(frogsPerSecond>0){
+    flies += frogsPerSecond;
+    render();
+    checkAchievements();
+  }
+},1000);
+
+/* -------------------------
+   SAVE / LOAD
+------------------------- */
+
+function save(){
+  localStorage.setItem("frogClickerSave",JSON.stringify({
+    flies,power,frogsPerSecond,combo,clicks,bestCombo,
+    upgrades,achievements
+  }));
+}
+
+function load(){
+  const data=localStorage.getItem("frogClickerSave");
+
+  if(!data)return;
+
+  try{
+    const s=JSON.parse(data);
+
+    flies=s.flies||0;
+    power=s.power||1;
+    frogsPerSecond=s.frogsPerSecond||0;
+    combo=s.combo||1;
+    clicks=s.clicks||0;
+    bestCombo=s.bestCombo||1;
+
+    if(s.upgrades){
+      s.upgrades.forEach((x,i)=>{
+        if(upgrades[i]){
+          upgrades[i].cost=x.cost;
+          upgrades[i].bought=x.bought;
+        }
+      });
+    }
+
+    if(s.achievements){
+      s.achievements.forEach((x,i)=>{
+        if(achievements[i])
+          achievements[i].unlocked=x.unlocked;
+      });
+    }
+  }catch(e){}
+}
+
+setInterval(save,5000);
+
+/* -------------------------
+   UI
+------------------------- */
+
+function format(n){
+  if(n<1000)return Math.floor(n);
+
+  const units=["K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
+  let x=n;
+  let unit=0;
+
+  while(x>=1000 && unit<units.length){
+    x/=1000;
+    unit++;
+  }
+
+  return x.toFixed(x>=100?0:x>=10?1:2)+units[unit-1];
+}
+
+function log(message){
+  const line=document.createElement("div");
+  line.textContent="> "+message;
+  logBox.prepend(line);
+
+  while(logBox.children.length>30)
+    logBox.removeChild(logBox.lastChild);
+}
+
+function render(){
+  stats.textContent=
+    "🍃 "+format(flies)+
+    " flies | 🐸 "+
+    format(power)+
+    " click power | ⚡ "+
+    format(frogsPerSecond)+
+    " frogs/sec";
+
+  document.getElementById("combo").textContent=
+    "Combo: x"+combo;
+
+  document.querySelectorAll(".item button").forEach((button,i)=>{
+    button.disabled=flies<upgrades[i].cost;
+  });
+}
+
+/* -------------------------
+   VISUAL EFFECTS
+------------------------- */
+
+frog.addEventListener("click",()=>{
+  const splash=document.createElement("div");
+
+  splash.textContent="💚";
+  splash.style.position="fixed";
+  splash.style.left=(Math.random()*80+10)+"%";
+  splash.style.top=(Math.random()*70+10)+"%";
+  splash.style.fontSize=(20+Math.random()*30)+"px";
+  splash.style.pointerEvents="none";
+  splash.style.transition="1s";
+
+  document.body.appendChild(splash);
+
+  setTimeout(()=>{
+    splash.style.transform="translateY(-100px)";
+    splash.style.opacity="0";
+  },10);
+
+  setTimeout(()=>splash.remove(),1000);
+});
+
+/* -------------------------
+   START
+------------------------- */
+
+load();
+renderShop();
+renderAchievements();
+render();
+
+log("Welcome to Frog Clicker!");
+log("There are exactly 200 things to collect!");
+</script>
+
+</body>
+</html>
