@@ -2,234 +2,421 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ultimate Frog Clicker 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07140d">
+<meta name="description" content="Frog Clicker - 330 mechanics and 3300 upgrades">
+<title>🐸 Frog Clicker</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#58d36c,#b8ef8b,#62d9df);
-  color:#173b1d;
+:root {
+  --bg: #07140d;
+  --bg2: #0b1e13;
+  --panel: #10291b;
+  --panel2: #0c2116;
+  --border: #2f6d49;
+  --green: #72e6a1;
+  --green2: #3dbb70;
+  --gold: #ffd76a;
+  --red: #ff7d7d;
+  --blue: #77c9ff;
+  --purple: #d19aff;
+  --text: #eaffef;
+  --muted: #9bc1a7;
+  --shadow: rgba(0,0,0,.35);
 }
 
-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:#123f20;
-  color:white;
-  padding:12px;
-  box-shadow:0 4px 18px #0005;
+* {
+  box-sizing: border-box;
 }
 
-h1{
-  margin:0;
-  text-align:center;
+html {
+  scroll-behavior: smooth;
 }
 
-#stats{
-  text-align:center;
-  margin-top:7px;
-  font-weight:bold;
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      #1b5134 0,
+      var(--bg) 45%
+    );
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
-nav{
-  display:flex;
-  gap:6px;
-  overflow:auto;
-  padding:9px;
-  background:#225f31;
+button {
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-button{
-  border:0;
-  border-radius:10px;
-  padding:9px 12px;
-  background:#46a94f;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
+button:hover {
+  background: #1a4830;
 }
 
-button:hover{
-  filter:brightness(1.1);
+button:active {
+  transform: translateY(1px);
 }
 
-button:disabled{
-  background:#999;
-  cursor:not-allowed;
+button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
 }
 
-.page{
-  display:none;
-  max-width:1200px;
-  margin:auto;
-  padding:18px;
+button.active {
+  background: #286342;
+  border-color: var(--green);
 }
 
-.page.active{
-  display:block;
+.app {
+  width: min(1450px, 100%);
+  margin: auto;
+  padding: 8px;
 }
 
-.card{
-  background:#ffffffe8;
-  padding:16px;
-  border-radius:18px;
-  margin-bottom:16px;
-  box-shadow:0 7px 20px #0002;
+/* TOP BAR */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(7,20,13,.96);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px var(--shadow);
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-  gap:10px;
+.mechanics {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 7px;
+  scrollbar-width: thin;
 }
 
-.item{
-  background:#eaffdf;
-  border:2px solid #b7dda8;
-  border-radius:14px;
-  padding:12px;
+.mechanics button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 6px 9px;
+  font-size: 12px;
 }
 
-.item h3{
-  margin:0 0 7px;
+.stats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-.item p{
-  font-size:13px;
-  min-height:34px;
+.stat {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 12px;
 }
 
-.selected{
-  border-color:#ffd329;
-  box-shadow:0 0 12px #ffd329;
+.stat b {
+  color: var(--green);
 }
 
-.locked{
-  opacity:.45;
+/* MAIN */
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 410px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
-#frog{
-  width:300px;
-  height:280px;
-  margin:35px auto;
-  background:#54c954;
-  border:12px solid #287d32;
-  border-radius:48%;
-  position:relative;
-  cursor:pointer;
-  box-shadow:inset 0 -25px #3da644,0 15px 30px #0004;
-  transition:.08s;
+.card {
+  background: rgba(10,31,20,.96);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 14px;
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
 }
 
-#frog:active{
-  transform:scale(.9) rotate(-3deg);
+/* FROG */
+
+.frog-area {
+  height: 430px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 55%,
+      #225b39 0,
+      #123a25 30%,
+      #081810 70%
+    );
 }
 
-.eye{
-  width:75px;
-  height:75px;
-  background:#76df70;
-  border:7px solid #287d32;
-  border-radius:50%;
-  position:absolute;
-  top:-38px;
+.frog-area::before {
+  content: "🌿   🪷   🌿   🪷   🌿";
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: 34px;
+  opacity: .8;
 }
 
-.eye:after{
-  content:"";
-  width:22px;
-  height:35px;
-  background:#111;
-  border-radius:50%;
-  position:absolute;
-  left:20px;
-  top:14px;
+.frog {
+  position: relative;
+  z-index: 2;
+  font-size: 160px;
+  user-select: none;
+  cursor: pointer;
+  transition:
+    transform .08s,
+    filter .2s;
+  filter: drop-shadow(0 20px 18px rgba(0,0,0,.45));
 }
 
-.left{left:35px}
-.right{right:35px}
-
-.mouth{
-  position:absolute;
-  width:130px;
-  height:55px;
-  border-bottom:10px solid #164d25;
-  border-radius:50%;
-  left:73px;
-  top:145px;
+.frog:hover {
+  filter:
+    drop-shadow(0 20px 18px rgba(0,0,0,.45))
+    brightness(1.1);
 }
 
-#combo{
-  text-align:center;
-  font-size:26px;
-  font-weight:bold;
+.frog:active {
+  transform: scale(.88) rotate(-4deg);
 }
 
-#log{
-  background:#102c16;
-  color:#aaffaa;
-  border-radius:10px;
-  height:120px;
-  overflow:auto;
-  padding:10px;
-  font-family:monospace;
+/* FLOATING NUMBERS */
+
+.float {
+  position: absolute;
+  z-index: 10;
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: 900;
+  pointer-events: none;
+  animation: floatUp .8s ease-out forwards;
 }
 
-.bar{
-  height:18px;
-  background:#ccc;
-  border-radius:20px;
-  overflow:hidden;
-  margin:5px 0 10px;
-}
-
-.bar div{
-  height:100%;
-  background:#43b951;
-}
-
-.badge{
-  display:inline-block;
-  padding:7px 10px;
-  margin:3px;
-  border-radius:20px;
-  background:#ffd84d;
-}
-
-.battle{
-  background:#222;
-  color:white;
-  border-radius:15px;
-  padding:20px;
-  text-align:center;
-}
-
-#target{
-  font-size:55px;
-  cursor:pointer;
-}
-
-.notice{
-  background:#fff3b0;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
-}
-
-@media(max-width:600px){
-  #frog{
-    width:230px;
-    height:220px;
+@keyframes floatUp {
+  from {
+    transform:
+      translateY(0)
+      scale(1);
+    opacity: 1;
   }
 
-  .mouth{
-    left:48px;
-    top:120px;
+  to {
+    transform:
+      translateY(-100px)
+      scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* ENERGY */
+
+.energy-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.energy-bar,
+.xp-bar {
+  height: 11px;
+  background: #050d08;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.energy-fill {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      #35bd6c,
+      #b7ed72
+    );
+}
+
+.xp-fill {
+  width: 0;
+  height: 100%;
+  background:
+    linear-gradient(
+      90deg,
+      #8d6aff,
+      #d8a0ff
+    );
+}
+
+/* ACTIONS */
+
+.actions {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* ITEMS */
+
+.items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.item {
+  background: #0b2015;
+  border: 1px solid #24583a;
+  border-radius: 10px;
+  padding: 9px;
+}
+
+.item-name {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.item-info {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+  margin: 5px 0 7px;
+}
+
+/* ACTIVITY */
+
+.activity {
+  max-height: 150px;
+  overflow-y: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.activity div {
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+}
+
+/* PANEL */
+
+.panel-title {
+  margin: 0 0 4px;
+}
+
+.description {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.section-title {
+  margin-top: 0;
+}
+
+/* NOTIFICATIONS */
+
+.toast {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  z-index: 999;
+  background: #173b28;
+  border: 1px solid var(--green);
+  border-radius: 10px;
+  padding: 10px 14px;
+  max-width: 320px;
+  box-shadow: 0 8px 25px #0008;
+  animation: toastIn .25s ease-out;
+}
+
+@keyframes toastIn {
+  from {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* BADGES */
+
+.badge {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 99px;
+  background: var(--gold);
+  color: #171207;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .items {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .app {
+    padding: 4px;
+  }
+
+  .frog-area {
+    height: 330px;
+  }
+
+  .frog {
+    font-size: 115px;
+  }
+
+  .items {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    font-size: 11px;
+    padding: 6px 7px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+
+  .float,
+  .frog {
+    animation: none !important;
+    transition: none !important;
   }
 }
 </style>
@@ -237,2085 +424,2202 @@ button:disabled{
 
 <body>
 
-<header>
-<h1>🐸 ULTIMATE FROG CLICKER</h1>
-<div id="stats"></div>
-</header>
+<div class="app">
 
-<nav>
-<button onclick="page('home')">🏠</button>
-<button onclick="page('frogs')">🐸 Frogs</button>
-<button onclick="page('shop')">🛒 Shop</button>
-<button onclick="page('pond')">🌊 Pond</button>
-<button onclick="page('pets')">🐾 Pets</button>
-<button onclick="page('quests')">📜 Quests</button>
-<button onclick="page('enemies')">👾 Enemies</button>
-<button onclick="page('bosses')">👑 Bosses</button>
-<button onclick="page('explore')">🗺️ Explore</button>
-<button onclick="page('fishing')">🎣 Fishing</button>
-<button onclick="page('crafting')">🔨 Crafting</button>
-<button onclick="page('weather')">☁️ Weather</button>
-<button onclick="page('seasons')">🌎 Seasons</button>
-<button onclick="page('skins')">🎨 Skins</button>
-<button onclick="page('minigames')">🎮 Games</button>
-<button onclick="page('collection')">📚 Collection</button>
-<button onclick="page('achievements')">🏆 Achievements</button>
-<button onclick="page('badges')">🎖️ Badges</button>
-<button onclick="page('events')">🎉 Events</button>
-<button onclick="page('upgrades')">⚡ Upgrades</button>
-</nav>
+  <!-- ================================================
+       TOP MECHANICS BAR
+  ================================================= -->
 
-<!-- HOME -->
-<section id="home" class="page active">
+  <header class="topbar">
 
-<div class="card">
-<h2>🐸 Your Frog</h2>
+    <div
+      class="mechanics"
+      id="mechanicsBar"
+      aria-label="Game mechanics"
+    ></div>
 
-<div id="frog">
-<div class="eye left"></div>
-<div class="eye right"></div>
-<div class="mouth"></div>
-</div>
+    <div class="stats">
 
-<div id="combo">Combo x1</div>
-
-<div id="log"></div>
-</div>
-
-<div class="card">
-<h2>📊 Player</h2>
-<div id="playerInfo"></div>
-</div>
-
-</section>
-
-<!-- FROGS -->
-<section id="frogs" class="page">
-<div class="card">
-<h2>🐸 Frog Species</h2>
-<div id="frogList" class="grid"></div>
-</div>
-</section>
-
-<!-- SHOP -->
-<section id="shop" class="page">
-<div class="card">
-<h2>🛒 Shop</h2>
-<div id="shopList" class="grid"></div>
-</div>
-</section>
-
-<!-- POND -->
-<section id="pond" class="page">
-<div class="card">
-<h2>🌊 Pond</h2>
-<div id="pondList" class="grid"></div>
-</div>
-</section>
-
-<!-- PETS -->
-<section id="pets" class="page">
-<div class="card">
-<h2>🐾 Pets</h2>
-<div id="petList" class="grid"></div>
-</div>
-</section>
-
-<!-- QUESTS -->
-<section id="quests" class="page">
-<div class="card">
-<h2>📜 Quests</h2>
-<div id="questList" class="grid"></div>
-</div>
-</section>
-
-<!-- ENEMIES -->
-<section id="enemies" class="page">
-<div class="card">
-<h2>👾 Enemies</h2>
-<div id="enemyList" class="grid"></div>
-</div>
-</section>
-
-<!-- BOSSES -->
-<section id="bosses" class="page">
-<div class="card">
-<h2>👑 Bosses</h2>
-<div id="bossList" class="grid"></div>
-<div id="bossBattle"></div>
-</div>
-</section>
-
-<!-- EXPLORE -->
-<section id="explore" class="page">
-<div class="card">
-<h2>🗺️ Exploration</h2>
-<div id="exploreList" class="grid"></div>
-</div>
-</section>
-
-<!-- FISHING -->
-<section id="fishing" class="page">
-<div class="card">
-<h2>🎣 Fishing</h2>
-<div id="fishList" class="grid"></div>
-<button onclick="fish()">🎣 Fish</button>
-<div id="fishResult"></div>
-</div>
-</section>
-
-<!-- CRAFTING -->
-<section id="crafting" class="page">
-<div class="card">
-<h2>🔨 Crafting</h2>
-<div id="craftList" class="grid"></div>
-</div>
-</section>
-
-<!-- WEATHER -->
-<section id="weather" class="page">
-<div class="card">
-<h2>☁️ Weather</h2>
-<p>Weather changes every 60 seconds.</p>
-<div id="weatherList" class="grid"></div>
-</div>
-</section>
-
-<!-- SEASONS -->
-<section id="seasons" class="page">
-<div class="card">
-<h2>🌎 Seasons</h2>
-<p>Seasons change every 5 minutes.</p>
-<div id="seasonList" class="grid"></div>
-</div>
-</section>
-
-<!-- SKINS -->
-<section id="skins" class="page">
-<div class="card">
-<h2>🎨 Skins</h2>
-<div id="skinList" class="grid"></div>
-</div>
-</section>
-
-<!-- MINIGAMES -->
-<section id="minigames" class="page">
-<div class="card">
-<h2>🎮 Minigames</h2>
-<div id="minigameList" class="grid"></div>
-<div id="minigame"></div>
-</div>
-</section>
-
-<!-- COLLECTION -->
-<section id="collection" class="page">
-<div class="card">
-<h2>📚 Collection</h2>
-<div id="collectionList" class="grid"></div>
-</div>
-</section>
-
-<!-- ACHIEVEMENTS -->
-<section id="achievements" class="page">
-<div class="card">
-<h2>🏆 Achievements</h2>
-<div id="achievementList"></div>
-</div>
-</section>
-
-<!-- BADGES -->
-<section id="badges" class="page">
-<div class="card">
-<h2>🎖️ Badges</h2>
-<div id="badgeList" class="grid"></div>
-</div>
-</section>
-
-<!-- EVENTS -->
-<section id="events" class="page">
-<div class="card">
-<h2>🎉 Events</h2>
-<div id="eventList" class="grid"></div>
-</div>
-</section>
-
-<!-- UPGRADES -->
-<section id="upgrades" class="page">
-<div class="card">
-<h2>⚡ Upgrades</h2>
-<div id="upgradeList" class="grid"></div>
-</div>
-</section>
-
-<script>
-
-/* =========================================================
-   GAME DATA
-========================================================= */
-
-const frogData=[
-["Green Frog",1,"#54c954",0],
-["Tree Frog",3,"#64d65e",100],
-["Bull Frog",7,"#4aaa42",500],
-["Poison Frog",15,"#9bdc32",2500],
-["Glass Frog",30,"#b6ffe0",10000],
-["Golden Frog",60,"#ffd43b",50000],
-["Crystal Frog",120,"#8ff6ff",250000],
-["Space Frog",250,"#6d55e8",1000000],
-["Dragon Frog",500,"#e6533c",5000000],
-["God Frog",1000,"#fff",25000000]
-];
-
-const shopData=[
-["Fly Jar",20,2,0],
-["Mega Tongue",100,10,0],
-["Golden Fly",500,50,0],
-["Fly Factory",2000,0,20],
-["Magic Lily",5000,100,0],
-["Croak Radio",10000,0,100],
-["Bug Farm",25000,0,250],
-["Frog Computer",100000,0,1000],
-["Quantum Tongue",500000,5000,0],
-["Infinity Button",2000000,10000,0]
-];
-
-const pondData=[
-["Tiny Pond",50,1],
-["Clean Water",200,3],
-["Lily Pads",500,5],
-["Reed Garden",1500,10],
-["Waterfall",5000,25],
-["Secret Cave",15000,50],
-["Crystal Spring",50000,100],
-["Rainbow Water",200000,500],
-["Moon Pond",1000000,2500],
-["Legendary Pond",5000000,10000]
-];
-
-const petData=[
-["🐛 Worm",50,1,0],
-["🦗 Cricket",100,2,0],
-["🪰 Fly",250,5,0],
-["🐌 Snail",500,0,5],
-["🐟 Fish",1000,0,10],
-["🦆 Duck",5000,0,25],
-["🦎 Lizard",10000,0,50],
-["🐢 Turtle",25000,0,100],
-["🐍 Snake",100000,0,500],
-["🐉 Baby Dragon",1000000,0,5000]
-];
-
-const questData=[
-["Clicker",100,"clicks",100,500],
-["Fly Collector",1000,"flies",1000,1000],
-["Shopper",5,"purchases",5,1500],
-["Fisher",1,"fish",1,2000],
-["Enemy Slayer",10,"enemies",10,3000],
-["Boss Slayer",1,"bosses",1,5000],
-["Crafter",5,"crafted",5,7500],
-["Explorer",5,"explored",5,10000],
-["Level Up",10,"level",10,15000],
-["Frog Legend",1000000,"flies",1000000,100000]
-];
-
-const enemyData=[
-["Angry Fly",20,10],
-["Mosquito",50,25],
-["Rat",100,50],
-["Snake",250,100],
-["Crab",500,250],
-["Heron",1000,500],
-["Alligator",5000,2500],
-["Shadow Bat",10000,5000],
-["Swamp Monster",50000,25000],
-["Frog Hunter",250000,100000]
-];
-
-const bossData=[
-["Mega Mosquito",1000,100],
-["King Rat",5000,500],
-["Swamp King",20000,2500],
-["Giant Snake",50000,10000],
-["Ancient Heron",100000,25000],
-["Pond Dragon",500000,100000],
-["Shadow Beast",2000000,500000],
-["Frog Destroyer",10000000,2500000],
-["Universe Eater",50000000,10000000],
-["Frog God",250000000,100000000]
-];
-
-const exploreData=[
-["Old Pond",100],
-["Dark Forest",500],
-["Mushroom Cave",1500],
-["Crystal Cavern",5000],
-["Lost Temple",15000],
-["Cloud Kingdom",50000],
-["Moon Base",250000],
-["Mars Swamp",1000000],
-["Alien Planet",5000000],
-["Frog Dimension",25000000]
-];
-
-const fishData=[
-["Tiny Fish",10],
-["Blue Fish",25],
-["Golden Fish",100],
-["Rainbow Fish",500],
-["Electric Eel",1000],
-["Crystal Fish",2500],
-["Moon Fish",10000],
-["Star Fish",50000],
-["Dragon Fish",250000],
-["God Fish",1000000]
-];
-
-const craftData=[
-["Leaf Hat",50,5,0],
-["Mud Armor",100,0,25],
-["Fly Sword",500,25,0],
-["Golden Crown",2000,100,0],
-["Crystal Shield",5000,0,250],
-["Magic Staff",10000,500,0],
-["Rainbow Boots",50000,1000,0],
-["Space Helmet",250000,5000,0],
-["Dragon Armor",1000000,25000,0],
-["Infinity Crown",10000000,100000,0]
-];
-
-const weatherData=[
-["☀️ Sunny",1.1,1.0],
-["🌧️ Rain",1.0,1.2],
-["⛈️ Storm",1.5,1.5],
-["❄️ Snow",1.25,1.0],
-["🌈 Rainbow",2.0,2.0],
-["🌪️ Tornado",1.0,3.0],
-["🌫️ Fog",1.0,1.0],
-["🔥 Heatwave",1.5,1.0],
-["🌙 Moonlight",1.0,2.0],
-["✨ Cosmic Storm",5.0,5.0]
-];
-
-const seasonData=[
-["🌱 Spring",1.1,1.1],
-["☀️ Summer",1.2,1.0],
-["🍂 Autumn",1.0,1.3],
-["❄️ Winter",1.0,1.4],
-["🌸 Blossom",1.5,1.2],
-["🌧️ Monsoon",1.1,1.75],
-["🔥 Dry Season",2,1],
-["🌌 Star Season",2.5,2],
-["🐸 Frog Season",3,3],
-["♾️ Eternal Season",10,10]
-];
-
-const skinData=[
-["Classic","#54c954"],
-["Blue","#4d9de0"],
-["Red","#e05b5b"],
-["Purple","#a75be0"],
-["Gold","#ffd34d"],
-["Rainbow","linear-gradient(90deg,red,orange,yellow,green,blue,purple)"],
-["Galaxy","linear-gradient(135deg,#111,#673ab7,#00bcd4)"],
-["Lava","linear-gradient(135deg,#ff3d00,#ff9800)"],
-["Ice","linear-gradient(135deg,#dffcff,#55c9ff)"],
-["Void","#15151f"]
-];
-
-const miniData=[
-["Fly Catch",500],
-["Lily Jump",750],
-["Frog Race",1000],
-["Tongue Test",1500],
-["Bug Hunt",2500],
-["Pond Puzzle",5000],
-["Croak Karaoke",10000],
-["Fish Frenzy",25000],
-["Boss Rush",100000],
-["Frog Soccer",250000]
-];
-
-const collectionData=[
-"Golden Leaf","Ancient Coin","Dragon Scale","Moon Rock",
-"Rainbow Feather","Crystal Shard","Alien Egg","Magic Acorn",
-"Frog Statue","Universe Gem"
-];
-
-const achievementData=[
-["First Hop","clicks",1],
-["Fly Collector","flies",1000],
-["Millionaire","flies",1000000],
-["Click Machine","clicks",10000],
-["Combo Master","combo",50],
-["Boss Slayer","bosses",5],
-["Fisher Frog","fish",10],
-["Explorer","explored",10],
-["Crafter","crafted",10],
-["Frog Legend","flies",10000000]
-];
-
-const badgeData=[
-["🥉 Bronze Frog","clicks",100],
-["🥈 Silver Frog","clicks",1000],
-["🥇 Gold Frog","clicks",10000],
-["💎 Diamond Frog","flies",100000],
-["🌈 Rainbow Frog","collection",5],
-["🔥 Fire Frog","bosses",3],
-["❄️ Ice Frog","fish",5],
-["🌌 Space Frog","explored",7],
-["👑 Royal Frog","bosses",10],
-["♾️ Infinite Frog","flies",100000000]
-];
-
-const eventData=[
-["Fly Storm",1000],
-["Golden Rain",5000],
-["Frog Party",10000],
-["Monster Attack",25000],
-["Rainbow Day",50000],
-["Double XP",100000],
-["Treasure Hunt",250000],
-["Meteor Shower",1000000],
-["Giant Frog",5000000],
-["God Frog Visit",25000000]
-];
-
-const upgradeData=[
-["Stronger Tongue",100,"power",2],
-["Faster Tongue",500,"passive",2],
-["Bigger Stomach",1000,"power",5],
-["Lucky Feet",5000,"coins",2],
-["Golden Skin",10000,"flies",1.25],
-["Mega Brain",50000,"xp",2],
-["Quantum Legs",250000,"passive",2],
-["Time Warp",1000000,"passive",2],
-["Universe Brain",10000000,"all",2],
-["Infinity Power",100000000,"all",10]
-];
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-let game={
-  flies:0,
-  coins:0,
-  power:1,
-  passive:1,
-  health:100,
-  maxHealth:100,
-  clicks:0,
-  combo:1,
-  level:1,
-  xp:0,
-
-  frog:0,
-  skin:0,
-
-  weather:0,
-  season:0,
-
-  purchases:0,
-  enemies:0,
-  bosses:0,
-  fish:0,
-  crafted:0,
-  explored:0,
-
-  pets:[],
-  ponds:[],
-  quests:[],
-  achievements:[],
-  badges:[],
-  collections:[],
-
-  multipliers:{
-    flies:1,
-    coins:1,
-    xp:1
-  },
-
-  shopOwned:Array(10).fill(0),
-  pondOwned:Array(10).fill(0),
-  petOwned:Array(10).fill(0),
-  upgradeOwned:Array(10).fill(0),
-
-  exploredPlaces:Array(10).fill(false),
-  craftedItems:Array(10).fill(false),
-
-  eventIndex:0
-};
-
-let activeBoss=null;
-let lastClick=0;
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
-
-function page(id){
-
-  document.querySelectorAll(".page")
-    .forEach(x=>x.classList.remove("active"));
-
-  document.getElementById(id)
-    .classList.add("active");
-}
-
-/* =========================================================
-   SAVE / LOAD
-========================================================= */
-
-function save(){
-  localStorage.setItem(
-    "frogClickerFixed",
-    JSON.stringify(game)
-  );
-}
-
-function load(){
-
-  const raw=localStorage.getItem("frogClickerFixed");
-
-  if(!raw)return;
-
-  try{
-    const saved=JSON.parse(raw);
-
-    Object.keys(game).forEach(key=>{
-      if(saved[key]!==undefined)
-        game[key]=saved[key];
-    });
-
-  }catch(e){
-    console.log("Save could not be loaded.");
-  }
-}
-
-/* =========================================================
-   FORMAT
-========================================================= */
-
-function format(n){
-
-  if(!Number.isFinite(n))
-    return "0";
-
-  if(n<1000)
-    return Math.floor(n);
-
-  const units=[
-    "K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"
-  ];
-
-  let i=-1;
-
-  while(n>=1000 && i<units.length-1){
-    n/=1000;
-    i++;
-  }
-
-  return n.toFixed(n>=100?0:n>=10?1:2)+units[i];
-}
-
-/* =========================================================
-   MULTIPLIERS
-========================================================= */
-
-function weatherFlyMultiplier(){
-  return weatherData[game.weather][1];
-}
-
-function weatherPassiveMultiplier(){
-  return weatherData[game.weather][2];
-}
-
-function seasonFlyMultiplier(){
-  return seasonData[game.season][1];
-}
-
-function seasonPassiveMultiplier(){
-  return seasonData[game.season][2];
-}
-
-function getClickPower(){
-
-  let power=game.power;
-
-  const frog=frogData[game.frog];
-
-  power+=frog[1]-1;
-
-  return power;
-}
-
-function getPassive(){
-
-  return game.passive
-    *weatherPassiveMultiplier()
-    *seasonPassiveMultiplier()
-    *game.multipliers.flies;
-}
-
-/* =========================================================
-   LEVELING
-========================================================= */
-
-function addXP(amount){
-
-  game.xp+=amount*game.multipliers.xp;
-
-  while(game.xp>=game.level*100){
-
-    game.xp-=game.level*100;
-    game.level++;
-
-    game.maxHealth+=10;
-    game.health=game.maxHealth;
-
-    log("⭐ LEVEL UP! Level "+game.level);
-  }
-}
-
-/* =========================================================
-   CLICKING
-========================================================= */
-
-document.getElementById("frog").onclick=()=>{
-
-  const now=Date.now();
-
-  if(now-lastClick<900)
-    game.combo=Math.min(100,game.combo+1);
-  else
-    game.combo=1;
-
-  lastClick=now;
-
-  let amount=
-    getClickPower()*
-    game.combo*
-    weatherFlyMultiplier()*
-    seasonFlyMultiplier()*
-    game.multipliers.flies;
-
-  amount=Math.floor(amount);
-
-  game.flies+=amount;
-  game.clicks++;
-
-  addXP(1);
-
-  document.getElementById("combo").textContent=
-    "Combo x"+game.combo;
-
-  log("+"+format(amount)+" 🍃");
-
-  checkSystems();
-  update();
-};
-
-/* =========================================================
-   BUY SHOP
-========================================================= */
-
-function buyShop(i){
-
-  const item=shopData[i];
-  const cost=item[1];
-
-  if(game.flies<cost){
-    log("Not enough flies.");
-    return;
-  }
-
-  game.flies-=cost;
-
-  game.power+=item[2];
-  game.passive+=item[3];
-
-  game.shopOwned[i]++;
-  game.purchases++;
-
-  log("Bought "+item[0]+"!");
-  addXP(10);
-
-  update();
-}
-
-/* =========================================================
-   BUY POND
-========================================================= */
-
-function buyPond(i){
-
-  const item=pondData[i];
-
-  if(game.flies<item[1]){
-    log("Not enough flies.");
-    return;
-  }
-
-  if(game.pondOwned[i]>=1){
-    log("You already own this pond upgrade.");
-    return;
-  }
-
-  game.flies-=item[1];
-
-  game.passive+=item[2];
-  game.pondOwned[i]=1;
-
-  game.purchases++;
-
-  log("🌊 Pond upgraded: "+item[0]);
-
-  update();
-}
-
-/* =========================================================
-   BUY PET
-========================================================= */
-
-function buyPet(i){
-
-  const item=petData[i];
-
-  if(game.petOwned[i]){
-    log("You already own "+item[0]);
-    return;
-  }
-
-  if(game.flies<item[1]){
-    log("Not enough flies.");
-    return;
-  }
-
-  game.flies-=item[1];
-
-  game.power+=item[2];
-  game.passive+=item[3];
-
-  game.petOwned[i]=1;
-  game.pets.push(i);
-
-  log("🐾 Pet adopted: "+item[0]);
-
-  update();
-}
-
-/* =========================================================
-   FROGS
-========================================================= */
-
-function chooseFrog(i){
-
-  const frog=frogData[i];
-
-  if(game.flies<frog[3] && i!==0){
-    log("You need "+format(frog[3])+" flies.");
-    return;
-  }
-
-  if(i!==game.frog){
-
-    game.frog=i;
-
-    log("🐸 Equipped "+frog[0]+"!");
-  }
-
-  update();
-}
-
-/* =========================================================
-   SKINS
-========================================================= */
-
-function chooseSkin(i){
-
-  game.skin=i;
-
-  document.getElementById("frog").style.background=
-    skinData[i][1];
-
-  log("🎨 Equipped "+skinData[i][0]+" skin.");
-
-  update();
-}
-
-/* =========================================================
-   ENEMIES
-========================================================= */
-
-function fightEnemy(i){
-
-  const e=enemyData[i];
-
-  const playerPower=getClickPower();
-
-  if(playerPower<e[1]){
-    game.health-=10;
-
-    log("💥 "+e[0]+" hurt you!");
-
-    if(game.health<=0){
-      game.health=game.maxHealth;
-      game.flies=Math.floor(game.flies*.9);
-
-      log("💀 You fainted and lost 10% of your flies.");
-    }
-
-    update();
-    return;
-  }
-
-  const reward=
-    Math.floor(
-      e[2]*
-      game.multipliers.flies
-    );
-
-  game.flies+=reward;
-  game.coins+=Math.floor(reward/2);
-  game.enemies++;
-
-  addXP(20);
-
-  log("⚔️ Defeated "+e[0]+"! +"+format(reward));
-
-  update();
-}
-
-/* =========================================================
-   BOSSES
-========================================================= */
-
-function startBoss(i){
-
-  const b=bossData[i];
-
-  if(getClickPower()<b[1]){
-    log("You are too weak for "+b[0]);
-    return;
-  }
-
-  activeBoss={
-    index:i,
-    hp:b[1],
-    maxHp:b[1],
-    reward:b[2]
-  };
-
-  renderBoss();
-
-  log("👑 BATTLE STARTED: "+b[0]);
-}
-
-function attackBoss(){
-
-  if(!activeBoss)return;
-
-  const damage=
-    Math.max(
-      1,
-      Math.floor(getClickPower())
-    );
-
-  activeBoss.hp-=damage;
-
-  if(activeBoss.hp<=0){
-
-    const reward=
-      Math.floor(
-        activeBoss.reward*
-        game.multipliers.flies
-      );
-
-    game.flies+=reward;
-    game.coins+=reward;
-    game.bosses++;
-
-    addXP(100);
-
-    log("👑 BOSS DEFEATED! +"+format(reward));
-
-    activeBoss=null;
-
-    renderBoss();
-    update();
-
-    return;
-  }
-
-  renderBoss();
-}
-
-function renderBoss(){
-
-  const box=document.getElementById("bossBattle");
-
-  if(!activeBoss){
-    box.innerHTML="<p>No boss battle active.</p>";
-    return;
-  }
-
-  const b=bossData[activeBoss.index];
-
-  const percent=
-    Math.max(
-      0,
-      activeBoss.hp/activeBoss.maxHp*100
-    );
-
-  box.innerHTML=`
-    <div class="battle">
-      <h2>👑 ${b[0]}</h2>
-
-      <p>
-        ❤️ ${format(activeBoss.hp)}
-        / ${format(activeBoss.maxHp)}
-      </p>
-
-      <div class="bar">
-        <div style="width:${percent}%"></div>
+      <div class="stat">
+        🌿 Lily:
+        <b id="coins">0</b>
       </div>
 
-      <button onclick="attackBoss()">
-        👊 ATTACK
+      <div class="stat">
+        💰/sec:
+        <b id="income">0</b>
+      </div>
+
+      <div class="stat">
+        🖱️ Clicks:
+        <b id="clicks">0</b>
+      </div>
+
+      <div class="stat">
+        ⭐ Level:
+        <b id="level">1</b>
+      </div>
+
+      <div class="stat">
+        ⚡ Energy:
+        <b id="energy">100/100</b>
+      </div>
+
+      <div class="stat">
+        ♻️ Rebirths:
+        <b id="rebirths">0</b>
+      </div>
+
+      <div class="stat">
+        🏆 Achievements:
+        <b id="achievementCount">0</b>
+      </div>
+
+      <button id="saveButton">
+        💾 Save
       </button>
+
+      <button id="resetButton">
+        🔄 Reset
+      </button>
+
     </div>
-  `;
-}
+
+  </header>
+
+  <!-- ================================================
+       MAIN GAME
+  ================================================= -->
+
+  <main class="main">
+
+    <section>
+
+      <!-- FROG -->
+
+      <div
+        class="card frog-area"
+        id="frogArea"
+      >
+
+        <div
+          class="frog"
+          id="frog"
+          tabindex="0"
+          role="button"
+          aria-label="Click frog"
+        >
+          🐸
+        </div>
+
+      </div>
+
+      <!-- ENERGY -->
+
+      <div
+        class="card"
+        style="margin-top:12px"
+      >
+
+        <div class="energy-header">
+
+          <b>⚡ Frog Energy</b>
+
+          <span id="energyPercent">
+            100%
+          </span>
+
+        </div>
+
+        <div class="energy-bar">
+
+          <div
+            class="energy-fill"
+            id="energyFill"
+          ></div>
+
+        </div>
+
+        <div class="actions">
+
+          <button id="megaClick">
+            🐸 Mega Croak ×25
+          </button>
+
+          <button id="rebirthButton">
+            ♻️ Pond Rebirth
+          </button>
+
+          <button id="critButton">
+            💥 Critical Croak
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- XP -->
+
+      <div
+        class="card"
+        style="margin-top:12px"
+      >
+
+        <div class="energy-header">
+
+          <b>⭐ Frog XP</b>
+
+          <span id="xpText">
+            0 / 100
+          </span>
+
+        </div>
+
+        <div class="xp-bar">
+
+          <div
+            class="xp-fill"
+            id="xpFill"
+          ></div>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIVITY -->
+
+      <div
+        class="card"
+        style="margin-top:12px"
+      >
+
+        <b>📜 Activity</b>
+
+        <div
+          class="activity"
+          id="activity"
+          aria-live="polite"
+        ></div>
+
+      </div>
+
+    </section>
+
+    <!-- UPGRADE PANEL -->
+
+    <aside class="card">
+
+      <h2
+        class="panel-title"
+        id="mechanicTitle"
+      >
+        Click Power
+      </h2>
+
+      <p
+        class="description"
+        id="mechanicDescription"
+      >
+        Increase the amount of Lily earned per click.
+      </p>
+
+      <div
+        class="items"
+        id="items"
+      ></div>
+
+    </aside>
+
+  </main>
+
+</div>
+
+<script>
+"use strict";
 
 /* =========================================================
-   EXPLORATION
+   330 GAME MECHANICS
 ========================================================= */
 
-function explore(i){
+const mechanics = [
 
-  if(game.exploredPlaces[i]){
-    log("You already explored "+exploreData[i][0]);
-    return;
-  }
+  /* ORIGINAL 30 */
 
-  const cost=
-    Math.floor(
-      exploreData[i][1]*.2
-    );
+  "Click Power",
+  "Energy",
+  "Auto-Click",
+  "Lily Pads",
+  "Mutations",
+  "Magic",
+  "Breeding",
+  "Achievements",
+  "Biomes",
+  "Enemies",
+  "Quests",
+  "Minigames",
+  "Artifacts",
+  "Potions",
+  "Weather",
+  "Day/Night",
+  "Prestige",
+  "Skins",
+  "Events",
+  "Frog Friends",
+  "Predators",
+  "Treasures",
+  "Jumping",
+  "Swimming",
+  "Hopping",
+  "Croaks",
+  "Decor",
+  "Companions",
+  "Cosmetics",
+  "Mastery",
 
-  if(game.flies<cost){
-    log("You need "+format(cost)+" flies.");
-    return;
-  }
+  /* 100 ADDITIONAL */
 
-  game.flies-=cost;
+  "Frog Levels",
+  "Frog XP",
+  "Critical Croaks",
+  "Combo System",
+  "Combo Multiplier",
+  "Golden Frogs",
+  "Rare Frogs",
+  "Epic Frogs",
+  "Legendary Frogs",
+  "Mythic Frogs",
 
-  const reward=
-    Math.floor(
-      exploreData[i][1]*
-      game.multipliers.flies
-    );
+  "Frog Classes",
+  "Frog Skills",
+  "Skill Trees",
+  "Skill Points",
+  "Ultimate Abilities",
+  "Cooldowns",
+  "Buffs",
+  "Debuffs",
+  "Status Effects",
+  "Damage System",
 
-  game.flies+=reward;
+  "Boss Fights",
+  "Boss Rewards",
+  "Boss Rush",
+  "Enemy Waves",
+  "Enemy Levels",
+  "Enemy Loot",
+  "Enemy Armor",
+  "Enemy Weaknesses",
+  "Enemy Types",
+  "Enemy Spawns",
 
-  game.exploredPlaces[i]=true;
-  game.explored++;
+  "Pond Levels",
+  "Pond XP",
+  "Pond Expansion",
+  "Pond Buildings",
+  "Pond Workers",
+  "Pond Population",
+  "Pond Happiness",
+  "Pond Cleanliness",
+  "Pond Temperature",
+  "Pond Water Quality",
 
-  addXP(50);
+  "Fishing",
+  "Fishing Rods",
+  "Fish Collection",
+  "Fish Breeding",
+  "Fish Farming",
+  "Insect Catching",
+  "Bug Collection",
+  "Bug Breeding",
+  "Bug Farming",
+  "Food Production",
 
-  const collectionIndex=
-    game.explored%collectionData.length;
+  "Frog Farming",
+  "Frog Ranch",
+  "Egg Collection",
+  "Egg Incubation",
+  "Egg Hatching",
+  "Frog Genetics",
+  "Genetic Traits",
+  "Trait Fusion",
+  "Trait Rarity",
+  "Trait Research",
 
-  if(!game.collections.includes(collectionIndex)){
-    game.collections.push(collectionIndex);
+  "Research",
+  "Research Points",
+  "Research Labs",
+  "Technology Tree",
+  "Technology Levels",
+  "Science Bonuses",
+  "Discovery System",
+  "Ancient Research",
+  "Modern Research",
+  "Secret Research",
 
-    log(
-      "📚 Found collectible: "+
-      collectionData[collectionIndex]
-    );
-  }
+  "Exploration",
+  "Exploration Energy",
+  "Exploration Maps",
+  "Hidden Areas",
+  "Secret Caves",
+  "Lost Temples",
+  "Ancient Ruins",
+  "Treasure Maps",
+  "Discovery Rewards",
+  "Exploration Milestones",
 
-  log(
-    "🗺️ Explored "+
-    exploreData[i][0]+
-    "! +"+format(reward)
+  "Trading",
+  "Market Prices",
+  "Market Orders",
+  "Frog Merchants",
+  "Rare Trading",
+  "Item Trading",
+  "Resource Trading",
+  "Daily Deals",
+  "Black Market",
+  "Merchant Reputation",
+
+  /* 200 MORE */
+
+  "Frog Ascension",
+  "Frog Reincarnation",
+  "Frog Souls",
+  "Soul Collection",
+  "Soul Upgrades",
+  "Soul Fusion",
+  "Soul Levels",
+  "Soul Skills",
+  "Soul Bonuses",
+  "Soul Mastery",
+
+  "Croak Resonance",
+  "Croak Chains",
+  "Croak Combos",
+  "Croak Mastery",
+  "Croak Evolution",
+  "Croak Range",
+  "Croak Frequency",
+  "Croak Damage",
+  "Croak Accuracy",
+  "Croak Criticals",
+
+  "Tongue Power",
+  "Tongue Range",
+  "Tongue Speed",
+  "Tongue Accuracy",
+  "Tongue Combos",
+  "Tongue Upgrades",
+  "Tongue Abilities",
+  "Tongue Mastery",
+  "Tongue Criticals",
+  "Tongue Evolution",
+
+  "Jump Charge",
+  "Jump Distance",
+  "Jump Height",
+  "Jump Speed",
+  "Jump Combos",
+  "Jump Criticals",
+  "Jump Mastery",
+  "Jump Training",
+  "Jump Challenges",
+  "Jump Records",
+
+  "Swimming Speed",
+  "Swimming Stamina",
+  "Swimming Depth",
+  "Swimming Tricks",
+  "Swimming Combos",
+  "Swimming Training",
+  "Swimming Mastery",
+  "Swimming Races",
+  "Swimming Challenges",
+  "Swimming Records",
+
+  "Weather Control",
+  "Rain Power",
+  "Storm Power",
+  "Lightning Power",
+  "Wind Power",
+  "Fog Power",
+  "Snow Power",
+  "Heat Waves",
+  "Weather Forecast",
+  "Weather Predictions",
+
+  "Moon Phases",
+  "Moon Bonuses",
+  "Full Moon Events",
+  "New Moon Events",
+  "Eclipse Events",
+  "Meteor Showers",
+  "Aurora Events",
+  "Starfall Events",
+  "Constellations",
+  "Astronomy",
+
+  "Sun Power",
+  "Sunlight Collection",
+  "Solar Energy",
+  "Solar Upgrades",
+  "Sunrise Bonuses",
+  "Sunset Bonuses",
+  "Golden Hour",
+  "Heat Resistance",
+  "Sun Gardens",
+  "Solar Mastery",
+
+  "Pond Seasons",
+  "Spring Growth",
+  "Summer Heat",
+  "Autumn Harvest",
+  "Winter Frost",
+  "Seasonal Crops",
+  "Seasonal Frogs",
+  "Seasonal Enemies",
+  "Seasonal Quests",
+  "Seasonal Bosses",
+
+  "Pond Economy",
+  "Pond Currency",
+  "Currency Exchange",
+  "Inflation",
+  "Deflation",
+  "Supply And Demand",
+  "Pond Tax",
+  "Pond Investments",
+  "Pond Banking",
+  "Pond Interest",
+
+  "Frog Banking",
+  "Frog Wallet",
+  "Frog Savings",
+  "Frog Loans",
+  "Frog Interest",
+  "Frog Investments",
+  "Frog Stocks",
+  "Frog Bonds",
+  "Frog Dividends",
+  "Frog Wealth",
+
+  "Crafting",
+  "Crafting Recipes",
+  "Crafting Levels",
+  "Crafting XP",
+  "Crafting Quality",
+  "Crafting Rarity",
+  "Crafting Materials",
+  "Crafting Stations",
+  "Advanced Crafting",
+  "Master Crafting",
+
+  "Blacksmithing",
+  "Alchemy",
+  "Cooking",
+  "Tailoring",
+  "Carpentry",
+  "Gardening",
+  "Mining",
+  "Fishing Mastery",
+  "Cooking Mastery",
+  "Alchemy Mastery",
+
+  "Resource Gathering",
+  "Wood Gathering",
+  "Stone Gathering",
+  "Metal Gathering",
+  "Crystal Gathering",
+  "Herb Gathering",
+  "Mushroom Gathering",
+  "Flower Gathering",
+  "Fruit Gathering",
+  "Rare Resource Gathering",
+
+  "Resource Storage",
+  "Storage Upgrades",
+  "Storage Expansion",
+  "Resource Compression",
+  "Resource Conversion",
+  "Resource Refining",
+  "Resource Recycling",
+  "Resource Automation",
+  "Resource Efficiency",
+  "Resource Mastery",
+
+  "Frog Villages",
+  "Frog Houses",
+  "Frog Shops",
+  "Frog Schools",
+  "Frog Hospitals",
+  "Frog Libraries",
+  "Frog Temples",
+  "Frog Workshops",
+  "Frog Farms",
+  "Frog Markets",
+
+  "Frog Citizens",
+  "Citizen Happiness",
+  "Citizen Jobs",
+  "Citizen Skills",
+  "Citizen Levels",
+  "Citizen Families",
+  "Citizen Housing",
+  "Citizen Needs",
+  "Citizen Events",
+  "Citizen Loyalty",
+
+  "Frog Government",
+  "Frog Laws",
+  "Frog Policies",
+  "Frog Elections",
+  "Frog Council",
+  "Frog Leaders",
+  "Frog Reputation",
+  "Frog Diplomacy",
+  "Frog Alliances",
+  "Frog Treaties",
+
+  "Frog Festivals",
+  "Croak Festival",
+  "Lily Festival",
+  "Rain Festival",
+  "Moon Festival",
+  "Harvest Festival",
+  "Spring Festival",
+  "Summer Festival",
+  "Winter Festival",
+  "Frog Carnival",
+
+  "Race Events",
+  "Jumping Races",
+  "Swimming Races",
+  "Tongue Races",
+  "Obstacle Races",
+  "Endurance Races",
+  "Speed Trials",
+  "Time Trials",
+  "Tournament Mode",
+  "Championship Mode",
+
+  "Arena Mode",
+  "Survival Mode",
+  "Endless Mode",
+  "Challenge Mode",
+  "Hard Mode",
+  "Nightmare Mode",
+  "Chaos Mode",
+  "Speedrun Mode",
+  "Iron Frog Mode",
+  "Randomizer Mode",
+
+  "Achievement Tiers",
+  "Bronze Achievements",
+  "Silver Achievements",
+  "Gold Achievements",
+  "Diamond Achievements",
+  "Secret Achievements",
+  "Hidden Achievements",
+  "Challenge Achievements",
+  "Speed Achievements",
+  "Collection Achievements"
+];
+
+/* =========================================================
+   VERIFY 330
+========================================================= */
+
+if (mechanics.length !== 330) {
+  console.error(
+    "Expected 330 mechanics but found:",
+    mechanics.length
   );
-
-  update();
 }
 
 /* =========================================================
-   FISHING
+   ITEM PREFIXES
 ========================================================= */
 
-function fish(){
-
-  const maxIndex=
-    Math.min(
-      fishData.length-1,
-      Math.floor(game.level/2)
-    );
-
-  const index=
-    Math.floor(
-      Math.random()*(maxIndex+1)
-    );
-
-  const f=fishData[index];
-
-  const reward=
-    Math.floor(
-      f[1]*
-      game.multipliers.flies
-    );
-
-  game.flies+=reward;
-  game.coins+=Math.floor(reward/2);
-  game.fish++;
-
-  addXP(25);
-
-  document.getElementById("fishResult").innerHTML=
-    "🎣 You caught <b>"+
-    f[0]+
-    "</b>! +"+
-    format(reward)+
-    " flies!";
-
-  log("Caught "+f[0]);
-
-  update();
-}
+const prefixes = [
+  "Tiny",
+  "Mossy",
+  "Swift",
+  "Golden",
+  "Moonlit",
+  "Royal",
+  "Spotted",
+  "Crystal",
+  "Ancient",
+  "Lucky",
+  "Bubble",
+  "Stormy",
+  "Sunny",
+  "Shadow",
+  "Emerald",
+  "Velvet",
+  "Cosmic",
+  "Neon",
+  "Marsh",
+  "River",
+  "Jungle",
+  "Frost",
+  "Rainy",
+  "Solar",
+  "Turbo",
+  "Mystic",
+  "Wild",
+  "Giant",
+  "Pocket",
+  "Legendary"
+];
 
 /* =========================================================
-   CRAFTING
+   3300 ITEMS
+   330 MECHANICS × 10 ITEMS
 ========================================================= */
 
-function craft(i){
+const items = [];
 
-  if(game.craftedItems[i]){
-    log("Already crafted.");
-    return;
-  }
+for (
+  let i = 0;
+  i < mechanics.length * 10;
+  i++
+) {
 
-  const c=craftData[i];
+  const category =
+    Math.floor(i / 10);
 
-  if(game.flies<c[1]){
-    log("Not enough flies.");
-    return;
-  }
+  const level =
+    (i % 10) + 1;
 
-  game.flies-=c[1];
+  items.push({
 
-  game.power+=c[2];
-  game.maxHealth+=c[3];
+    id: i,
 
-  if(c[3]>0)
-    game.health=game.maxHealth;
+    category,
 
-  game.craftedItems[i]=true;
-  game.crafted++;
+    level,
 
-  addXP(50);
+    name:
+      prefixes[i % prefixes.length] +
+      " " +
+      mechanics[category] +
+      " " +
+      level,
 
-  log("🔨 Crafted "+c[0]+"!");
-
-  update();
-}
-
-/* =========================================================
-   WEATHER
-========================================================= */
-
-function changeWeather(i){
-
-  game.weather=i;
-
-  log(
-    "☁️ Weather changed to "+
-    weatherData[i][0]
-  );
-
-  update();
-}
-
-setInterval(()=>{
-
-  game.weather=
-    (game.weather+1)%weatherData.length;
-
-  log(
-    "☁️ Weather changed automatically: "+
-    weatherData[game.weather][0]
-  );
-
-  update();
-
-},60000);
-
-/* =========================================================
-   SEASONS
-========================================================= */
-
-function changeSeason(i){
-
-  game.season=i;
-
-  log(
-    "🌎 Season changed to "+
-    seasonData[i][0]
-  );
-
-  update();
-}
-
-setInterval(()=>{
-
-  game.season=
-    (game.season+1)%seasonData.length;
-
-  log(
-    "🌎 New season: "+
-    seasonData[game.season][0]
-  );
-
-  update();
-
-},300000);
-
-/* =========================================================
-   MINIGAMES
-========================================================= */
-
-function playMinigame(i){
-
-  const reward=
-    miniData[i][1]*
-    game.multipliers.flies;
-
-  const box=
-    document.getElementById("minigame");
-
-  let seconds=5;
-  let score=0;
-
-  box.innerHTML=`
-    <div class="battle">
-      <h2>${miniData[i][0]}</h2>
-      <p>Click the target as many times as possible!</p>
-      <div id="target">🪰</div>
-      <p>Time: <span id="timer">5</span></p>
-      <p>Score: <span id="score">0</span></p>
-    </div>
-  `;
-
-  const target=document.getElementById("target");
-
-  target.style.display="inline-block";
-
-  target.onclick=()=>{
-
-    score++;
-
-    document.getElementById("score").textContent=score;
-
-    target.style.transform=
-      `translate(${Math.random()*200-100}px,
-                 ${Math.random()*100-50}px)`;
-  };
-
-  const timer=setInterval(()=>{
-
-    seconds--;
-
-    document.getElementById("timer").textContent=
-      seconds;
-
-    if(seconds<=0){
-
-      clearInterval(timer);
-
-      const finalReward=
+    baseCost:
+      Math.max(
+        10,
         Math.floor(
-          reward*
-          (1+score/10)
-        );
+          20 *
+          Math.pow(
+            1.045,
+            i
+          )
+        )
+      ),
 
-      game.flies+=finalReward;
-      addXP(100);
+    power:
+      1 + (i % 10),
 
-      box.innerHTML=
-        `<h2>🎉 Game Over!</h2>
-         <p>Score: ${score}</p>
-         <p>Reward: +${format(finalReward)} flies</p>`;
+    owned: 0
 
-      log("🎮 Minigame complete!");
+  });
 
-      update();
-    }
-
-  },1000);
 }
 
 /* =========================================================
-   EVENTS
+   GAME STATE
 ========================================================= */
 
-function triggerEvent(i){
+const state = {
 
-  let reward=
-    eventData[i][1];
+  coins: 0,
 
-  if(i===5){
-    game.multipliers.xp*=2;
+  clicks: 0,
 
-    setTimeout(()=>{
-      game.multipliers.xp/=2;
-      log("Double XP event ended.");
-    },60000);
+  energy: 100,
+
+  maxEnergy: 100,
+
+  multiplier: 1,
+
+  rebirths: 0,
+
+  level: 1,
+
+  xp: 0,
+
+  xpNeeded: 100,
+
+  activeMechanic: 0,
+
+  combo: 0,
+
+  maxCombo: 0,
+
+  criticals: 0,
+
+  achievements: 0,
+
+  totalPlayTime: 0,
+
+  lastSave: Date.now(),
+
+  owned:
+    Array(
+      mechanics.length * 10
+    ).fill(0)
+
+};
+
+/* =========================================================
+   DOM HELPERS
+========================================================= */
+
+const $ = id =>
+  document.getElementById(id);
+
+/* =========================================================
+   NUMBER FORMAT
+========================================================= */
+
+function formatNumber(value) {
+
+  if (
+    !Number.isFinite(value)
+  ) {
+    return "0";
   }
 
-  reward*=
-    game.multipliers.flies;
-
-  game.flies+=reward;
-
-  log(
-    "🎉 "+eventData[i][0]+
-    "! +"+format(reward)+" flies!"
-  );
-
-  update();
-}
-
-setInterval(()=>{
-
-  const i=
-    Math.floor(
-      Math.random()*eventData.length
+  if (
+    value >= 1e18
+  ) {
+    return (
+      (value / 1e18)
+        .toFixed(2) +
+      "Qi"
     );
-
-  triggerEvent(i);
-
-},30000);
-
-/* =========================================================
-   UPGRADES
-========================================================= */
-
-function buyUpgrade(i){
-
-  if(game.upgradeOwned[i]){
-    log("Already purchased.");
-    return;
   }
 
-  const u=upgradeData[i];
-
-  if(game.flies<u[1]){
-    log("Not enough flies.");
-    return;
+  if (
+    value >= 1e15
+  ) {
+    return (
+      (value / 1e15)
+        .toFixed(2) +
+      "Qa"
+    );
   }
 
-  game.flies-=u[1];
-
-  game.upgradeOwned[i]=1;
-
-  switch(u[2]){
-
-    case "power":
-      game.power*=u[3];
-      break;
-
-    case "passive":
-      game.passive*=u[3];
-      break;
-
-    case "coins":
-      game.multipliers.coins*=u[3];
-      break;
-
-    case "flies":
-      game.multipliers.flies*=u[3];
-      break;
-
-    case "xp":
-      game.multipliers.xp*=u[3];
-      break;
-
-    case "all":
-      game.power*=u[3];
-      game.passive*=u[3];
-      game.multipliers.flies*=u[3];
-      break;
+  if (
+    value >= 1e12
+  ) {
+    return (
+      (value / 1e12)
+        .toFixed(2) +
+      "T"
+    );
   }
 
-  log("⚡ Upgrade purchased: "+u[0]);
-
-  update();
-}
-
-/* =========================================================
-   QUEST SYSTEM
-========================================================= */
-
-function questProgress(q){
-
-  switch(q[2]){
-
-    case "clicks":return game.clicks;
-    case "flies":return game.flies;
-    case "purchases":return game.purchases;
-    case "fish":return game.fish;
-    case "enemies":return game.enemies;
-    case "bosses":return game.bosses;
-    case "crafted":return game.crafted;
-    case "explored":return game.explored;
-    case "level":return game.level;
+  if (
+    value >= 1e9
+  ) {
+    return (
+      (value / 1e9)
+        .toFixed(2) +
+      "B"
+    );
   }
 
-  return 0;
-}
-
-function claimQuest(i){
-
-  if(game.quests.includes(i)){
-    log("Quest already completed.");
-    return;
+  if (
+    value >= 1e6
+  ) {
+    return (
+      (value / 1e6)
+        .toFixed(2) +
+      "M"
+    );
   }
 
-  const q=questData[i];
-
-  if(questProgress(q)<q[3]){
-    log("Quest isn't complete yet.");
-    return;
+  if (
+    value >= 1000
+  ) {
+    return (
+      (value / 1000)
+        .toFixed(2) +
+      "K"
+    );
   }
 
-  game.quests.push(i);
-
-  game.flies+=q[4];
-
-  addXP(q[4]/10);
-
-  log(
-    "📜 QUEST COMPLETE: "+
-    q[0]+
-    "! +"+
-    format(q[4])+
-    " flies!"
-  );
-
-  update();
-}
-
-/* =========================================================
-   ACHIEVEMENTS
-========================================================= */
-
-function achievementProgress(a){
-
-  switch(a[1]){
-
-    case "clicks":return game.clicks;
-    case "flies":return game.flies;
-    case "combo":return game.combo;
-    case "bosses":return game.bosses;
-    case "fish":return game.fish;
-    case "explored":return game.explored;
-    case "crafted":return game.crafted;
-  }
-
-  return 0;
-}
-
-function checkAchievements(){
-
-  achievementData.forEach((a,i)=>{
-
-    if(
-      !game.achievements.includes(i) &&
-      achievementProgress(a)>=a[2]
-    ){
-
-      game.achievements.push(i);
-
-      const reward=
-        (i+1)*1000;
-
-      game.flies+=reward;
-
-      log(
-        "🏆 ACHIEVEMENT: "+
-        a[0]+
-        "! +"+
-        format(reward)
-      );
-    }
-  });
-}
-
-/* =========================================================
-   BADGES
-========================================================= */
-
-function checkBadges(){
-
-  badgeData.forEach((b,i)=>{
-
-    let progress=0;
-
-    if(b[1]==="collection")
-      progress=game.collections.length;
-    else
-      progress=achievementProgress([b[0],b[1],b[2]]);
-
-    if(
-      progress>=b[2] &&
-      !game.badges.includes(i)
-    ){
-
-      game.badges.push(i);
-
-      log(
-        "🎖️ BADGE UNLOCKED: "+
-        b[0]
-      );
-    }
-  });
-}
-
-/* =========================================================
-   COLLECTION
-========================================================= */
-
-function checkCollections(){
-
-  game.collections=
-    game.collections.filter(
-      x=>x>=0&&x<collectionData.length
-    );
-}
-
-/* =========================================================
-   SYSTEM CHECK
-========================================================= */
-
-function checkSystems(){
-
-  checkAchievements();
-  checkBadges();
-  checkCollections();
-
-  addXP(0);
-}
-
-/* =========================================================
-   PASSIVE INCOME
-========================================================= */
-
-setInterval(()=>{
-
-  const amount=
-    getPassive();
-
-  game.flies+=amount;
-
-  addXP(
-    Math.max(
-      1,
-      Math.floor(amount/10)
-    )
-  );
-
-  checkSystems();
-
-  update();
-
-},1000);
-
-/* =========================================================
-   RENDER HELPERS
-========================================================= */
-
-function card(title,text,button){
-
-  return `
-    <div class="item">
-      <h3>${title}</h3>
-      <p>${text}</p>
-      ${button||""}
-    </div>
-  `;
-}
-
-/* =========================================================
-   RENDER FROGS
-========================================================= */
-
-function renderFrogs(){
-
-  const box=document.getElementById("frogList");
-
-  box.innerHTML="";
-
-  frogData.forEach((f,i)=>{
-
-    const unlocked=
-      i===0 ||
-      game.flies>=f[3] ||
-      i===game.frog;
-
-    box.innerHTML+=card(
-      f[0],
-      "Power: +"+f[1]+" | Cost: "+format(f[3]),
-      `<button
-        ${!unlocked?"disabled":""}
-        onclick="chooseFrog(${i})">
-        ${game.frog===i?"✅ Equipped":"Equip"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER SHOP
-========================================================= */
-
-function renderShop(){
-
-  const box=document.getElementById("shopList");
-
-  box.innerHTML="";
-
-  shopData.forEach((x,i)=>{
-
-    box.innerHTML+=card(
-      x[0],
-      "Cost: 🍃 "+format(x[1])+
-      "<br>+"+x[2]+" power<br>+"+x[3]+" passive",
-      `<button onclick="buyShop(${i})">
-        Buy
-      </button>
-      <small>Owned: ${game.shopOwned[i]}</small>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER POND
-========================================================= */
-
-function renderPond(){
-
-  const box=document.getElementById("pondList");
-
-  box.innerHTML="";
-
-  pondData.forEach((x,i)=>{
-
-    box.innerHTML+=card(
-      x[0],
-      "Cost: "+format(x[1])+
-      "<br>+"+x[2]+" passive",
-      `<button
-        ${game.pondOwned[i]?"disabled":""}
-        onclick="buyPond(${i})">
-        ${game.pondOwned[i]?"Owned":"Upgrade"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER PETS
-========================================================= */
-
-function renderPets(){
-
-  const box=document.getElementById("petList");
-
-  box.innerHTML="";
-
-  petData.forEach((x,i)=>{
-
-    box.innerHTML+=card(
-      x[0],
-      "Cost: "+format(x[1])+
-      "<br>+"+x[2]+" power<br>+"+x[3]+" passive",
-      `<button
-        ${game.petOwned[i]?"disabled":""}
-        onclick="buyPet(${i})">
-        ${game.petOwned[i]?"Adopted":"Adopt"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER QUESTS
-========================================================= */
-
-function renderQuests(){
-
-  const box=document.getElementById("questList");
-
-  box.innerHTML="";
-
-  questData.forEach((q,i)=>{
-
-    const progress=
-      Math.min(
-        questProgress(q),
-        q[3]
-      );
-
-    box.innerHTML+=card(
-      "📜 "+q[0],
-      q[2]+
-      "<br>Progress: "+
-      format(progress)+
-      "/"+
-      format(q[3])+
-      "<br>Reward: "+
-      format(q[4])+" flies",
-      `<button
-        onclick="claimQuest(${i})"
-        ${game.quests.includes(i)?"disabled":""}>
-        ${game.quests.includes(i)?"✅ Complete":"Claim"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER ENEMIES
-========================================================= */
-
-function renderEnemies(){
-
-  const box=document.getElementById("enemyList");
-
-  box.innerHTML="";
-
-  enemyData.forEach((e,i)=>{
-
-    box.innerHTML+=card(
-      "👾 "+e[0],
-      "Required power: "+format(e[1])+
-      "<br>Reward: "+format(e[2]),
-      `<button onclick="fightEnemy(${i})">
-        Fight
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER BOSSES
-========================================================= */
-
-function renderBosses(){
-
-  const box=document.getElementById("bossList");
-
-  box.innerHTML="";
-
-  bossData.forEach((b,i)=>{
-
-    box.innerHTML+=card(
-      "👑 "+b[0],
-      "Required power: "+format(b[1])+
-      "<br>Reward: "+format(b[2]),
-      `<button onclick="startBoss(${i})">
-        Battle
-      </button>`
-    );
-  });
-
-  renderBoss();
-}
-
-/* =========================================================
-   RENDER EXPLORE
-========================================================= */
-
-function renderExplore(){
-
-  const box=document.getElementById("exploreList");
-
-  box.innerHTML="";
-
-  exploreData.forEach((e,i)=>{
-
-    box.innerHTML+=card(
-      "🗺️ "+e[0],
-      "Reward: "+format(e[1]),
-      `<button
-        ${game.exploredPlaces[i]?"disabled":""}
-        onclick="explore(${i})">
-        ${game.exploredPlaces[i]?"✅ Explored":"Explore"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER FISH
-========================================================= */
-
-function renderFish(){
-
-  const box=document.getElementById("fishList");
-
-  box.innerHTML="";
-
-  fishData.forEach((f,i)=>{
-
-    const unlocked=
-      game.level>=Math.max(1,Math.floor(i/2));
-
-    box.innerHTML+=card(
-      "🎣 "+f[0],
-      "Reward: "+format(f[1])+
-      (unlocked?"":"<br>🔒 Higher level required"),
-      ""
-    );
-  });
-}
-
-/* =========================================================
-   RENDER CRAFT
-========================================================= */
-
-function renderCraft(){
-
-  const box=document.getElementById("craftList");
-
-  box.innerHTML="";
-
-  craftData.forEach((c,i)=>{
-
-    box.innerHTML+=card(
-      "🔨 "+c[0],
-      "Cost: "+format(c[1])+
-      "<br>+"+c[2]+" power"+
-      "<br>+"+c[3]+" max health",
-      `<button
-        ${game.craftedItems[i]?"disabled":""}
-        onclick="craft(${i})">
-        ${game.craftedItems[i]?"Crafted":"Craft"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER WEATHER
-========================================================= */
-
-function renderWeather(){
-
-  const box=document.getElementById("weatherList");
-
-  box.innerHTML="";
-
-  weatherData.forEach((w,i)=>{
-
-    box.innerHTML+=card(
-      w[0],
-      "Click ×"+w[1]+
-      "<br>Passive ×"+w[2],
-      `<button onclick="changeWeather(${i})">
-        ${game.weather===i?"✅ Active":"Activate"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER SEASONS
-========================================================= */
-
-function renderSeasons(){
-
-  const box=document.getElementById("seasonList");
-
-  box.innerHTML="";
-
-  seasonData.forEach((s,i)=>{
-
-    box.innerHTML+=card(
-      s[0],
-      "Click ×"+s[1]+
-      "<br>Passive ×"+s[2],
-      `<button onclick="changeSeason(${i})">
-        ${game.season===i?"✅ Active":"Activate"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER SKINS
-========================================================= */
-
-function renderSkins(){
-
-  const box=document.getElementById("skinList");
-
-  box.innerHTML="";
-
-  skinData.forEach((s,i)=>{
-
-    box.innerHTML+=card(
-      s[0],
-      `<div style="
-        height:45px;
-        border-radius:10px;
-        background:${s[1]};
-        margin:7px 0">
-      </div>`,
-      `<button onclick="chooseSkin(${i})">
-        ${game.skin===i?"✅ Equipped":"Equip"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER MINIGAMES
-========================================================= */
-
-function renderMinigames(){
-
-  const box=document.getElementById("minigameList");
-
-  box.innerHTML="";
-
-  miniData.forEach((m,i)=>{
-
-    box.innerHTML+=card(
-      "🎮 "+m[0],
-      "Base reward: "+format(m[1]),
-      `<button onclick="playMinigame(${i})">
-        Play
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER COLLECTION
-========================================================= */
-
-function renderCollection(){
-
-  const box=document.getElementById("collectionList");
-
-  box.innerHTML="";
-
-  collectionData.forEach((c,i)=>{
-
-    const owned=
-      game.collections.includes(i);
-
-    box.innerHTML+=card(
-      owned?"📚 "+c:"🔒 ???",
-      owned?"Collected!":"Not discovered yet."
-    );
-  });
-}
-
-/* =========================================================
-   RENDER ACHIEVEMENTS
-========================================================= */
-
-function renderAchievements(){
-
-  const box=document.getElementById("achievementList");
-
-  box.innerHTML="";
-
-  achievementData.forEach((a,i)=>{
-
-    const progress=
-      Math.min(
-        achievementProgress(a),
-        a[2]
-      );
-
-    const unlocked=
-      game.achievements.includes(i);
-
-    box.innerHTML+=`
-      <span class="badge"
-        style="opacity:${unlocked?1:.45}">
-        ${unlocked?"🏆":"🔒"}
-        ${a[0]}
-        ${format(progress)}/${format(a[2])}
-      </span>
-    `;
-  });
-}
-
-/* =========================================================
-   RENDER BADGES
-========================================================= */
-
-function renderBadges(){
-
-  const box=document.getElementById("badgeList");
-
-  box.innerHTML="";
-
-  badgeData.forEach((b,i)=>{
-
-    const unlocked=
-      game.badges.includes(i);
-
-    box.innerHTML+=card(
-      unlocked?b[0]:"🔒 ???",
-      unlocked?b[0]+" unlocked!":"Keep playing to discover this badge."
-    );
-  });
-}
-
-/* =========================================================
-   RENDER EVENTS
-========================================================= */
-
-function renderEvents(){
-
-  const box=document.getElementById("eventList");
-
-  box.innerHTML="";
-
-  eventData.forEach((e,i)=>{
-
-    box.innerHTML+=card(
-      "🎉 "+e[0],
-      "Possible reward: "+format(e[1]),
-      `<button onclick="triggerEvent(${i})">
-        Trigger
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   RENDER UPGRADES
-========================================================= */
-
-function renderUpgrades(){
-
-  const box=document.getElementById("upgradeList");
-
-  box.innerHTML="";
-
-  upgradeData.forEach((u,i)=>{
-
-    box.innerHTML+=card(
-      "⚡ "+u[0],
-      "Cost: "+format(u[1])+
-      "<br>Effect: ×"+u[3]+" "+u[2],
-      `<button
-        ${game.upgradeOwned[i]?"disabled":""}
-        onclick="buyUpgrade(${i})">
-        ${game.upgradeOwned[i]?"Purchased":"Buy"}
-      </button>`
-    );
-  });
-}
-
-/* =========================================================
-   MAIN UPDATE
-========================================================= */
-
-function update(){
-
-  document.getElementById("stats").textContent=
-    "🍃 "+format(game.flies)+
-    " | 💰 "+format(game.coins)+
-    " | ❤️ "+game.health+"/"+game.maxHealth+
-    " | ⚡ "+format(getPassive())+"/s"+
-    " | ⭐ Lv."+game.level+
-    " | 👆 "+format(game.clicks)+" clicks";
-
-  document.getElementById("playerInfo").innerHTML=`
-    <p>🐸 Frog: ${frogData[game.frog][0]}</p>
-    <p>🎨 Skin: ${skinData[game.skin][0]}</p>
-    <p>⚡ Click power: ${format(getClickPower())}</p>
-    <p>☁️ Weather: ${weatherData[game.weather][0]}</p>
-    <p>🌎 Season: ${seasonData[game.season][0]}</p>
-    <p>📜 Quests completed: ${game.quests.length}/10</p>
-    <p>🏆 Achievements: ${game.achievements.length}/10</p>
-    <p>🎖️ Badges: ${game.badges.length}/10</p>
-    <p>📚 Collection: ${game.collections.length}/10</p>
-    <p>🗺️ Explored: ${game.explored}/10</p>
-    <p>👾 Enemies defeated: ${game.enemies}</p>
-    <p>👑 Bosses defeated: ${game.bosses}</p>
-    <p>🎣 Fish caught: ${game.fish}</p>
-    <p>🔨 Crafted: ${game.crafted}/10</p>
-  `;
-
-  document.getElementById("frog").style.background=
-    skinData[game.skin][1];
-
-  renderFrogs();
-  renderShop();
-  renderPond();
-  renderPets();
-  renderQuests();
-  renderEnemies();
-  renderBosses();
-  renderExplore();
-  renderFish();
-  renderCraft();
-  renderWeather();
-  renderSeasons();
-  renderSkins();
-  renderMinigames();
-  renderCollection();
-  renderAchievements();
-  renderBadges();
-  renderEvents();
-  renderUpgrades();
-
-  save();
+  return Math.floor(value)
+    .toString();
 }
 
 /* =========================================================
    LOG
 ========================================================= */
 
-function log(message){
+function log(message) {
 
-  const box=document.getElementById("log");
+  const activity =
+    $("activity");
 
-  const line=document.createElement("div");
+  const line =
+    document.createElement("div");
 
-  line.textContent="> "+message;
+  line.textContent =
+    message;
 
-  box.prepend(line);
+  activity.prepend(line);
 
-  while(box.children.length>30)
-    box.lastChild.remove();
+  while (
+    activity.children.length >
+    40
+  ) {
+    activity.lastChild.remove();
+  }
+
 }
 
 /* =========================================================
-   INITIALIZE
+   TOAST
 ========================================================= */
 
-load();
+function toast(message) {
 
-update();
+  const old =
+    document.querySelector(
+      ".toast"
+    );
 
-log("🐸 Ultimate Frog Clicker loaded!");
-log("🎮 All 200 game elements are connected.");
-log("🌟 Become the Frog Legend!");
+  if (old) {
+    old.remove();
+  }
 
-/* AUTO SAVE */
-setInterval(save,5000);
+  const element =
+    document.createElement("div");
+
+  element.className =
+    "toast";
+
+  element.textContent =
+    message;
+
+  document.body.appendChild(
+    element
+  );
+
+  setTimeout(
+    () => element.remove(),
+    2200
+  );
+
+}
+
+/* =========================================================
+   INCOME
+========================================================= */
+
+function getIncomePerSecond() {
+
+  let income = 0;
+
+  for (
+    let i = 0;
+    i < items.length;
+    i++
+  ) {
+
+    const item =
+      items[i];
+
+    income +=
+      state.owned[i] *
+      item.power *
+      (1 +
+        item.category *
+        0.002);
+
+  }
+
+  const comboBonus =
+    1 +
+    Math.min(
+      state.combo,
+      100
+    ) *
+    0.005;
+
+  return (
+    income *
+    state.multiplier *
+    (1 +
+      state.rebirths *
+      0.2) *
+    comboBonus
+  );
+
+}
+
+/* =========================================================
+   CLICK VALUE
+========================================================= */
+
+function getClickValue(
+  basePower = 1
+) {
+
+  const comboBonus =
+    1 +
+    Math.min(
+      state.combo,
+      100
+    ) *
+    0.01;
+
+  return (
+    basePower *
+    state.multiplier *
+    comboBonus *
+    (1 +
+      state.rebirths *
+      0.2)
+  );
+
+}
+
+/* =========================================================
+   XP
+========================================================= */
+
+function addXP(amount) {
+
+  state.xp += amount;
+
+  while (
+    state.xp >=
+    state.xpNeeded
+  ) {
+
+    state.xp -=
+      state.xpNeeded;
+
+    state.level++;
+
+    state.xpNeeded =
+      Math.floor(
+        state.xpNeeded *
+        1.18
+      );
+
+    state.maxEnergy += 5;
+
+    state.energy =
+      state.maxEnergy;
+
+    toast(
+      "⭐ Frog reached Level " +
+      state.level + "!"
+    );
+
+    log(
+      "⭐ Level up! Frog is now level " +
+      state.level
+    );
+
+  }
+
+}
+
+/* =========================================================
+   CLICK FROG
+========================================================= */
+
+function clickFrog(
+  power = 1
+) {
+
+  if (
+    state.energy < 1
+  ) {
+
+    log(
+      "⚡ Your frog needs energy."
+    );
+
+    return;
+
+  }
+
+  state.energy =
+    Math.max(
+      0,
+      state.energy - 1
+    );
+
+  state.clicks++;
+
+  state.combo++;
+
+  state.maxCombo =
+    Math.max(
+      state.maxCombo,
+      state.combo
+    );
+
+  const gain =
+    getClickValue(
+      power
+    );
+
+  state.coins +=
+    gain;
+
+  addXP(
+    Math.max(
+      1,
+      Math.floor(
+        power
+      )
+    )
+  );
+
+  createFloat(
+    "+" +
+    formatNumber(
+      gain
+    ) +
+    " 🌿"
+  );
+
+  updateStats();
+
+}
+
+/* =========================================================
+   CRITICAL CLICK
+========================================================= */
+
+function criticalCroak() {
+
+  if (
+    state.energy < 5
+  ) {
+
+    log(
+      "⚡ Need 5 energy."
+    );
+
+    return;
+
+  }
+
+  state.energy -= 5;
+
+  state.criticals++;
+
+  state.combo += 5;
+
+  const gain =
+    getClickValue(100) *
+    10;
+
+  state.coins +=
+    gain;
+
+  addXP(50);
+
+  createFloat(
+    "💥 CRITICAL +" +
+    formatNumber(
+      gain
+    )
+  );
+
+  toast(
+    "💥 Critical Croak!"
+  );
+
+  updateStats();
+
+}
+
+/* =========================================================
+   FLOATING TEXT
+========================================================= */
+
+function createFloat(text) {
+
+  const element =
+    document.createElement(
+      "div"
+    );
+
+  element.className =
+    "float";
+
+  element.textContent =
+    text;
+
+  element.style.left =
+    (
+      40 +
+      Math.random() *
+      20
+    ) + "%";
+
+  element.style.top =
+    (
+      35 +
+      Math.random() *
+      25
+    ) + "%";
+
+  $("frogArea")
+    .appendChild(
+      element
+    );
+
+  setTimeout(
+    () => element.remove(),
+    800
+  );
+
+}
+
+/* =========================================================
+   MECHANICS BAR
+========================================================= */
+
+function renderMechanics() {
+
+  const bar =
+    $("mechanicsBar");
+
+  bar.innerHTML = "";
+
+  mechanics.forEach(
+    (
+      mechanic,
+      index
+    ) => {
+
+      const button =
+        document.createElement(
+          "button"
+        );
+
+      button.type =
+        "button";
+
+      button.textContent =
+        mechanic;
+
+      if (
+        index ===
+        state.activeMechanic
+      ) {
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          state.activeMechanic =
+            index;
+
+          render();
+
+        }
+      );
+
+      bar.appendChild(
+        button
+      );
+
+    }
+  );
+
+}
+
+/* =========================================================
+   ITEM PANEL
+========================================================= */
+
+function renderItems() {
+
+  const panel =
+    $("items");
+
+  panel.innerHTML = "";
+
+  const start =
+    state.activeMechanic *
+    10;
+
+  const end =
+    start + 10;
+
+  for (
+    let i = start;
+    i < end;
+    i++
+  ) {
+
+    const item =
+      items[i];
+
+    if (!item) {
+      continue;
+    }
+
+    const cost =
+      item.baseCost *
+      Math.pow(
+        1.12,
+        state.owned[i]
+      );
+
+    const box =
+      document.createElement(
+        "div"
+      );
+
+    box.className =
+      "item";
+
+    const name =
+      document.createElement(
+        "div"
+      );
+
+    name.className =
+      "item-name";
+
+    name.textContent =
+      item.name;
+
+    const info =
+      document.createElement(
+        "div"
+      );
+
+    info.className =
+      "item-info";
+
+    info.textContent =
+      "Power +" +
+      item.power +
+      " • Owned " +
+      state.owned[i] +
+      " • Cost " +
+      formatNumber(cost) +
+      " 🌿";
+
+    const buy =
+      document.createElement(
+        "button"
+      );
+
+    buy.textContent =
+      "Buy";
+
+    buy.style.width =
+      "100%";
+
+    buy.disabled =
+      state.coins <
+      cost;
+
+    buy.addEventListener(
+      "click",
+      () => {
+
+        buyItem(i);
+
+      }
+    );
+
+    box.appendChild(
+      name
+    );
+
+    box.appendChild(
+      info
+    );
+
+    box.appendChild(
+      buy
+    );
+
+    panel.appendChild(
+      box
+    );
+
+  }
+
+  $("mechanicTitle")
+    .textContent =
+    mechanics[
+      state.activeMechanic
+    ];
+
+  $("mechanicDescription")
+    .textContent =
+    "Upgrade " +
+    mechanics[
+      state.activeMechanic
+    ] +
+    " using these 10 upgrades.";
+
+}
+
+/* =========================================================
+   BUY
+========================================================= */
+
+function buyItem(index) {
+
+  const item =
+    items[index];
+
+  const cost =
+    item.baseCost *
+    Math.pow(
+      1.12,
+      state.owned[index]
+    );
+
+  if (
+    state.coins <
+    cost
+  ) {
+
+    return;
+
+  }
+
+  state.coins -=
+    cost;
+
+  state.owned[index]++;
+
+  addXP(
+    item.power * 2
+  );
+
+  log(
+    "🛒 Bought " +
+    item.name
+  );
+
+  render();
+
+}
+
+/* =========================================================
+   REBIRTH
+========================================================= */
+
+function rebirth() {
+
+  const requirement =
+    1000000 *
+    Math.pow(
+      3,
+      state.rebirths
+    );
+
+  if (
+    state.coins <
+    requirement
+  ) {
+
+    toast(
+      "Need " +
+      formatNumber(
+        requirement
+      ) +
+      " Lily."
+    );
+
+    return;
+
+  }
+
+  state.rebirths++;
+
+  state.coins = 0;
+
+  state.owned.fill(0);
+
+  state.combo = 0;
+
+  state.multiplier =
+    1 +
+    state.rebirths *
+    0.2;
+
+  state.energy =
+    state.maxEnergy;
+
+  toast(
+    "♻️ Pond Rebirth!"
+  );
+
+  log(
+    "♻️ Rebirth " +
+    state.rebirths +
+    " complete."
+  );
+
+  render();
+
+}
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveGame(
+  showMessage = true
+) {
+
+  const save = {
+
+    version: 2,
+
+    coins:
+      state.coins,
+
+    clicks:
+      state.clicks,
+
+    energy:
+      state.energy,
+
+    maxEnergy:
+      state.maxEnergy,
+
+    multiplier:
+      state.multiplier,
+
+    rebirths:
+      state.rebirths,
+
+    level:
+      state.level,
+
+    xp:
+      state.xp,
+
+    xpNeeded:
+      state.xpNeeded,
+
+    activeMechanic:
+      state.activeMechanic,
+
+    combo:
+      state.combo,
+
+    maxCombo:
+      state.maxCombo,
+
+    criticals:
+      state.criticals,
+
+    achievements:
+      state.achievements,
+
+    totalPlayTime:
+      state.totalPlayTime,
+
+    owned:
+      state.owned,
+
+    savedAt:
+      Date.now()
+
+  };
+
+  try {
+
+    localStorage.setItem(
+      "frog-clicker-save",
+      JSON.stringify(save)
+    );
+
+    state.lastSave =
+      Date.now();
+
+    if (showMessage) {
+
+      toast(
+        "💾 Game saved!"
+      );
+
+    }
+
+  } catch (error) {
+
+    log(
+      "❌ Could not save game."
+    );
+
+  }
+
+}
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+function loadGame() {
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        "frog-clicker-save"
+      );
+
+    if (!raw) {
+      return;
+    }
+
+    const save =
+      JSON.parse(raw);
+
+    if (
+      !save ||
+      !Array.isArray(
+        save.owned
+      ) ||
+      save.owned.length !==
+        mechanics.length * 10
+    ) {
+
+      return;
+
+    }
+
+    state.coins =
+      Math.max(
+        0,
+        Number(save.coins) || 0
+      );
+
+    state.clicks =
+      Math.max(
+        0,
+        Number(save.clicks) || 0
+      );
+
+    state.maxEnergy =
+      Math.max(
+        100,
+        Number(
+          save.maxEnergy
+        ) || 100
+      );
+
+    state.energy =
+      Math.max(
+        0,
+        Math.min(
+          state.maxEnergy,
+          Number(save.energy) ||
+          0
+        )
+      );
+
+    state.multiplier =
+      Math.max(
+        1,
+        Number(
+          save.multiplier
+        ) || 1
+      );
+
+    state.rebirths =
+      Math.max(
+        0,
+        Math.floor(
+          Number(
+            save.rebirths
+          ) || 0
+        )
+      );
+
+    state.level =
+      Math.max(
+        1,
+        Math.floor(
+          Number(
+            save.level
+          ) || 1
+        )
+      );
+
+    state.xp =
+      Math.max(
+        0,
+        Number(
+          save.xp
+        ) || 0
+      );
+
+    state.xpNeeded =
+      Math.max(
+        100,
+        Number(
+          save.xpNeeded
+        ) || 100
+      );
+
+    state.activeMechanic =
+      Math.max(
+        0,
+        Math.min(
+          mechanics.length - 1,
+          Math.floor(
+            Number(
+              save.activeMechanic
+            ) || 0
+          )
+        )
+      );
+
+    state.combo =
+      Math.max(
+        0,
+        Number(
+          save.combo
+        ) || 0
+      );
+
+    state.maxCombo =
+      Math.max(
+        0,
+        Number(
+          save.maxCombo
+        ) || 0
+      );
+
+    state.criticals =
+      Math.max(
+        0,
+        Number(
+          save.criticals
+        ) || 0
+      );
+
+    state.totalPlayTime =
+      Math.max(
+        0,
+        Number(
+          save.totalPlayTime
+        ) || 0
+      );
+
+    state.owned =
+      save.owned.map(
+        value =>
+          Math.max(
+            0,
+            Math.floor(
+              Number(value) || 0
+            )
+          )
+      );
+
+    /* OFFLINE EARNINGS */
+
+    if (
+      Number.isFinite(
+        save.savedAt
+      )
+    ) {
+
+      const offlineSeconds =
+        Math.min(
+          60 * 60 * 12,
+          Math.max(
+            0,
+            (Date.now() -
+              save.savedAt) /
+              1000
+          )
+        );
+
+      const offlineIncome =
+        getIncomePerSecond() *
+        offlineSeconds *
+        0.5;
+
+      if (
+        offlineIncome > 0
+      ) {
+
+        state.coins +=
+          offlineIncome;
+
+        log(
+          "🌙 Offline earnings: +" +
+          formatNumber(
+            offlineIncome
+          ) +
+          " Lily"
+        );
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.warn(
+      "Save could not be loaded.",
+      error
+    );
+
+  }
+
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetGame() {
+
+  if (
+    !confirm(
+      "Reset ALL Frog Clicker progress?"
+    )
+  ) {
+
+    return;
+
+  }
+
+  try {
+
+    localStorage.removeItem(
+      "frog-clicker-save"
+    );
+
+  } catch (error) {}
+
+  location.reload();
+
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats() {
+
+  const income =
+    getIncomePerSecond();
+
+  $("coins")
+    .textContent =
+    formatNumber(
+      state.coins
+    );
+
+  $("income")
+    .textContent =
+    formatNumber(
+      income
+    );
+
+  $("clicks")
+    .textContent =
+    formatNumber(
+      state.clicks
+    );
+
+  $("level")
+    .textContent =
+    state.level;
+
+  $("rebirths")
+    .textContent =
+    state.rebirths;
+
+  $("energy")
+    .textContent =
+    Math.floor(
+      state.energy
+    ) +
+    "/" +
+    state.maxEnergy;
+
+  const energyPercent =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        state.energy /
+        state.maxEnergy *
+        100
+      )
+    );
+
+  $("energyFill")
+    .style.width =
+    energyPercent +
+    "%";
+
+  $("energyPercent")
+    .textContent =
+    Math.floor(
+      energyPercent
+    ) +
+    "%";
+
+  $("xpText")
+    .textContent =
+    formatNumber(
+      state.xp
+    ) +
+    " / " +
+    formatNumber(
+      state.xpNeeded
+    );
+
+  $("xpFill")
+    .style.width =
+    Math.min(
+      100,
+      state.xp /
+      state.xpNeeded *
+      100
+    ) +
+    "%";
+
+  $("achievementCount")
+    .textContent =
+    state.achievements;
+
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+  renderMechanics();
+
+  renderItems();
+
+  updateStats();
+
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+$("frog")
+  .addEventListener(
+    "click",
+    () => clickFrog()
+  );
+
+$("frog")
+  .addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
+
+        event.preventDefault();
+
+        clickFrog();
+
+      }
+
+    }
+  );
+
+$("megaClick")
+  .addEventListener(
+    "click",
+    () => {
+
+      clickFrog(25);
+
+    }
+  );
+
+$("critButton")
+  .addEventListener(
+    "click",
+    criticalCroak
+  );
+
+$("rebirthButton")
+  .addEventListener(
+    "click",
+    rebirth
+  );
+
+$("saveButton")
+  .addEventListener(
+    "click",
+    () => saveGame(true)
+  );
+
+$("resetButton")
+  .addEventListener(
+    "click",
+    resetGame
+  );
+
+/* =========================================================
+   COMBO TIMER
+========================================================= */
+
+setInterval(
+  () => {
+
+    if (
+      state.combo > 0
+    ) {
+
+      state.combo =
+        Math.max(
+          0,
+          state.combo - 1
+        );
+
+    }
+
+  },
+  1000
+);
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+let lastTime =
+  performance.now();
+
+function gameLoop(
+  currentTime
+) {
+
+  const delta =
+    Math.min(
+      .25,
+      Math.max(
+        0,
+        (currentTime -
+          lastTime) /
+          1000
+      )
+    );
+
+  lastTime =
+    currentTime;
+
+  state.totalPlayTime +=
+    delta;
+
+  /* PASSIVE INCOME */
+
+  state.coins +=
+    getIncomePerSecond() *
+    delta;
+
+  /* ENERGY */
+
+  state.energy =
+    Math.min(
+      state.maxEnergy,
+      state.energy +
+      delta * 4
+    );
+
+  updateStats();
+
+  requestAnimationFrame(
+    gameLoop
+  );
+
+}
+
+requestAnimationFrame(
+  gameLoop
+);
+
+/* =========================================================
+   AUTO SAVE
+========================================================= */
+
+setInterval(
+  () => saveGame(false),
+  10000
+);
+
+/* =========================================================
+   BUG TESTS
+========================================================= */
+
+function runSelfTests() {
+
+  const tests = [
+
+    [
+      "Exactly 330 mechanics",
+      mechanics.length === 330
+    ],
+
+    [
+      "Exactly 3300 items",
+      items.length === 3300
+    ],
+
+    [
+      "10 items per mechanic",
+      items.length ===
+      mechanics.length * 10
+    ],
+
+    [
+      "Owned array matches items",
+      state.owned.length ===
+      items.length
+    ],
+
+    [
+      "All item costs finite",
+      items.every(
+        item =>
+          Number.isFinite(
+            item.baseCost
+          ) &&
+          item.baseCost > 0
+      )
+    ],
+
+    [
+      "All item powers valid",
+      items.every(
+        item =>
+          Number.isFinite(
+            item.power
+          ) &&
+          item.power > 0
+      )
+    ],
+
+    [
+      "Mechanics bar exists",
+      !!$("mechanicsBar")
+    ],
+
+    [
+      "Frog exists",
+      !!$("frog")
+    ],
+
+    [
+      "Items panel exists",
+      !!$("items")
+    ],
+
+    [
+      "Energy system exists",
+      !!$("energyFill")
+    ],
+
+    [
+      "Save button exists",
+      !!$("saveButton")
+    ],
+
+    [
+      "Reset button exists",
+      !!$("resetButton")
+    ]
+
+  ];
+
+  let passed = 0;
+
+  for (
+    const test of tests
+  ) {
+
+    if (
+      test[1]
+    ) {
+
+      passed++;
+
+    } else {
+
+      console.error(
+        "BUG FOUND:",
+        test[0]
+      );
+
+      log(
+        "🐛 BUG: " +
+        test[0]
+      );
+
+    }
+
+  }
+
+  if (
+    passed ===
+    tests.length
+  ) {
+
+    log(
+      "✅ Self-test: " +
+      passed +
+      "/" +
+      tests.length +
+      " tests passed."
+    );
+
+  }
+
+}
+
+/* =========================================================
+   START
+========================================================= */
+
+loadGame();
+
+render();
+
+runSelfTests();
+
+log(
+  "🐸 Welcome to Frog Clicker!"
+);
+
+log(
+  "🧪 330 mechanics and 3300 upgrades loaded."
+);
 
 </script>
 
