@@ -1,294 +1,108 @@
 "use strict";
 
-/*
-  Main Frog Frenzy engine.
-  The game deliberately avoids running 500 separate loops.
-*/
+/* =========================================================
+STATE
+========================================================= */
 
-window.game=loadGame();
+function createGame(){
 
-let lastClickTime=0;
-let lastRender=0;
-let lastSave=Date.now();
-let animationFrame=0;
+  return {
+
+    coins:new BigNum(0),
+    gems:new BigNum(25),
+
+    xp:new BigNum(0),
+
+    level:1,
+
+    clicks:0,
+    criticals:0,
+
+    combo:1,
+    bestCombo:1,
+
+    energy:100,
+    maxEnergy:100,
+
+    world:0,
+    skin:0,
+
+    pets:{},
+    petXP:{},
+
+    ownedSkins:[0],
+
+    evolution:0,
+    mutations:0,
+
+    friends:[],
+
+    clan:null,
+
+    prestige:0,
+    rebirth:0,
+
+    dailyDay:-1,
+    dailyStreak:0,
+
+    eventUntil:0,
+    eventMultiplier:1,
+    eventName:"",
+
+    lastSave:Date.now(),
+
+    mechanics:Array(500).fill(0),
+
+    totalCoins:new BigNum(0)
+
+  };
+
+}
+
+let game=createGame();
+
+let lastClick=0;
+let lastUI=0;
+let lastSaveTime=0;
+let currentTab="home";
 
 
 /* =========================================================
-   BASIC HELPERS
+HELPERS
 ========================================================= */
 
-function fmt(value){
+function mechanicLevel(id){
 
-  return BN(value).toString();
-
-}
-
-
-function toast(message){
-
-  const element=
-    document.getElementById("toast");
-
-  element.textContent=message;
-  element.style.display="block";
-
-  clearTimeout(toast.timer);
-
-  toast.timer=setTimeout(
-    ()=>{
-      element.style.display="none";
-    },
-    1800
-  );
+  return game.mechanics[id-1]||0;
 
 }
 
+function addMechanic(id,amount=1){
 
-function activity(message){
-
-  const container=
-    document.getElementById("activity");
-
-  if(!container)
+  if(id<1 || id>500)
     return;
 
-  const row=
-    document.createElement("div");
-
-  row.className="activity-item";
-  row.textContent=message;
-
-  container.prepend(row);
-
-  while(container.children.length>8)
-    container.lastElementChild.remove();
-
-}
-
-
-function floating(message,critical=false){
-
-  const element=
-    document.createElement("div");
-
-  element.className=
-    "float-number"+
-    (critical?" float-critical":"");
-
-  element.textContent=message;
-
-  element.style.left=
-    (35+Math.random()*30)+"%";
-
-  element.style.top=
-    (35+Math.random()*20)+"%";
-
-  document
-    .getElementById("floatingNumbers")
-    .appendChild(element);
-
-  setTimeout(
-    ()=>element.remove(),
-    800
-  );
-
-}
-
-
-function spendCoins(cost){
-
-  cost=BN(cost);
-
-  if(game.coins.lessThan(cost)){
-
-    toast(
-      "❌ Need "+fmt(cost)+" 🪙"
+  game.mechanics[id-1]=
+    Math.min(
+      100,
+      game.mechanics[id-1]+amount
     );
 
-    return false;
-
-  }
-
-  game.coins=
-    game.coins.sub(cost);
-
-  return true;
-
 }
 
+function effect(type){
 
-function earnCoins(amount){
+  let total=0;
 
-  amount=BN(amount);
+  for(const mechanic of MECHANICS){
 
-  game.coins=
-    game.coins.add(amount);
+    if(mechanic.type===type){
 
-  game.totalCoins=
-    game.totalCoins.add(amount);
-
-  addXP(
-    amount.div(100)
-  );
-
-}
-
-
-function addXP(amount){
-
-  game.xp=
-    game.xp.add(amount);
-
-  checkLevels();
-
-}
-
-
-function checkLevels(){
-
-  let safety=0;
-
-  while(
-    game.level<1000000 &&
-    game.xp.greaterOrEqual(
-      new BigNumber(
-        100*game.level
-      )
-    ) &&
-    safety<100
-  ){
-
-    game.xp=
-      game.xp.sub(
-        new BigNumber(
-          100*game.level
-        )
-      );
-
-    game.level++;
-
-    game.gems=
-      game.gems.add(
-        new BigNumber(
-          2+Math.floor(game.level/10)
-        )
-      );
-
-    improveMechanic(
-      130,
-      1
-    );
-
-    if(game.level%10===0){
-
-      activity(
-        "⭐ Reached level "+
-        game.level+"!"
-      );
+      total+=
+        mechanic.value*
+        mechanicLevel(mechanic.id);
 
     }
-
-    safety++;
-
-  }
-
-}
-
-
-/* =========================================================
-   MECHANIC SYSTEM
-========================================================= */
-
-function improveMechanic(id,amount=1){
-
-  if(id<0 || id>=500)
-    return;
-
-  game.mechanics[id]=Math.min(
-    100,
-    (game.mechanics[id]||0)+amount
-  );
-
-}
-
-
-function mechanicPower(id){
-
-  return 1+
-    (game.mechanics[id]||0)*0.01;
-
-}
-
-
-function categoryPower(category){
-
-  let result=1;
-
-  const start=category*10;
-
-  for(let i=0;i<10;i++){
-
-    result*=
-      mechanicPower(start+i);
-
-  }
-
-  return result;
-
-}
-
-
-/*
-  Category indices:
-  0 clicking
-  1 economy
-  2 pets
-  3 skins
-  4 evolution
-  5 worlds
-  6 bosses
-  7 combat
-  8 crafting
-  9 friends
-  10 clans
-  ...
-*/
-
-
-/* =========================================================
-   CLICK POWER
-========================================================= */
-
-function skinMultiplier(){
-
-  return SKINS[game.skin]?.multiplier || 1;
-
-}
-
-
-function petMultiplier(){
-
-  let total=1;
-
-  for(const key in game.pets){
-
-    const index=Number(key);
-
-    const pet=PETS[index];
-
-    if(!pet)
-      continue;
-
-    const level=
-      game.pets[key]||0;
-
-    total*=
-      1+
-      (pet.multiplier-1)*
-      Math.min(
-        10,
-        1+level*.05
-      );
 
   }
 
@@ -296,94 +110,174 @@ function petMultiplier(){
 
 }
 
+function has(type){
 
-function worldMultiplier(){
-
-  return WORLDS[game.world]?.multiplier || 1;
+  return effect(type)>0;
 
 }
 
+function random(min,max){
 
-function permanentMultiplier(){
+  return min+
+    Math.random()*(max-min);
 
-  return (
-    1+
-    game.prestige*.75+
-    game.ascension*5+
-    game.rebirth*30
+}
+
+function powerOfTen(power){
+
+  const e=Math.floor(power);
+
+  return new BigNum(
+    10**(power-e),
+    e
   );
 
 }
 
 
-function clickPower(){
+/* =========================================================
+MULTIPLIERS
+========================================================= */
 
-  let power=1;
+function petMultiplier(){
 
-  power+=game.level*.2;
+  let result=1;
 
-  power*=
-    skinMultiplier();
+  for(const key in game.pets){
 
-  power*=
-    petMultiplier();
+    const index=Number(key);
+    const level=game.pets[key];
 
-  power*=
-    worldMultiplier();
+    if(PETS[index]){
 
-  power*=
-    permanentMultiplier();
+      result*=
+        PETS[index][3]+
+        level*.04+
+        effect("petBonus");
 
-  power*=
-    categoryPower(0);
-
-  power*=
-    categoryPower(1);
-
-  power*=
-    categoryPower(13);
-
-  power*=
-    categoryPower(14);
-
-  power*=
-    categoryPower(21);
-
-  power*=
-    categoryPower(24);
-
-  power*=
-    categoryPower(42);
-
-  power*=
-    categoryPower(47);
-
-  power*=
-    categoryPower(48);
-
-  if(
-    Date.now()<game.eventUntil
-  ){
-
-    power*=
-      game.eventMultiplier;
+    }
 
   }
 
-  return new BigNumber(power);
+  return result;
+}
+
+function clickPower(){
+
+  let result=1;
+
+  result+=game.level*.2;
+
+  result+=game.prestige*2;
+
+  result+=game.rebirth*25;
+
+  result+=effect("coinGeneration");
+
+  result*=
+    1+
+    effect("upgradePower")+
+    effect("clickMastery");
+
+  result*=
+    1+
+    effect("prestigePower")+
+    effect("ascensionPower")+
+    effect("rebirthPower")+
+    effect("cosmicPower");
+
+  result*=
+    1+
+    game.world*0.2;
+
+  result*=
+    SKINS[game.skin][2];
+
+  result*=
+    petMultiplier();
+
+  result*=
+    1+effect("coinMult");
+
+  result*=
+    1+effect("worldMult");
+
+  result*=
+    1+effect("grandMastery");
+
+  if(Date.now()<game.eventUntil)
+    result*=game.eventMultiplier;
+
+  return new BigNum(result);
+
+}
+
+function critChance(){
+
+  return Math.min(
+    .8,
+    .05+
+    effect("crit")+
+    effect("upgradeCrit")+
+    effect("comboCrit")+
+    effect("equipCrit")
+  );
+
+}
+
+function shopCost(value){
+
+  const discount=
+    Math.min(
+      .75,
+      effect("discount")+
+      effect("shopDiscount")+
+      effect("upgradeCost")*-1
+    );
+
+  return new BigNum(value)
+    .mul(1-discount);
 
 }
 
 
 /* =========================================================
-   CLICKING
+EARNING
+========================================================= */
+
+function earn(value){
+
+  const amount=
+    toBig(value);
+
+  game.coins=
+    game.coins.add(amount);
+
+  game.totalCoins=
+    game.totalCoins.add(amount);
+
+  game.xp=
+    game.xp.add(
+      amount.mul(
+        .02+
+        effect("levelXP")
+      )
+    );
+
+  checkLevel();
+
+}
+
+
+/* =========================================================
+CLICKING
 ========================================================= */
 
 function clickFrog(){
 
   if(game.energy<=0){
 
-    toast("⚡ Out of energy!");
+    toast("⚡ No energy!");
 
     return;
 
@@ -392,13 +286,14 @@ function clickFrog(){
   game.energy=
     Math.max(
       0,
-      game.energy-.35
+      game.energy-.3
     );
 
-  const now=performance.now();
+  const now=
+    performance.now();
 
   const rapid=
-    now-lastClickTime<700;
+    now-lastClick<750;
 
   if(rapid){
 
@@ -406,23 +301,23 @@ function clickFrog(){
       Math.min(
         1000,
         game.combo+
-        .15*
-        categoryPower(14)
+        .1+
+        effect("combo")
       );
 
-    improveMechanic(140);
+    addMechanic(1);
 
   }else{
 
     game.combo=
       Math.max(
         1,
-        game.combo*.85
+        game.combo*.75
       );
 
   }
 
-  lastClickTime=now;
+  lastClick=now;
 
   game.bestCombo=
     Math.max(
@@ -431,60 +326,45 @@ function clickFrog(){
     );
 
   let reward=
-    clickPower().mul(
-      game.combo
-    );
-
+    clickPower()
+      .mul(game.combo);
 
   /* Critical */
-  const criticalChance=
-    Math.min(
-      .8,
-      .05+
-      (game.mechanics[1]||0)*.003+
-      game.prestige*.01
-    );
-
-  if(Math.random()<criticalChance){
+  if(
+    Math.random()<
+    critChance()
+  ){
 
     reward=
       reward.mul(
-        10*
-        mechanicPower(1)
+        10+
+        effect("criticalDamage")*10
       );
 
     game.criticals++;
 
-    improveMechanic(1);
+    addMechanic(2);
 
-    floating(
-      "💥 CRITICAL!",
-      true
-    );
+    floatText("💥 CRITICAL!");
 
   }
-
 
   /* Perfect */
   if(
     rapid &&
     Math.random()<
-    .08+
-    (game.mechanics[2]||0)*.002
+    .1+
+    effect("perfect")
   ){
 
     reward=
-      reward.mul(
-        2*
-        mechanicPower(2)
-      );
+      reward.mul(2);
 
-    improveMechanic(2);
+    addMechanic(3);
 
-    floating("✨ PERFECT!");
+    floatText("✨ PERFECT!");
 
   }
-
 
   /* Charged */
   if(
@@ -494,36 +374,29 @@ function clickFrog(){
 
     reward=
       reward.mul(
-        5*
-        mechanicPower(3)
+        3+
+        effect("charged")*10
       );
 
-    improveMechanic(3);
-
-    floating("⚡ CHARGED!");
+    addMechanic(4);
 
   }
-
 
   /* Golden */
   if(
     Math.random()<
-    .004+
-    (game.mechanics[4]||0)*.001
+    .006+
+    effect("golden")
   ){
 
     reward=
-      reward.mul(
-        20*
-        mechanicPower(4)
-      );
+      reward.mul(20);
 
-    improveMechanic(4);
+    addMechanic(5);
 
-    floating("🟡 GOLDEN!");
+    floatText("🟡 GOLDEN!");
 
   }
-
 
   /* Jump */
   if(
@@ -532,15 +405,11 @@ function clickFrog(){
   ){
 
     reward=
-      reward.mul(
-        3*
-        mechanicPower(5)
-      );
+      reward.mul(4);
 
-    improveMechanic(5);
+    addMechanic(6);
 
   }
-
 
   /* Rapid */
   if(rapid){
@@ -548,13 +417,12 @@ function clickFrog(){
     reward=
       reward.mul(
         1+
-        game.combo*.01
+        effect("rapid")
       );
 
-    improveMechanic(6);
+    addMechanic(7);
 
   }
-
 
   /* Chain */
   if(
@@ -564,115 +432,70 @@ function clickFrog(){
 
     reward=
       reward.mul(
-        1.5*
-        mechanicPower(7)
+        1.5+
+        effect("chain")
       );
 
-    improveMechanic(7);
+    addMechanic(8);
 
   }
-
 
   /* Lucky */
-  if(Math.random()<.03){
-
-    reward=
-      reward.mul(
-        3*
-        mechanicPower(8)
-      );
-
-    improveMechanic(8);
-
-    floating("🍀 LUCKY!");
-
-  }
-
-
-  /* Mega Ribbit */
   if(
     Math.random()<
-    .0005+
-    game.level*.000002
+    .03+
+    effect("lucky")+
+    effect("luck")
   ){
 
     reward=
-      reward.mul(
-        100*
-        mechanicPower(9)
-      );
+      reward.mul(3);
 
-    improveMechanic(9);
-
-    floating(
-      "🐸 MEGA RIBBIT!",
-      true
-    );
+    addMechanic(9);
 
   }
 
+  /* Mega */
+  if(
+    Math.random()<
+    .0007+
+    effect("mega")
+  ){
+
+    reward=
+      reward.mul(100);
+
+    addMechanic(10);
+
+    floatText("🐸 MEGA RIBBIT!");
+
+  }
 
   game.clicks++;
 
-  earnCoins(reward);
+  earn(reward);
 
-  improveMechanic(
-    0,
-    .1
-  );
+  /* Give progress to mechanics related to clicks */
+  addMechanic(31);
+  addMechanic(33);
 
-  if(
-    game.clicks%100===0
-  ){
-
-    improveMechanic(
-      10+
-      Math.min(
-        9,
-        Math.floor(
-          game.clicks/1000
-        )
-      ),
-      1
-    );
-
-  }
+  if(game.clicks%100===0)
+    addMechanic(92);
 
   animateFrog();
 
-  renderFast();
+  updateFast();
 
 }
 
 
 /* =========================================================
-   ANIMATION
-========================================================= */
-
-function animateFrog(){
-
-  const frog=
-    document.getElementById("frog");
-
-  frog.classList.remove("frog-hit");
-
-  void frog.offsetWidth;
-
-  frog.classList.add("frog-hit");
-
-}
-
-
-/* =========================================================
-   MEGA JUMP
+MEGA JUMP
 ========================================================= */
 
 function megaJump(){
 
-  const cost=
-    new BigNumber(5);
-
-  if(game.gems.lessThan(cost)){
+  if(game.gems.cmp(5)<0){
 
     toast("Need 5 💎");
 
@@ -681,32 +504,26 @@ function megaJump(){
   }
 
   game.gems=
-    game.gems.sub(cost);
+    game.gems.sub(5);
 
-  const reward=
-    clickPower().mul(50);
-
-  earnCoins(reward);
-
-  improveMechanic(5,5);
-
-  floating(
-    "💥 +"+fmt(reward)
+  earn(
+    clickPower().mul(50)
   );
+
+  addMechanic(6,5);
+
+  toast("💥 MEGA JUMP!");
 
 }
 
 
 /* =========================================================
-   FRENZY
+FRENZY
 ========================================================= */
 
 function activateFrenzy(){
 
-  const cost=
-    new BigNumber(10);
-
-  if(game.gems.lessThan(cost)){
+  if(game.gems.cmp(10)<0){
 
     toast("Need 10 💎");
 
@@ -715,15 +532,19 @@ function activateFrenzy(){
   }
 
   game.gems=
-    game.gems.sub(cost);
+    game.gems.sub(10);
 
   game.eventUntil=
     Date.now()+30000;
 
-  game.eventMultiplier=3;
-  game.eventName="🔥 Frog Frenzy";
+  game.eventMultiplier=
+    3+
+    effect("eventPower");
 
-  improveMechanic(16,2);
+  game.eventName=
+    "🔥 Frog Frenzy";
+
+  addMechanic(157);
 
   toast("🔥 3× FRENZY!");
 
@@ -731,16 +552,12 @@ function activateFrenzy(){
 
 
 /* =========================================================
-   ENERGY
+ENERGY
 ========================================================= */
 
 function restoreEnergy(){
 
-  if(
-    game.gems.lessThan(
-      new BigNumber(2)
-    )
-  ){
+  if(game.gems.cmp(2)<0){
 
     toast("Need 2 💎");
 
@@ -749,12 +566,11 @@ function restoreEnergy(){
   }
 
   game.gems=
-    game.gems.sub(
-      new BigNumber(2)
-    );
+    game.gems.sub(2);
 
   game.energy=
-    game.maxEnergy;
+    game.maxEnergy+
+    effect("houseEnergy")*10;
 
   toast("⚡ Energy restored!");
 
@@ -762,7 +578,7 @@ function restoreEnergy(){
 
 
 /* =========================================================
-   EVENTS
+RANDOM EVENTS
 ========================================================= */
 
 function randomEvent(){
@@ -770,98 +586,34 @@ function randomEvent(){
   const event=
     EVENTS[
       Math.floor(
-        Math.random()*
-        EVENTS.length
+        Math.random()*EVENTS.length
       )
     ];
 
-  game.eventName=event.name;
-  game.eventMultiplier=event.multiplier;
+  game.eventName=event[0];
+
+  game.eventMultiplier=
+    event[1]+
+    effect("eventPower");
 
   game.eventUntil=
     Date.now()+
-    event.duration*1000;
+    event[2]*1000+
+    effect("eventDuration")*1000;
 
-  improveMechanic(170,1);
-  improveMechanic(171,1);
-  improveMechanic(172,1);
+  addMechanic(161);
 
   toast(
-    event.name+
+    event[0]+
     " ×"+
-    event.multiplier
+    game.eventMultiplier
   );
 
 }
 
 
 /* =========================================================
-   DAILY
-========================================================= */
-
-function dayNumber(){
-
-  return Math.floor(
-    Date.now()/86400000
-  );
-
-}
-
-
-function dailyReward(){
-
-  const today=dayNumber();
-
-  if(game.dailyDay===today){
-
-    toast("Already collected!");
-
-    return;
-
-  }
-
-  if(game.dailyDay===today-1){
-
-    game.dailyStreak++;
-
-  }else{
-
-    game.dailyStreak=1;
-
-  }
-
-  game.dailyDay=today;
-
-  const amount=
-    new BigNumber(
-      1000*
-      game.dailyStreak*
-      game.dailyStreak
-    );
-
-  earnCoins(amount);
-
-  game.gems=
-    game.gems.add(
-      new BigNumber(
-        game.dailyStreak*2
-      )
-    );
-
-  improveMechanic(94,1);
-  improveMechanic(95,1);
-
-  toast(
-    "🎁 +"+
-    fmt(amount)+
-    " 🪙"
-  );
-
-}
-
-
-/* =========================================================
-   PETS
+PETS
 ========================================================= */
 
 function buyPet(index){
@@ -874,49 +626,45 @@ function buyPet(index){
   const level=
     game.pets[index]||0;
 
-  const discount=
-    Math.max(
-      .35,
-      1-
-      (game.mechanics[18]||0)*.005
-    );
-
   const cost=
-    new BigNumber(
-      pet.cost*
-      (level+1)*
-      discount
+    shopCost(
+      pet[4]*(level+1)
     );
 
-  if(!spendCoins(cost))
+  if(!spend(cost)){
+
+    toast("Not enough coins!");
+
     return;
+
+  }
 
   game.pets[index]=
     level+1;
 
-  improveMechanic(20);
-  improveMechanic(21);
-  improveMechanic(22);
+  game.petXP[index]=
+    (game.petXP[index]||0)+100;
+
+  addMechanic(21);
+  addMechanic(22);
+  addMechanic(23);
 
   if(level===0)
-    improveMechanic(23);
+    addMechanic(24);
 
-  improveMechanic(24);
+  if(level>=5)
+    addMechanic(26);
 
-  if(level>=4)
-    improveMechanic(25);
+  if(level>=10)
+    addMechanic(27);
 
-  if(level>=9)
-    improveMechanic(26);
-
-  improveMechanic(27);
-  improveMechanic(28);
-  improveMechanic(29);
+  addMechanic(28);
+  addMechanic(29);
+  addMechanic(30);
 
   toast(
-    "🐾 "+pet.name+
-    " is now level "+
-    (level+1)
+    "🐾 "+pet[1]+
+    " level "+(level+1)
   );
 
   renderPets();
@@ -925,7 +673,7 @@ function buyPet(index){
 
 
 /* =========================================================
-   SKINS
+SKINS
 ========================================================= */
 
 function selectSkin(index){
@@ -939,58 +687,59 @@ function selectSkin(index){
 
     game.skin=index;
 
-    improveMechanic(30);
-    improveMechanic(33);
-
     renderSkins();
-    renderFast();
+    updateFast();
 
     return;
 
   }
 
   const cost=
-    new BigNumber(skin.cost);
+    shopCost(skin[3]);
 
-  if(!spendCoins(cost))
+  if(!spend(cost)){
+
+    toast(
+      "Need "+cost.string()+" 🪙"
+    );
+
     return;
 
+  }
+
   game.ownedSkins.push(index);
+
   game.skin=index;
 
-  improveMechanic(30);
-  improveMechanic(31);
-  improveMechanic(32);
-  improveMechanic(33);
-
-  if(index>=6)
-    improveMechanic(34);
+  addMechanic(31);
+  addMechanic(32);
+  addMechanic(33);
+  addMechanic(34);
+  addMechanic(35);
 
   if(index>=8)
-    improveMechanic(35);
+    addMechanic(36);
 
   if(index>=10)
-    improveMechanic(36);
-
-  improveMechanic(37);
+    addMechanic(37);
 
   if(game.ownedSkins.length>=3)
-    improveMechanic(38);
+    addMechanic(39);
 
-  improveMechanic(39);
+  addMechanic(40);
 
   toast(
-    "🎨 Unlocked "+
-    skin.name+"!"
+    "🎨 "+skin[1]+" unlocked!"
   );
 
   renderSkins();
+  updateFast();
 
 }
 
 
 /* =========================================================
-   WORLDS
+WORLDS
 ========================================================= */
 
 function travelWorld(index){
@@ -1000,11 +749,11 @@ function travelWorld(index){
   if(!world)
     return;
 
-  if(game.level<world.level){
+  if(game.level<index*10+1){
 
     toast(
       "Need level "+
-      world.level
+      (index*10+1)
     );
 
     return;
@@ -1012,92 +761,66 @@ function travelWorld(index){
   }
 
   const cost=
-    new BigNumber(world.cost);
+    shopCost(world[3]);
 
-  if(!spendCoins(cost))
+  if(!spend(cost)){
+
+    toast(
+      "Need "+
+      cost.string()+
+      " 🪙"
+    );
+
     return;
+
+  }
 
   game.world=index;
 
-  for(let i=50;i<60;i++)
-    improveMechanic(i);
+  for(let id=51;id<=60;id++)
+    addMechanic(id);
 
   toast(
-    world.icon+
-    " "+world.name
+    world[0]+" "+
+    world[1]
   );
 
   renderWorlds();
-  renderFast();
-
-}
-
-
-function explore(){
-
-  const reward=
-    clickPower().mul(
-      10+
-      Math.random()*100
-    );
-
-  earnCoins(reward);
-
-  game.exploration++;
-
-  improveMechanic(52);
-  improveMechanic(58);
-
-  if(Math.random()<.25){
-
-    improveMechanic(53);
-
-    earnCoins(
-      reward.mul(5)
-    );
-
-  }
-
-  if(Math.random()<.1){
-
-    improveMechanic(55);
-
-    game.gems=
-      game.gems.add(5);
-
-  }
-
-  toast(
-    "🗺️ +"+fmt(reward)
-  );
+  updateFast();
 
 }
 
 
 /* =========================================================
-   BOSSES
+BOSSES
 ========================================================= */
 
 function bossDamage(){
 
   let damage=
     clickPower()
-    .mul(100);
+      .mul(100)
+      .mul(
+        1+
+        effect("bossDamage")+
+        effect("dungeonDamage")+
+        effect("gearDamage")
+      );
 
-  damage=
-    damage.mul(
-      categoryPower(6)
-    );
+  if(
+    Math.random()<
+    .05+
+    effect("bossCrit")
+  ){
 
-  damage=
-    damage.mul(
-      categoryPower(7)
-    );
+    damage=
+      damage.mul(5);
+
+  }
 
   return damage;
 
 }
-
 
 function fightBoss(index){
 
@@ -1107,47 +830,13 @@ function fightBoss(index){
     return;
 
   const health=
-    new BigNumber(boss.health);
+    new BigNum(boss[2]);
 
   const damage=
     bossDamage();
 
-  if(damage.lessThan(health)){
+  if(damage.cmp(health)<0){
 
     toast(
       "Need "+
-      fmt(health)+
-      " damage"
-    );
-
-    return;
-
-  }
-
-  let reward=
-    new BigNumber(
-      boss.reward
-    );
-
-  reward=
-    reward.mul(
-      1+
-      (game.mechanics[66]||0)*.1
-    );
-
-  earnCoins(reward);
-
-  game.gems=
-    game.gems.add(
-      new BigNumber(
-        Math.max(
-          1,
-          boss.reward/10000
-        )
-      )
-    );
-
-  game.bossKills++;
-
-  for(let i=60;i<70;i++)
-    improve
+      health
