@@ -1,260 +1,69 @@
 "use strict";
 
-/* =========================
-   PETS
-========================= */
-
-const PETS=[
-
-  {
-    icon:"🪰",
-    name:"Tiny Fly",
-    rarity:"Common",
-    multiplier:1.1,
-    cost:500
-  },
-
-  {
-    icon:"🐛",
-    name:"Happy Worm",
-    rarity:"Common",
-    multiplier:1.25,
-    cost:2500
-  },
-
-  {
-    icon:"🐌",
-    name:"Mega Snail",
-    rarity:"Uncommon",
-    multiplier:1.5,
-    cost:15000
-  },
-
-  {
-    icon:"🦋",
-    name:"Rainbow Butterfly",
-    rarity:"Rare",
-    multiplier:2,
-    cost:100000
-  },
-
-  {
-    icon:"🐢",
-    name:"Swamp Turtle",
-    rarity:"Rare",
-    multiplier:3,
-    cost:750000
-  },
-
-  {
-    icon:"🦆",
-    name:"Golden Duck",
-    rarity:"Epic",
-    multiplier:5,
-    cost:5000000
-  },
-
-  {
-    icon:"🐍",
-    name:"Crystal Snake",
-    rarity:"Legendary",
-    multiplier:9,
-    cost:50000000
-  },
-
-  {
-    icon:"🐲",
-    name:"Baby Dragon",
-    rarity:"Mythic",
-    multiplier:18,
-    cost:1000000000
-  }
-
+const PETS = [
+  ["🪰","Fly","Common",1.10,500],
+  ["🐛","Worm","Common",1.25,2000],
+  ["🐌","Snail","Uncommon",1.50,10000],
+  ["🦋","Butterfly","Rare",2.0,50000],
+  ["🐢","Turtle","Rare",2.7,250000],
+  ["🦆","Duck","Epic",3.5,1000000],
+  ["🐍","Snake","Legendary",5,10000000],
+  ["🐲","Dragon Frog","Mythic",8,100000000],
+  ["👽","Alien Frog","Cosmic",15,1000000000],
+  ["🌌","Galaxy Frog","Divine",30,10000000000]
 ];
 
-
-/* =========================
-   SKINS
-========================= */
-
-const SKINS=[
-
-  {icon:"🐸",name:"Classic",multiplier:1,cost:0},
-  {icon:"🟡",name:"Golden Frog",multiplier:2,cost:1000},
-  {icon:"🔵",name:"Ocean Frog",multiplier:3,cost:5000},
-  {icon:"🔴",name:"Ruby Frog",multiplier:5,cost:25000},
-  {icon:"🟣",name:"Mystic Frog",multiplier:8,cost:100000},
-  {icon:"⚫",name:"Shadow Frog",multiplier:12,cost:500000},
-  {icon:"🤖",name:"Robot Frog",multiplier:20,cost:2500000},
-  {icon:"👻",name:"Ghost Frog",multiplier:35,cost:15000000},
-  {icon:"👽",name:"Alien Frog",multiplier:60,cost:100000000},
-  {icon:"🌈",name:"Rainbow Frog",multiplier:100,cost:1000000000},
-  {icon:"🐲",name:"Dragon Frog",multiplier:250,cost:10000000000},
-  {icon:"👑",name:"Frog King",multiplier:750,cost:100000000000}
+const SKINS = [
+  ["🐸","Classic",1,0],
+  ["🟡","Golden",2,1000],
+  ["🔵","Ocean",3,5000],
+  ["🔴","Ruby",5,25000],
+  ["🟣","Mystic",8,100000],
+  ["⚫","Shadow",12,500000],
+  ["🤖","Robot",20,2000000],
+  ["👻","Ghost",30,10000000],
+  ["👽","Alien",50,50000000],
+  ["🌈","Rainbow",80,250000000],
+  ["🐲","Dragon",150,1000000000],
+  ["👑","King",300,10000000000]
 ];
 
-
-/* =========================
-   WORLDS
-========================= */
-
-const WORLDS=[
-
-  {icon:"🌿",name:"Lily Pond",multiplier:1,cost:0,level:1},
-  {icon:"🌲",name:"Moss Forest",multiplier:2,cost:10000,level:10},
-  {icon:"🏔️",name:"Frog Mountain",multiplier:5,cost:100000,level:20},
-  {icon:"🏜️",name:"Desert Oasis",multiplier:10,cost:1000000,level:30},
-  {icon:"🌊",name:"Coral Marsh",multiplier:25,cost:10000000,level:40},
-  {icon:"🌋",name:"Volcano Bog",multiplier:60,cost:100000000,level:50},
-  {icon:"🌙",name:"Moon Pond",multiplier:150,cost:1000000000,level:65},
-  {icon:"☁️",name:"Sky Swamp",multiplier:400,cost:10000000000,level:80},
-  {icon:"🪐",name:"Frog Planet",multiplier:1000,cost:1000000000000,level:100},
-  {icon:"🌈",name:"Rainbow Dimension",multiplier:5000,cost:100000000000000,level:150}
+const WORLDS = [
+  ["🌿","Lily Pond",1,0],
+  ["🌲","Moss Forest",2,1000],
+  ["🏔️","Frog Mountain",4,10000],
+  ["🏜️","Desert Oasis",8,100000],
+  ["🌊","Coral Marsh",16,1000000],
+  ["🌋","Volcano Bog",32,10000000],
+  ["🌙","Moon Pond",70,100000000],
+  ["☁️","Sky Swamp",150,10000000000],
+  ["🪐","Frog Planet",350,1000000000000],
+  ["🌈","Rainbow Dimension",1000,1000000000000000]
 ];
 
-
-/* =========================
-   BOSSES
-========================= */
-
-const BOSSES=[
-
-  {
-    icon:"🟢",
-    name:"Slime Toad",
-    health:100000,
-    reward:5000
-  },
-
-  {
-    icon:"👹",
-    name:"Swamp Monster",
-    health:10000000,
-    reward:100000
-  },
-
-  {
-    icon:"🐲",
-    name:"Dragon Toad",
-    health:1000000000,
-    reward:5000000
-  },
-
-  {
-    icon:"👽",
-    name:"Alien Frog",
-    health:100000000000,
-    reward:100000000
-  },
-
-  {
-    icon:"🌌",
-    name:"Galaxy Beast",
-    health:100000000000000,
-    reward:10000000000
-  },
-
-  {
-    icon:"♾️",
-    name:"Infinity Frog",
-    health:1e20,
-    reward:1e15
-  }
-
+const BOSSES = [
+  ["🟢","Slime Toad",100000,1000],
+  ["👹","Swamp Monster",100000000,10000],
+  ["🐲","Dragon Toad",100000000000,100000],
+  ["👽","Alien Frog",1e18,1000000],
+  ["🌌","Galaxy Beast",1e25,10000000],
+  ["♾️","Infinity Boss",1e35,100000000]
 ];
 
-
-/* =========================
-   CRAFTING
-========================= */
-
-const RECIPES=[
-
-  {
-    icon:"🍀",
-    name:"Lucky Potion",
-    cost:100000,
-    effect:"Temporary luck boost"
-  },
-
-  {
-    icon:"🔥",
-    name:"Frenzy Potion",
-    cost:1000000,
-    effect:"Temporary 5× income"
-  },
-
-  {
-    icon:"💎",
-    name:"Gem Potion",
-    cost:10000000,
-    effect:"Gain bonus gems"
-  },
-
-  {
-    icon:"🧬",
-    name:"Mutation Serum",
-    cost:100000000,
-    effect:"Gain mutation progress"
-  },
-
-  {
-    icon:"👑",
-    name:"Royal Crown",
-    cost:1000000000,
-    effect:"Permanent power bonus"
-  },
-
-  {
-    icon:"♾️",
-    name:"Infinity Elixir",
-    cost:1e15,
-    effect:"Gain prestige"
-  }
-
+const RECIPES = [
+  ["🍀","Lucky Potion",10000,1],
+  ["🔥","Frenzy Potion",1000000,2],
+  ["💎","Gem Potion",10000000,10],
+  ["🧬","Mutation Serum",100000000,1],
+  ["👑","Royal Crown",1000000000,20],
+  ["♾️","Infinity Elixir",1e15,100]
 ];
 
-
-/* =========================
-   RANDOM EVENTS
-========================= */
-
-const EVENTS=[
-
-  {
-    name:"🪰 Fly Swarm",
-    multiplier:2,
-    duration:20
-  },
-
-  {
-    name:"🌧️ Golden Rain",
-    multiplier:4,
-    duration:25
-  },
-
-  {
-    name:"🌈 Rainbow Storm",
-    multiplier:8,
-    duration:30
-  },
-
-  {
-    name:"👽 Alien Invasion",
-    multiplier:15,
-    duration:40
-  },
-
-  {
-    name:"💎 Gem Meteor",
-    multiplier:25,
-    duration:45
-  },
-
-  {
-    name:"🔥 Lava Festival",
-    multiplier:50,
-    duration:60
-  }
-
+const EVENTS = [
+  ["🪰 Fly Swarm",2,20],
+  ["🌧️ Golden Rain",4,25],
+  ["🌈 Rainbow Storm",8,30],
+  ["👽 Alien Invasion",15,40],
+  ["💎 Gem Meteor",25,45],
+  ["🔥 Lava Festival",50,60]
 ];
