@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>🐸 Frog Frenzy 500</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#07120a">
+<title>🐸 Frog Frenzy 500</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="topbar">
-  <div class="logo">🐸 FROG FRENZY <span>500</span></div>
+<header>
+  <div class="logo">🐸 FROG FRENZY 500</div>
 
-  <div class="resources">
-    <div>🪙 <b id="coins">0</b></div>
-    <div>💎 <b id="gems">50</b></div>
-    <div>⚡ <b id="energy">100</b></div>
-    <div>⭐ <b id="level">1</b></div>
-    <div>🔥 x<b id="combo">1.00</b></div>
+  <div class="stats">
+    <span>🪙 <b id="coins">0</b></span>
+    <span>💎 <b id="gems">0</b></span>
+    <span>⚡ <b id="energy">100</b></span>
+    <span>⭐ Lv <b id="level">1</b></span>
+    <span>🔥 x<b id="combo">1.00</b></span>
+    <span>🏆 <b id="prestige">0</b></span>
+    <span>🌌 <b id="rebirth">0</b></span>
   </div>
 </header>
 
-<nav id="nav">
+<nav id="tabs">
   <button data-tab="home">🐸 Home</button>
   <button data-tab="mechanics">⚙️ 500 Mechanics</button>
   <button data-tab="pets">🐾 Pets</button>
@@ -35,52 +38,44 @@
 <main>
 
 <section id="home" class="page">
-
   <div class="home-grid">
 
     <div class="panel frog-panel">
-      <div class="world-title" id="worldName">🌿 Lily Pond</div>
+      <div id="worldLabel">🌿 Lily Pond</div>
 
-      <button id="frogButton" class="frog-button" aria-label="Click frog">
-        <span id="frog">🐸</span>
-      </button>
+      <button id="frog" aria-label="Click frog">🐸</button>
 
       <div class="power">
-        <span id="clickPower">1</span> 🪙 / click
+        <b id="clickPower">1</b> 🪙 / click
       </div>
 
-      <div class="click-buttons">
-        <button id="jumpButton">💥 Mega Jump</button>
+      <div class="row">
+        <button id="megaButton">💥 Mega Jump</button>
         <button id="frenzyButton">🔥 Frenzy</button>
       </div>
 
-      <div class="statline">
-        Clicks: <b id="clicks">0</b>
-      </div>
-
-      <div class="progress-label">
-        Level XP
-        <span id="xpText">0 / 100</span>
-      </div>
+      <div>Clicks: <b id="clicks">0</b></div>
 
       <div class="bar">
-        <div id="xpBar" class="fill"></div>
+        <i id="xpBar"></i>
       </div>
+
+      <small id="xpText">0 / 100 XP</small>
     </div>
 
     <div class="panel">
       <h2>🔥 Combo</h2>
-      <div class="big-number">x<span id="comboBig">1.00</span></div>
+      <div class="big">x<span id="comboBig">1.00</span></div>
       <p>Best: <b id="bestCombo">1.00</b></p>
-      <p class="muted">Click quickly to build your combo.</p>
+      <p>Criticals: <b id="criticals">0</b></p>
     </div>
 
     <div class="panel">
       <h2>⚡ Energy</h2>
       <div class="bar">
-        <div id="energyBar" class="fill blue"></div>
+        <i id="energyBar"></i>
       </div>
-      <p id="energyText">100 / 100</p>
+      <p><span id="energyText">100 / 100</span></p>
       <button id="energyButton">Restore — 2 💎</button>
     </div>
 
@@ -91,9 +86,9 @@
     </div>
 
     <div class="panel">
-      <h2>🎲 Event</h2>
+      <h2>🎉 Event</h2>
       <p id="eventText">No event.</p>
-      <button id="eventButton">Start Random Event</button>
+      <button id="eventButton">🎲 Start Event</button>
     </div>
 
     <div class="panel">
@@ -102,85 +97,62 @@
     </div>
 
   </div>
-
 </section>
-
 
 <section id="mechanics" class="page hidden">
   <div class="page-title">
     <h1>⚙️ 500 Mechanics</h1>
-    <p>50 categories × 10 mechanics.</p>
+    <input id="mechanicSearch" placeholder="Search mechanics...">
   </div>
-
-  <input
-    id="mechanicSearch"
-    class="search"
-    placeholder="Search mechanics..."
-  >
-
   <div id="mechanicCategories"></div>
 </section>
-
 
 <section id="pets" class="page hidden">
   <h1>🐾 Pets</h1>
   <div id="petsGrid" class="card-grid"></div>
 </section>
 
-
 <section id="skins" class="page hidden">
   <h1>🎨 Skins</h1>
   <div id="skinsGrid" class="card-grid"></div>
 </section>
-
 
 <section id="worlds" class="page hidden">
   <h1>🌎 Worlds</h1>
   <div id="worldsGrid" class="card-grid"></div>
 </section>
 
-
 <section id="bosses" class="page hidden">
   <h1>👹 Bosses</h1>
   <div id="bossesGrid" class="card-grid"></div>
 </section>
 
-
 <section id="crafting" class="page hidden">
   <h1>🔨 Crafting</h1>
-  <div id="craftingGrid" class="card-grid"></div>
+  <div id="craftGrid" class="card-grid"></div>
 </section>
-
 
 <section id="social" class="page hidden">
 
-  <h1>👥 Social</h1>
-
-  <div class="two-column">
+  <div class="card-grid">
 
     <div class="panel">
       <h2>👥 Friends</h2>
-
-      <div class="row">
-        <input id="friendInput" placeholder="Friend name">
-        <button id="addFriend">Add Friend</button>
-      </div>
-
+      <input id="friendName" placeholder="Friend name">
+      <button id="addFriend">Add Friend</button>
       <div id="friendsList"></div>
-
-      <button id="friendGift">🎁 Friend Gift</button>
     </div>
 
     <div class="panel">
       <h2>🏰 Clan</h2>
-
-      <div id="clanArea"></div>
+      <input id="clanName" placeholder="Clan name">
+      <button id="createClan">Create Clan</button>
+      <div id="clanInfo"></div>
     </div>
 
   </div>
 
 </section>
-
 
 <section id="progression" class="page hidden">
   <h1>🏆 Progression</h1>
@@ -194,23 +166,14 @@
     </div>
 
     <div class="panel">
-      <h2>🌌 Ascension</h2>
+      <h2>🌌 Rebirth</h2>
       <p>Requires 10 prestige.</p>
-      <button id="ascensionButton">Ascend</button>
-    </div>
-
-    <div class="panel">
-      <h2>♾️ Rebirth</h2>
-      <p>Requires 5 ascensions.</p>
       <button id="rebirthButton">Rebirth</button>
     </div>
 
     <div class="panel">
-      <h2>📊 Mastery</h2>
-      <p id="masteryText">0%</p>
-      <div class="bar">
-        <div id="masteryBar" class="fill purple"></div>
-      </div>
+      <h2>📊 Statistics</h2>
+      <div id="statistics"></div>
     </div>
 
   </div>
@@ -219,7 +182,6 @@
 </main>
 
 <div id="toast"></div>
-<div id="floatingNumbers"></div>
 
 <script src="mechanics.js"></script>
 <script src="content.js"></script>
