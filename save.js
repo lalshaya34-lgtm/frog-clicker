@@ -2,397 +2,174 @@
 
 /*
   Big-number representation.
-
-  Numbers are stored as:
-  mantissa × 10^exponent
-
-  This avoids the game breaking when the player reaches
-  extremely large values.
+  This prevents numbers from turning into Infinity as quickly
+  and avoids expensive giant-number calculations.
 */
 
-class BigNumber{
+class BigNum{
 
-  constructor(value=0,exponent=null){
+  constructor(m=0,e=0){
 
-    if(value instanceof BigNumber){
-
-      this.m=value.m;
-      this.e=value.e;
-
+    if(m instanceof BigNum){
+      this.m=m.m;
+      this.e=m.e;
       return;
     }
 
-    if(
-      typeof value==="object" &&
-      value &&
-      typeof value.m==="number"
-    ){
-
-      this.m=value.m;
-      this.e=value.e||0;
-
+    if(typeof m === "object" && m !== null){
+      this.m=Number(m.m)||0;
+      this.e=Number(m.e)||0;
       this.normalize();
-
       return;
     }
 
-    if(exponent!==null){
-
-      this.m=Number(value)||0;
-      this.e=Number(exponent)||0;
-
-      this.normalize();
-
-      return;
-    }
-
-    value=Number(value)||0;
-
-    if(value===0){
-
-      this.m=0;
-      this.e=0;
-
-      return;
-    }
-
-    this.m=value;
-    this.e=0;
+    this.m=Number(m)||0;
+    this.e=Number(e)||0;
 
     this.normalize();
-
   }
-
 
   normalize(){
 
-    if(!Number.isFinite(this.m)){
-
-      this.m=9.99;
-      this.e=9999;
-
-      return this;
-    }
-
     if(this.m===0){
-
       this.e=0;
-
       return this;
     }
 
-    const power=Math.floor(
+    const p=Math.floor(
       Math.log10(Math.abs(this.m))
     );
 
-    this.m/=10**power;
-    this.e+=power;
+    if(Number.isFinite(p)){
+      this.m/=10**p;
+      this.e+=p;
+    }
 
     return this;
   }
 
+  add(value){
 
-  add(other){
+    const x=toBig(value);
 
-    other=BN(other);
+    if(!x.m)return new BigNum(this);
+    if(!this.m)return new BigNum(x);
 
-    if(this.m===0)
-      return new BigNumber(other);
+    const difference=this.e-x.e;
 
-    if(other.m===0)
-      return new BigNumber(this);
+    if(difference>15)
+      return new BigNum(this);
 
-    const difference=this.e-other.e;
-
-    if(difference>16)
-      return new BigNumber(this);
-
-    if(difference<-16)
-      return new BigNumber(other);
+    if(difference<-15)
+      return new BigNum(x);
 
     if(difference>=0){
 
-      return new BigNumber(
-        this.m+
-        other.m*10**(-difference),
-        this.e
-      );
+      this.m+=x.m*10**(-difference);
+
+    }else{
+
+      this.m=x.m+this.m*10**difference;
+      this.e=x.e;
 
     }
 
-    return new BigNumber(
-      other.m+
-      this.m*10**difference,
-      other.e
-    );
-
+    return this.normalize();
   }
 
+  sub(value){
 
-  sub(other){
+    const x=toBig(value);
 
-    other=BN(other);
-
-    if(this.compare(other)<0)
-      return new BigNumber(0);
+    if(this.cmp(x)<0)
+      return new BigNum(0);
 
     return this.add(
-      new BigNumber(-other.m,other.e)
+      new BigNum(-x.m,x.e)
     );
-
   }
 
+  mul(value){
 
-  mul(other){
+    const x=toBig(value);
 
-    other=BN(other);
+    this.m*=x.m;
+    this.e+=x.e;
 
-    return new BigNumber(
-      this.m*other.m,
-      this.e+other.e
-    );
-
+    return this.normalize();
   }
 
+  div(value){
 
-  div(other){
+    const x=toBig(value);
 
-    other=BN(other);
+    if(!x.m)
+      return new BigNum(0);
 
-    if(other.m===0)
-      return new BigNumber(0);
+    this.m/=x.m;
+    this.e-=x.e;
 
-    return new BigNumber(
-      this.m/other.m,
-      this.e-other.e
-    );
-
+    return this.normalize();
   }
 
+  cmp(value){
 
-  compare(other){
+    const x=toBig(value);
 
-    other=BN(other);
-
-    if(this.m===0 && other.m===0)
+    if(!this.m && !x.m)
       return 0;
 
-    if(this.e!==other.e)
-      return this.e>other.e?1:-1;
+    if(this.e!==x.e)
+      return this.e>x.e?1:-1;
 
-    if(this.m===other.m)
+    if(this.m===x.m)
       return 0;
 
-    return this.m>other.m?1:-1;
-
+    return this.m>x.m?1:-1;
   }
 
-
-  greaterOrEqual(other){
-
-    return this.compare(other)>=0;
-
-  }
-
-
-  lessThan(other){
-
-    return this.compare(other)<0;
-
-  }
-
-
-  toNumber(){
+  number(){
 
     if(this.e>308)
       return Infinity;
 
     return this.m*10**this.e;
-
   }
 
+  string(){
 
-  toString(){
-
-    if(this.m===0)
+    if(!this.m)
       return "0";
 
-    if(this.e<6){
-
-      const n=this.toNumber();
-
-      if(Number.isFinite(n))
-        return Math.floor(n).toLocaleString();
-
-    }
+    if(this.e<6)
+      return Math.floor(
+        this.number()
+      ).toLocaleString();
 
     return this.m.toFixed(2)+"e"+this.e;
-
   }
 
 }
 
-
-function BN(value){
-
-  return value instanceof BigNumber
-    ?new BigNumber(value)
-    :new BigNumber(value);
-
+function toBig(value){
+  return value instanceof BigNum
+    ? new BigNum(value)
+    : new BigNum(value);
 }
-
-
-function serialize(value){
-
-  if(value instanceof BigNumber){
-
-    return{
-      __bigNumber:true,
-      m:value.m,
-      e:value.e
-    };
-
-  }
-
-  if(Array.isArray(value))
-    return value.map(serialize);
-
-  if(value && typeof value==="object"){
-
-    const result={};
-
-    for(const key in value)
-      result[key]=serialize(value[key]);
-
-    return result;
-
-  }
-
-  return value;
-
-}
-
-
-function deserialize(value){
-
-  if(
-    value &&
-    value.__bigNumber===true
-  ){
-
-    return new BigNumber(
-      value.m,
-      value.e
-    );
-
-  }
-
-  if(Array.isArray(value))
-    return value.map(deserialize);
-
-  if(value && typeof value==="object"){
-
-    for(const key in value)
-      value[key]=deserialize(value[key]);
-
-  }
-
-  return value;
-
-}
-
-
-function createDefaultState(){
-
-  return{
-
-    coins:new BigNumber(0),
-
-    gems:new BigNumber(50),
-
-    xp:new BigNumber(0),
-
-    level:1,
-
-    clicks:0,
-
-    criticals:0,
-
-    combo:1,
-
-    bestCombo:1,
-
-    energy:100,
-
-    maxEnergy:100,
-
-    world:0,
-
-    skin:0,
-
-    ownedSkins:[0],
-
-    pets:{},
-
-    friends:[],
-
-    clan:null,
-
-    prestige:0,
-
-    ascension:0,
-
-    rebirth:0,
-
-    mutations:0,
-
-    crafts:0,
-
-    bossKills:0,
-
-    exploration:0,
-
-    eventUntil:0,
-
-    eventMultiplier:1,
-
-    eventName:"",
-
-    dailyDay:-1,
-
-    dailyStreak:0,
-
-    totalCoins:new BigNumber(0),
-
-    mechanics:Array(500).fill(0),
-
-    lastSaved:Date.now()
-
-  };
-
-}
-
 
 function saveGame(){
-
-  if(!window.game)
-    return;
-
-  game.lastSaved=Date.now();
 
   try{
 
     localStorage.setItem(
       "frog-frenzy-500",
-      JSON.stringify(
-        serialize(game)
-      )
+      JSON.stringify(gameToJSON(game))
     );
 
   }catch(error){
 
     console.error(
-      "Could not save game:",
+      "Save failed:",
       error
     );
 
@@ -400,6 +177,60 @@ function saveGame(){
 
 }
 
+function gameToJSON(value){
+
+  if(value instanceof BigNum){
+
+    return {
+      __big:true,
+      m:value.m,
+      e:value.e
+    };
+
+  }
+
+  if(Array.isArray(value))
+    return value.map(gameToJSON);
+
+  if(value && typeof value==="object"){
+
+    const result={};
+
+    for(const key in value)
+      result[key]=gameToJSON(value[key]);
+
+    return result;
+  }
+
+  return value;
+}
+
+function restoreJSON(value){
+
+  if(
+    value &&
+    value.__big
+  ){
+
+    return new BigNum(
+      value.m,
+      value.e
+    );
+
+  }
+
+  if(Array.isArray(value))
+    return value.map(restoreJSON);
+
+  if(value && typeof value==="object"){
+
+    for(const key in value)
+      value[key]=restoreJSON(value[key]);
+
+  }
+
+  return value;
+}
 
 function loadGame(){
 
@@ -409,67 +240,83 @@ function loadGame(){
     );
 
   if(!raw)
-    return createDefaultState();
+    return;
 
   try{
 
     const loaded=
-      deserialize(
+      restoreJSON(
         JSON.parse(raw)
       );
 
-    const fresh=
-      createDefaultState();
-
-    const result=
-      Object.assign(
-        fresh,
-        loaded
-      );
+    Object.assign(
+      game,
+      loaded
+    );
 
     if(
-      !Array.isArray(result.mechanics) ||
-      result.mechanics.length!==500
+      !Array.isArray(game.mechanics) ||
+      game.mechanics.length!==500
     ){
 
-      result.mechanics=
+      game.mechanics=
         Array(500).fill(0);
 
     }
 
-    return result;
-
   }catch(error){
 
     console.error(
-      "Save was corrupted:",
+      "Save load failed:",
       error
     );
-
-    return createDefaultState();
 
   }
 
 }
 
-
 function offlineReward(){
 
-  if(!window.game)
-    return null;
+  if(!game.lastSave)
+    return;
 
-  const elapsed=
+  const seconds=
     Math.min(
       86400,
       Math.max(
         0,
-        (Date.now()-game.lastSaved)/1000
+        (Date.now()-game.lastSave)/1000
       )
     );
 
-  if(elapsed<30)
-    return null;
+  if(seconds<30)
+    return;
 
-  return elapsed;
+  const reward=
+    game.clickPower
+      ? game.clickPower()
+      : new BigNum(1);
+
+  const earned=
+    reward
+      .mul(seconds)
+      .mul(.15);
+
+  if(earned.cmp(0)>0){
+
+    game.coins=
+      game.coins.add(earned);
+
+    setTimeout(
+      ()=>{
+        toast(
+          "🌙 Offline reward: +"+
+          earned.string()+" 🪙"
+        );
+      },
+      500
+    );
+
+  }
 
 }
