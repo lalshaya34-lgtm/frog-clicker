@@ -1,1044 +1,1046 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Frog Frenzy Clicker</title>
-<style>
-*{box-sizing:border-box}
-:root{
-  --bg:#07140f;--panel:#10271b;--panel2:#173723;--green:#58e66f;
-  --green2:#24b84b;--yellow:#ffd85a;--text:#effff1;--muted:#9bc7a4;
-  --red:#ff6675;--blue:#62b8ff;--purple:#c084fc;
-}
-body{
-  margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;
-  color:var(--text);background:
-  radial-gradient(circle at 50% -10%,#245d36 0,#0b2115 35%,#050d09 80%);
-  min-height:100vh;overflow-x:hidden;
-}
-button{
-  border:0;color:white;font:inherit;font-weight:800;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-button:active{transform:scale(.96)}
-#app{max-width:1250px;margin:auto;padding:14px}
-header{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  margin-bottom:12px;flex-wrap:wrap
-}
-.logo{font-size:25px;font-weight:1000}
-.logo span{color:var(--green)}
-.resources{display:flex;gap:7px;flex-wrap:wrap}
-.res{
-  background:rgba(16,39,27,.9);border:1px solid #285b3a;border-radius:12px;
-  padding:8px 11px;min-width:90px;text-align:center
-}
-.res b{display:block;font-size:17px}.res small{color:var(--muted)}
-.layout{display:grid;grid-template-columns:260px 1fr 280px;gap:12px}
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1"> <title>🐸 Frog Frenzy Clicker</title> <style> *{box-sizing:border-box} body{ margin:0; font-family:Arial,sans-serif; color:#fff; background:linear-gradient(135deg,#06140b,#0b2d18,#123f20); min-height:100vh; } button{cursor:pointer;border:0;color:white;font-weight:bold} #app{max-width:1200px;margin:auto;padding:15px} header{ display:flex;justify-content:space-between;align-items:center; gap:10px;flex-wrap:wrap;margin-bottom:15px } .logo{font-size:28px;font-weight:900} .logo span{color:#64ed76} .resources{display:flex;gap:8px;flex-wrap:wrap} .resource{ background:#102a18;border:1px solid #347344;border-radius:12px; padding:8px 13px;text-align:center;min-width:90px } .resource b{display:block;font-size:18px} .resource small{color:#a8cdb0}
+.layout{display:grid;grid-template-columns:190px 1fr 230px;gap:12px}
 .panel{
-  background:linear-gradient(180deg,rgba(20,49,32,.96),rgba(10,27,18,.96));
-  border:1px solid #285b3a;border-radius:18px;box-shadow:0 15px 45px #0006;
+background:#0d2415;
+border:1px solid #2d6039;
+border-radius:18px;
+box-shadow:0 12px 35px #0007
 }
-.side{padding:10px;height:max-content}
+.sidebar{padding:10px;height:max-content}
 .nav{
-  width:100%;padding:12px;margin:4px 0;border-radius:12px;text-align:left;
-  background:#132f20;color:#b8d9bf;border:1px solid transparent
+width:100%;padding:12px 10px;margin:4px 0;
+background:#14341e;border-radius:10px;text-align:left
 }
-.nav:hover,.nav.active{background:#225d35;color:white;border-color:#3c9b55}
-.nav span{display:inline-block;width:27px}
-.main{padding:16px;min-height:690px}
-.screen{display:none}.screen.active{display:block}
-.hero{text-align:center}
-h1{margin:3px 0;font-size:28px}
-.sub{color:var(--muted)}
-.frog-wrap{
-  position:relative;width:285px;height:285px;margin:10px auto 8px;
-  display:grid;place-items:center
-}
+.nav:hover,.nav.active{background:#28733a}
+.main{padding:20px;min-height:650px}
+.right{padding:14px;height:max-content}
+
+.screen{display:none}
+.screen.active{display:block}
+
+h1{margin-top:0}
+.muted{color:#9fc0a6}
+
+.frog-area{text-align:center}
 .frog{
-  width:205px;height:170px;border-radius:48% 48% 45% 45%;
-  background:linear-gradient(#71ed7c,#28ad4d);
-  box-shadow:inset 0 -15px 0 #16863a,0 20px 45px #0008;
-  position:relative;cursor:pointer;user-select:none;
-  transition:transform .08s
+width:220px;height:180px;
+margin:35px auto 15px;
+background:linear-gradient(#69ed79,#29ad4c);
+border-radius:50%;
+position:relative;
+box-shadow:0 18px 35px #0008;
+user-select:none;
+transition:.08s;
 }
-.frog:before,.frog:after{
-  content:"";position:absolute;top:-37px;width:78px;height:78px;
-  border-radius:50%;background:#58d967;border:8px solid #177c38;
-}
-.frog:before{left:8px}.frog:after{right:8px}
+.frog:active{transform:scale(.92)}
 .eye{
-  position:absolute;top:-14px;width:30px;height:30px;background:#fff;
-  border-radius:50%;z-index:2;border:5px solid #126b31
+position:absolute;
+width:55px;height:55px;
+top:-25px;
+background:#65d875;
+border:6px solid #176d30;
+border-radius:50%;
 }
-.eye:after{content:"";position:absolute;width:11px;height:15px;background:#111;border-radius:50%;left:5px;top:4px}
-.e1{left:35px}.e2{right:35px}
+.eye:after{
+content:"";
+position:absolute;
+width:18px;height:25px;
+background:#111;
+border-radius:50%;
+left:13px;top:10px
+}
+.eye.left{left:30px}
+.eye.right{right:30px}
 .mouth{
-  position:absolute;width:105px;height:35px;left:50px;top:92px;
-  border-bottom:7px solid #125d2a;border-radius:50%
+position:absolute;
+width:115px;height:45px;
+left:52px;top:83px;
+border-bottom:8px solid #145b29;
+border-radius:50%
 }
 .tongue{
-  position:absolute;width:62px;height:17px;background:#ff7890;
-  border-radius:20px;left:72px;top:122px
+position:absolute;
+width:55px;height:15px;
+left:82px;top:119px;
+border-radius:20px;
+background:#ff7893
 }
-.frog.pop{transform:scale(.91) rotate(-2deg)}
-.click-power{font-size:20px;color:var(--yellow);font-weight:900}
-.progress{
-  height:12px;background:#07130c;border-radius:20px;overflow:hidden;
-  margin:7px 0 15px;border:1px solid #285b3a
+.power{color:#ffe36a;font-size:21px;font-weight:900}
+
+.bar{
+height:13px;background:#061008;
+border-radius:20px;overflow:hidden;margin:10px 0
 }
-.progress i{display:block;height:100%;background:linear-gradient(90deg,#38c95a,#b7ff6a);width:0%}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bar div{
+height:100%;width:0%;
+background:linear-gradient(90deg,#31c957,#aaff72)
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;margin-top:20px
+}
 .stat{
-  padding:10px;background:#0b1f14;border:1px solid #204b31;border-radius:12px;
-  text-align:center
+background:#102b19;
+border:1px solid #285b34;
+padding:12px;border-radius:12px;text-align:center
 }
-.stat b{display:block;font-size:18px}.stat small{color:var(--muted)}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.stat b{display:block;font-size:20px}
+.stat small{color:#9fc0a6}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px
+}
 .card{
-  padding:12px;background:#10281a;border:1px solid #285b3a;border-radius:14px;
+background:#112d1a;
+border:1px solid #2a6038;
+padding:14px;border-radius:13px
 }
-.card h3{margin:0 0 4px}.card p{margin:4px 0;color:var(--muted);font-size:13px}
+.card p{color:#a9c9b0}
 .buy{
-  width:100%;padding:10px;border-radius:10px;
-  background:linear-gradient(135deg,#3fd35b,#168b39)
+width:100%;padding:10px;
+border-radius:9px;
+background:linear-gradient(135deg,#42d65e,#218f3b)
 }
 .buy:disabled{opacity:.4;cursor:not-allowed}
-.skin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+
+.skins{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px
+}
 .skin{
-  padding:10px;text-align:center;border-radius:14px;background:#10281a;
-  border:2px solid #244d31
+padding:12px;
+background:#112d1a;
+border:2px solid #315e3c;
+border-radius:13px;
+text-align:center
 }
-.skin.selected{border-color:var(--yellow)}
-.mini-frog{width:70px;height:55px;border-radius:50%;margin:4px auto 8px}
-.common{border-color:#6b7280}.rare{border-color:#60a5fa}
-.epic{border-color:#c084fc}.legendary{border-color:#fbbf24}
-.mythic{border-color:#fb7185}
-.activity{
-  padding:9px;border-bottom:1px solid #23462e;font-size:13px;color:#bfe5c6
+.skin.selected{border-color:#ffe05c}
+.mini{
+width:65px;height:50px;
+margin:4px auto 10px;
+border-radius:50%;
 }
-.activity:last-child{border:0}
-.event{
-  padding:13px;border-radius:13px;background:linear-gradient(135deg,#512c7b,#223c73);
-  border:1px solid #8061bd;margin-bottom:10px
-}
-.badge{
-  display:inline-block;padding:4px 8px;border-radius:20px;background:#244b31;
-  color:#aeeeb8;font-size:11px;font-weight:900
-}
+
 .quest{
-  display:flex;justify-content:space-between;gap:8px;align-items:center;
-  padding:11px;background:#10281a;border-radius:12px;margin:7px 0
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+background:#112d1a;
+border:1px solid #2a6038;
+border-radius:12px;
+padding:12px;
+margin:8px 0
 }
-.right{padding:12px;height:max-content}
-.right h3{margin:3px 0 9px}
-.click-fx{
-  position:fixed;pointer-events:none;color:#ffe66d;font-weight:1000;
-  animation:float .8s ease-out forwards;z-index:100
+.quest button{width:auto;padding:9px 14px}
+
+.activity{
+padding:10px 2px;
+border-bottom:1px solid #244d2e;
+color:#b8d6bd;
+font-size:13px
 }
-@keyframes float{to{transform:translateY(-90px) scale(1.2);opacity:0}}
-.toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  background:#153b23;border:1px solid #53c76a;padding:12px 18px;
-  border-radius:13px;z-index:200;box-shadow:0 10px 30px #0008
+
+.badge{
+display:inline-block;
+padding:4px 8px;
+background:#245e32;
+border-radius:20px;
+font-size:11px
 }
-.modal-bg{
-  position:fixed;inset:0;background:#0009;display:none;place-items:center;z-index:150;
-  padding:20px
-}
-.modal{max-width:470px;width:100%;padding:20px;background:#10291b;border:1px solid #3d8150;border-radius:18px}
-.close{float:right;background:#294f35;border-radius:8px;padding:6px 10px}
+
 input{
-  width:100%;padding:11px;border-radius:10px;border:1px solid #356443;
-  background:#07140d;color:white;margin:5px 0 10px
+width:100%;
+padding:11px;
+background:#07150c;
+border:1px solid #356644;
+color:white;
+border-radius:9px;
+margin-bottom:8px
 }
-@media(max-width:950px){.layout{grid-template-columns:190px 1fr}.right{display:none}}
-@media(max-width:650px){
-  #app{padding:7px}.layout{display:block}.side{margin-bottom:8px}
-  .nav{width:calc(25% - 5px);display:inline-block;text-align:center;font-size:11px;padding:9px 3px}
-  .nav span{display:block;width:auto;font-size:18px}.main{min-height:650px}
-  .cards{grid-template-columns:1fr}.skin-grid{grid-template-columns:repeat(2,1fr)}
-  .stats{grid-template-columns:repeat(2,1fr)}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:25px;
+transform:translateX(-50%);
+background:#195b2d;
+border:1px solid #62db78;
+padding:12px 18px;
+border-radius:12px;
+z-index:50
+}
+
+@media(max-width:900px){
+.layout{grid-template-columns:160px 1fr}
+.right{display:none}
+}
+@media(max-width:600px){
+#app{padding:8px}
+.layout{display:block}
+.sidebar{margin-bottom:8px}
+.nav{
+width:calc(25% - 5px);
+display:inline-block;
+text-align:center;
+padding:9px 2px;
+font-size:11px
+}
+.nav span{display:block;font-size:18px}
+.main{padding:14px}
+.cards{grid-template-columns:1fr}
+.skins{grid-template-columns:repeat(2,1fr)}
+.stats{grid-template-columns:repeat(2,1fr)}
 }
 </style>
-</head>
-<body>
-<div id="app">
-<header>
-  <div class="logo">🐸 <span>FROG FRENZY</span></div>
-  <div class="resources">
-    <div class="res"><b id="coins">0</b><small>🪙 Coins</small></div>
-    <div class="res"><b id="gems">0</b><small>💎 Gems</small></div>
-    <div class="res"><b id="energy">100/100</b><small>⚡ Energy</small></div>
-    <div class="res"><b id="level">1</b><small>⭐ Level</small></div>
-  </div>
-</header>
 
-<div class="layout">
-<aside class="panel side">
-  <button class="nav active" data-screen="home"><span>🐸</span>Frog</button>
-  <button class="nav" data-screen="upgrades"><span>⬆️</span>Upgrades</button>
-  <button class="nav" data-screen="skins"><span>🎨</span>Skins</button>
-  <button class="nav" data-screen="pets"><span>🐣</span>Pets</button>
-  <button class="nav" data-screen="quests"><span>🎯</span>Quests</button>
-  <button class="nav" data-screen="worlds"><span>🌎</span>Worlds</button>
-  <button class="nav" data-screen="clan"><span>👑</span>Clan</button>
-  <button class="nav" data-screen="friends"><span>👥</span>Friends</button>
-  <button class="nav" data-screen="achievements"><span>🏆</span>Achievements</button>
-  <button class="nav" data-screen="settings"><span>⚙️</span>Settings</button>
-</aside>
+</head> <body> <div id="app"> <header> <div class="logo">🐸 <span>FROG FRENZY</span></div> <div class="resources"> <div class="resource"> <b id="coins">0</b> <small>🪙 Coins</small> </div> <div class="resource"> <b id="gems">0</b> <small>💎 Gems</small> </div> <div class="resource"> <b id="level">1</b> <small>⭐ Level</small> </div> </div> </header> <div class="layout"> <aside class="panel sidebar"> <button class="nav active" data-page="home"><span>🐸</span> Frog</button> <button class="nav" data-page="upgrades"><span>⬆️</span> Upgrades</button> <button class="nav" data-page="skins"><span>🎨</span> Skins</button> <button class="nav" data-page="pets"><span>🐣</span> Pets</button> <button class="nav" data-page="quests"><span>🎯</span> Quests</button> <button class="nav" data-page="worlds"><span>🌎</span> Worlds</button> <button class="nav" data-page="clan"><span>👑</span> Clan</button> <button class="nav" data-page="friends"><span>👥</span> Friends</button> <button class="nav" data-page="achievements"><span>🏆</span> Achievements</button> <button class="nav" data-page="settings"><span>⚙️</span> Settings</button> </aside> <main class="panel main"> <section id="home" class="screen active"> <div class="frog-area"> <span class="badge" id="worldLabel">🌿 Green Meadow</span>
+<h1>🐸 Click the Frog!</h1>
+<p class="muted">Make your frog richer and stronger.</p>
 
-<main class="panel main">
-
-<section id="home" class="screen active">
-  <div class="hero">
-    <div class="badge" id="worldName">🌿 Green Meadow</div>
-    <h1>Make the frog go BONK!</h1>
-    <div class="sub">Click the frog to earn coins and build your frog empire.</div>
-    <div class="frog-wrap">
-      <div class="frog" id="frog">
-        <div class="eye e1"></div><div class="eye e2"></div>
-        <div class="mouth"></div><div class="tongue"></div>
-      </div>
-    </div>
-    <div class="click-power">+<span id="clickPower">1</span> coins per click</div>
-    <div class="progress"><i id="xpBar"></i></div>
-    <div class="sub" id="xpText">0 / 100 XP</div>
-  </div>
-
-  <div class="stats" style="margin-top:14px">
-    <div class="stat"><b id="totalClicks">0</b><small>Total Clicks</small></div>
-    <div class="stat"><b id="cps">0</b><small>Coins / sec</small></div>
-    <div class="stat"><b id="combo">0</b><small>Combo</small></div>
-    <div class="stat"><b id="rebirths">0</b><small>Rebirths</small></div>
-    <div class="stat"><b id="crit">5%</b><small>Critical Chance</small></div>
-    <div class="stat"><b id="mult">1x</b><small>Multiplier</small></div>
-  </div>
-
-  <div id="eventBox" style="margin-top:12px"></div>
-</section>
-
-<section id="upgrades" class="screen">
-  <h1>⬆️ Frog Upgrades</h1>
-  <p class="sub">Make every click more powerful.</p>
-  <div class="cards" id="upgradeList"></div>
-</section>
-
-<section id="skins" class="screen">
-  <h1>🎨 Frog Skins</h1>
-  <p class="sub">Collect frogs with different abilities.</p>
-  <div class="skin-grid" id="skinList"></div>
-</section>
-
-<section id="pets" class="screen">
-  <h1>🐣 Frog Pets</h1>
-  <p class="sub">Pets automatically boost your empire.</p>
-  <div class="cards" id="petList"></div>
-</section>
-
-<section id="quests" class="screen">
-  <h1>🎯 Quests</h1>
-  <p class="sub">Complete objectives for bonus rewards.</p>
-  <div id="questList"></div>
-</section>
-
-<section id="worlds" class="screen">
-  <h1>🌎 Worlds</h1>
-  <p class="sub">Unlock new places and stronger bonuses.</p>
-  <div class="cards" id="worldList"></div>
-</section>
-
-<section id="clan" class="screen">
-  <h1>👑 Frog Clan</h1>
-  <p class="sub">Build your clan and unlock permanent bonuses.</p>
-  <div class="card">
-    <h2 id="clanName">🐸 Lonely Frogs</h2>
-    <p id="clanInfo">Level 1 • 1 member • 0 clan XP</p>
-    <button class="buy" id="clanXP">Donate 1,000 coins → +10 Clan XP</button>
-  </div>
-  <div class="cards" style="margin-top:10px">
-    <div class="card"><h3>👥 Members</h3><p>1 / 20</p></div>
-    <div class="card"><h3>💚 Clan Bonus</h3><p id="clanBonus">+0% coins</p></div>
-    <div class="card"><h3>🏰 Clan Level</h3><p id="clanLevel">1</p></div>
-    <div class="card"><h3>🏆 Clan XP</h3><p id="clanXPText">0</p></div>
-  </div>
-</section>
-
-<section id="friends" class="screen">
-  <h1>👥 Friends</h1>
-  <p class="sub">Your local friends list. Great for a GitHub Pages game without a server.</p>
-  <div class="card">
-    <input id="friendInput" placeholder="Enter a frog friend's name">
-    <button class="buy" id="addFriend">Add Friend</button>
-  </div>
-  <div id="friendList" style="margin-top:10px"></div>
-</section>
-
-<section id="achievements" class="screen">
-  <h1>🏆 Achievements</h1>
-  <p class="sub">There are lots of milestones to discover.</p>
-  <div class="cards" id="achievementList"></div>
-</section>
-
-<section id="settings" class="screen">
-  <h1>⚙️ Settings</h1>
-  <div class="cards">
-    <div class="card">
-      <h3>💾 Save</h3><p>Your game auto-saves every few seconds.</p>
-      <button class="buy" id="saveBtn">Save Now</button>
-    </div>
-    <div class="card">
-      <h3>🔄 Reset</h3><p>Delete all progress.</p>
-      <button class="buy" style="background:#8d2634" id="resetBtn">Reset Game</button>
-    </div>
-    <div class="card">
-      <h3>🔊 Sound</h3><p id="soundText">Sound effects enabled</p>
-      <button class="buy" id="soundBtn">Toggle Sound</button>
-    </div>
-    <div class="card">
-      <h3>📊 Performance</h3><p id="perf">Running efficiently</p>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<aside class="panel right">
-  <h3>⚡ Live Activity</h3>
-  <div id="activity"></div>
-  <h3 style="margin-top:18px">🎁 Daily Reward</h3>
-  <div class="card">
-    <p id="dailyText">Come back tomorrow!</p>
-    <button class="buy" id="dailyBtn">Claim Reward</button>
-  </div>
-  <h3 style="margin-top:18px">🔥 Streak</h3>
-  <div class="card">
-    <h2 id="streak">0 days</h2>
-    <p>Keep playing every day.</p>
-  </div>
-</aside>
-</div>
+<div class="frog" id="frog">
+  <div class="eye left"></div>
+  <div class="eye right"></div>
+  <div class="mouth"></div>
+  <div class="tongue"></div>
 </div>
 
-<div class="modal-bg" id="modal">
-  <div class="modal">
-    <button class="close" id="closeModal">×</button>
-    <h2 id="modalTitle"></h2>
-    <p id="modalText"></p>
-  </div>
+<div class="power">
+  +<span id="clickPower">1</span> coins per click
 </div>
 
-<script>
-"use strict";
+<div class="bar">
+  <div id="xpBar"></div>
+</div>
 
-/* =========================================================
-   FROG FRENZY CLICKER
-   Single-file, GitHub Pages friendly.
-   No external libraries. No server required.
-   ========================================================= */
+<div class="muted" id="xpText">0 / 100 XP</div>
 
-const $ = id => document.getElementById(id);
+</div> <div class="stats"> <div class="stat"> <b id="clicks">0</b> <small>Clicks</small> </div> <div class="stat"> <b id="auto">0</b> <small>Coins/sec</small> </div> <div class="stat"> <b id="combo">0x</b> <small>Combo</small> </div> <div class="stat"> <b id="crit">5%</b> <small>Critical</small> </div> <div class="stat"> <b id="rebirth">0</b> <small>Rebirths</small> </div> <div class="stat"> <b id="mult">1x</b> <small>Multiplier</small> </div> </div> </section> <section id="upgrades" class="screen"> <h1>⬆️ Upgrades</h1> <p class="muted">Buy upgrades to make your frog stronger.</p> <div class="cards" id="upgradeList"></div> </section> <section id="skins" class="screen"> <h1>🎨 Skins</h1> <p class="muted">Collect colorful frogs.</p> <div class="skins" id="skinList"></div> </section> <section id="pets" class="screen"> <h1>🐣 Pets</h1> <p class="muted">Pets give permanent bonuses.</p> <div class="cards" id="petList"></div> </section> <section id="quests" class="screen"> <h1>🎯 Quests</h1> <p class="muted">Complete challenges for rewards.</p> <div id="questList"></div> </section> <section id="worlds" class="screen"> <h1>🌎 Worlds</h1> <p class="muted">Travel to worlds with stronger multipliers.</p> <div class="cards" id="worldList"></div> </section> <section id="clan" class="screen"> <h1>👑 Frog Clan</h1> <div class="card"> <h2>🐸 Lonely Frogs</h2> <p>Clan Level: <b id="clanLevel">1</b></p> <p>Clan XP: <b id="clanXP">0</b></p> <p>Bonus: <b id="clanBonus">+2%</b></p> <button class="buy" id="donate">Donate 1,000 Coins</button> </div> </section> <section id="friends" class="screen"> <h1>👥 Friends</h1> <div class="card"> <input id="friendName" placeholder="Friend's frog name"> <button class="buy" id="addFriend">Add Friend</button> </div> <div id="friendList" style="margin-top:10px"></div> </section> <section id="achievements" class="screen"> <h1>🏆 Achievements</h1> <div class="cards" id="achievementList"></div> </section> <section id="settings" class="screen"> <h1>⚙️ Settings</h1> <div class="cards"> <div class="card"> <h3>💾 Save</h3> <p>Save your progress immediately.</p> <button class="buy" id="save">Save Game</button> </div>
+<div class="card">
+  <h3>🔄 Reset</h3>
+  <p>Delete all progress.</p>
+  <button class="buy" id="reset" style="background:#a83245">
+    Reset Game
+  </button>
+</div>
 
-const defaultState = {
-  coins:0,gems:0,xp:0,level:1,totalClicks:0,
-  combo:0,bestCombo:0,rebirths:0,energy:100,
-  maxEnergy:100,clickPower:1,auto:0,crit:0.05,mult:1,
-  luck:0,offline:0,world:0,skin:"Classic Frog",pet:null,
-  friends:[],clanXP:0,clanLevel:1,streak:0,lastDaily:0,
-  sound:true,unlockedWorlds:[0],ownedSkins:["Classic Frog"],
-  ownedPets:[],upgrades:{},achievements:[],quests:{},
-  lastSave:Date.now()
+</div> </section> </main> <aside class="panel right"> <h3>⚡ Activity</h3> <div id="activity"></div> </aside> </div> </div> <script> /* ===================================================== FROG FRENZY Everything is contained in this one HTML file. ===================================================== */
+var state = {
+coins:0,
+gems:0,
+xp:0,
+level:1,
+clicks:0,
+clickPower:1,
+auto:0,
+crit:0.05,
+multiplier:1,
+combo:0,
+bestCombo:0,
+rebirths:0,
+world:0,
+clanLevel:1,
+clanXP:0,
+skin:"Classic Frog",
+ownedSkins:["Classic Frog"],
+ownedPets:[],
+friends:[],
+upgrades:{}
 };
 
-let state = loadGame();
-let clickCooldown = 0;
-let lastClickTime = 0;
-let eventEnd = 0;
-let eventMultiplier = 1;
-let activity = [];
-let saveTimer = 0;
-
-/* ---------- DATA ---------- */
-
-const upgrades = [
- {id:"finger",name:"🍃 Sticky Fingers",desc:"+1 coin per click",base:25,type:"click",value:1},
- {id:"tongue",name:"👅 Mega Tongue",desc:"+5 coins per click",base:150,type:"click",value:5},
- {id:"legs",name:"🦵 Springy Legs",desc:"+15 coins per click",base:700,type:"click",value:15},
- {id:"eyes",name:"👀 Laser Eyes",desc:"+50 coins per click",base:3500,type:"click",value:50},
- {id:"crown",name:"👑 Golden Crown",desc:"+250 coins per click",base:20000,type:"click",value:250},
- {id:"fly",name:"🪰 Fly Farm",desc:"+1 coin/sec",base:100,type:"auto",value:1},
- {id:"pond",name:"💧 Magic Pond",desc:"+5 coins/sec",base:600,type:"auto",value:5},
- {id:"swamp",name:"🌿 Mega Swamp",desc:"+25 coins/sec",base:3000,type:"auto",value:25},
- {id:"factory",name:"🏭 Frog Factory",desc:"+100 coins/sec",base:15000,type:"auto",value:100},
- {id:"galaxy",name:"🌌 Cosmic Pond",desc:"+500 coins/sec",base:90000,type:"auto",value:500},
- {id:"crit",name:"💥 Critical Tongue",desc:"+2% critical chance",base:500,type:"crit",value:.02},
- {id:"fortune",name:"🍀 Lucky Clover",desc:"+5% critical chance",base:5000,type:"crit",value:.05},
- {id:"battery",name:"🔋 Energy Cell",desc:"+25 maximum energy",base:1000,type:"energy",value:25},
- {id:"training",name:"🥋 Frog Training",desc:"+10% coin multiplier",base:2500,type:"mult",value:.1},
- {id:"wisdom",name:"🧠 Ancient Wisdom",desc:"+25% coin multiplier",base:15000,type:"mult",value:.25},
- {id:"magnet",name:"🧲 Coin Magnet",desc:"+50% coin multiplier",base:75000,type:"mult",value:.5}
+var upgrades = [
+{id:"finger",name:"🍃 Strong Fingers",desc:"+1 click power",cost:25,type:"click",value:1},
+{id:"tongue",name:"👅 Mega Tongue",desc:"+5 click power",cost:150,type:"click",value:5},
+{id:"legs",name:"🦵 Frog Legs",desc:"+15 click power",cost:750,type:"click",value:15},
+{id:"eyes",name:"👀 Laser Eyes",desc:"+50 click power",cost:4000,type:"click",value:50},
+{id:"fly",name:"🪰 Fly Farm",desc:"+1 coin per second",cost:100,type:"auto",value:1},
+{id:"pond",name:"💧 Magic Pond",desc:"+5 coins per second",cost:600,type:"auto",value:5},
+{id:"swamp",name:"🌿 Mega Swamp",desc:"+25 coins per second",cost:3000,type:"auto",value:25},
+{id:"factory",name:"🏭 Frog Factory",desc:"+100 coins per second",cost:15000,type:"auto",value:100},
+{id:"crit",name:"💥 Critical Tongue",desc:"+2% critical chance",cost:500,type:"crit",value:.02},
+{id:"training",name:"🥋 Frog Training",desc:"+10% multiplier",cost:2500,type:"mult",value:.1}
 ];
 
-const skins = [
- {name:"Classic Frog",rarity:"common",color:"#35bd55",bonus:0},
- {name:"Blue Frog",rarity:"rare",color:"#3b82f6",bonus:.1},
- {name:"Purple Frog",rarity:"epic",color:"#a855f7",bonus:.2},
- {name:"Golden Frog",rarity:"legendary",color:"#eab308",bonus:.5},
- {name:"Lava Frog",rarity:"mythic",color:"#ef4444",bonus:1},
- {name:"Ice Frog",rarity:"rare",color:"#67e8f9",bonus:.15},
- {name:"Shadow Frog",rarity:"epic",color:"#374151",bonus:.3},
- {name:"Rainbow Frog",rarity:"legendary",color:"linear-gradient(90deg,#f44,#fc4,#4f7,#4df,#a6f)",bonus:.75},
- {name:"Galaxy Frog",rarity:"mythic",color:"#6d28d9",bonus:1.5},
- {name:"Emerald Frog",rarity:"legendary",color:"#10b981",bonus:.8},
- {name:"Bubble Frog",rarity:"rare",color:"#f9a8d4",bonus:.12},
- {name:"Royal Frog",rarity:"mythic",color:"#7c3aed",bonus:2}
+var skins = [
+{name:"Classic Frog",color:"#35bd55",bonus:0,cost:0},
+{name:"Blue Frog",color:"#3b82f6",bonus:.1,cost:5000},
+{name:"Purple Frog",color:"#a855f7",bonus:.2,cost:25000},
+{name:"Golden Frog",color:"#eab308",bonus:.5,cost:100000},
+{name:"Lava Frog",color:"#ef4444",bonus:1,cost:500000},
+{name:"Ice Frog",color:"#67e8f9",bonus:.25,cost:50000},
+{name:"Shadow Frog",color:"#374151",bonus:.4,cost:100000},
+{name:"Rainbow Frog",color:"linear-gradient(90deg,red,orange,yellow,green,blue,violet)",bonus:.75,cost:250000},
+{name:"Galaxy Frog",color:"#6d28d9",bonus:1.5,cost:5000000}
 ];
 
-const pets = [
- {name:"🐛 Worm",cost:1000,bonus:5,desc:"+5% coins"},
- {name:"🪰 Fly",cost:5000,bonus:12,desc:"+12% coins"},
- {name:"🐢 Tiny Turtle",cost:25000,bonus:25,desc:"+25% coins"},
- {name:"🦎 Lizard",cost:100000,bonus:50,desc:"+50% coins"},
- {name:"🐍 Snake",cost:500000,bonus:100,desc:"+100% coins"},
- {name:"🐲 Baby Dragon",cost:5000000,bonus:250,desc:"+250% coins"}
+var pets = [
+{name:"🐛 Worm",cost:1000,bonus:.05},
+{name:"🪰 Fly",cost:5000,bonus:.12},
+{name:"🐢 Turtle",cost:25000,bonus:.25},
+{name:"🦎 Lizard",cost:100000,bonus:.5},
+{name:"🐲 Baby Dragon",cost:1000000,bonus:1}
 ];
 
-const worlds = [
- {name:"🌿 Green Meadow",cost:0,mult:1},
- {name:"🌊 Crystal Pond",cost:10000,mult:2},
- {name:"🌲 Mystic Forest",cost:100000,mult:5},
- {name:"🌋 Volcano Swamp",cost:1000000,mult:12},
- {name:"❄️ Frozen Marsh",cost:10000000,mult:30},
- {name:"🌌 Frog Galaxy",cost:100000000,mult:100},
- {name:"👽 Alien Bog",cost:1000000000,mult:300},
- {name:"🏰 Frog Kingdom",cost:10000000000,mult:1000}
+var worlds = [
+{name:"🌿 Green Meadow",cost:0,mult:1},
+{name:"🌊 Crystal Pond",cost:10000,mult:2},
+{name:"🌲 Mystic Forest",cost:100000,mult:5},
+{name:"🌋 Volcano Swamp",cost:1000000,mult:12},
+{name:"❄️ Frozen Marsh",cost:10000000,mult:30},
+{name:"🌌 Frog Galaxy",cost:100000000,mult:100}
 ];
 
-const achievementDefs = [
- ["first","First Hop","Click the frog once.",s=>s.totalClicks>=1],
- ["100","Getting Started","Reach 100 clicks.",s=>s.totalClicks>=100],
- ["1k","Clicker","Reach 1,000 clicks.",s=>s.totalClicks>=1000],
- ["10k","Dedicated Frog","Reach 10,000 clicks.",s=>s.totalClicks>=10000],
- ["million","Millionaire","Have 1,000,000 coins.",s=>s.coins>=1e6],
- ["rich","Frog Tycoon","Have 1,000,000,000 coins.",s=>s.coins>=1e9],
- ["level10","Experienced","Reach level 10.",s=>s.level>=10],
- ["level25","Master Frog","Reach level 25.",s=>s.level>=25],
- ["combo25","Combo Master","Reach a 25x combo.",s=>s.bestCombo>=25],
- ["rebirth","New Beginning","Perform a rebirth.",s=>s.rebirths>=1],
- ["skin3","Fashion Frog","Own 3 skins.",s=>s.ownedSkins.length>=3],
- ["pet","Pet Parent","Own a pet.",s=>s.ownedPets.length>=1],
- ["world","Explorer","Unlock another world.",s=>s.unlockedWorlds.length>=2],
- ["clan","Clan Frog","Reach clan level 2.",s=>s.clanLevel>=2],
- ["daily","Regular","Claim a daily reward.",s=>s.streak>=1]
+var quests = [
+{name:"Click 100 times",target:100,reward:500,get:function(){return state.clicks}},
+{name:"Reach 1,000 coins",target:1000,reward:1000,get:function(){return state.coins}},
+{name:"Reach level 5",target:5,reward:2500,get:function(){return state.level}},
+{name:"Get a pet",target:1,reward:5000,get:function(){return state.ownedPets.length}}
 ];
 
-const questDefs = [
- {id:"qclick",name:"Hop 100 Times",target:100,reward:500,test:s=>s.totalClicks},
- {id:"qcoins",name:"Collect 10,000 Coins",target:10000,reward:1500,test:s=>Math.floor(s.coins)},
- {id:"qcombo",name:"Reach a 10x Combo",target:10,reward:2000,test:s=>s.bestCombo},
- {id:"qlevel",name:"Reach Level 5",target:5,reward:5000,test:s=>s.level},
- {id:"qpet",name:"Get a Pet",target:1,reward:10000,test:s=>s.ownedPets.length}
+var claimedQuests = [];
+
+var achievements = [
+["First Click",function(){return state.clicks>=1}],
+["100 Clicks",function(){return state.clicks>=100}],
+["1,000 Clicks",function(){return state.clicks>=1000}],
+["Millionaire",function(){return state.coins>=1000000}],
+["Level 10",function(){return state.level>=10}],
+["Combo Master",function(){return state.bestCombo>=20}],
+["Pet Owner",function(){return state.ownedPets.length>=1}],
+["Fashion Frog",function(){return state.ownedSkins.length>=3}],
+["World Traveler",function(){return state.world>=1}],
+["Clan Builder",function(){return state.clanLevel>=2}]
 ];
 
-/* ---------- NUMBER SYSTEM ---------- */
+var claimedAchievements=[];
 
-function fmt(n){
-  if(!Number.isFinite(n)) return "∞";
-  n=Math.max(0,n);
-  if(n<1000)return Math.floor(n).toLocaleString();
-  const units=["K","M","B","T","Qa","Qi","Sx","Sp","Oc","No","Dc","Ud","Dd","Td","Qad","Qid"];
-  let i=-1;
-  while(n>=1000 && i<units.length-1){n/=1000;i++}
-  return n.toFixed(n>=100?0:n>=10?1:2)+units[i];
+/* ---------- SAVE ---------- */
+
+function saveGame(){
+try{
+localStorage.setItem("frogFrenzySave",JSON.stringify({
+state:state,
+quests:claimedQuests,
+achievements:claimedAchievements
+}));
+}catch(e){}
 }
 
-function upgradeCost(u){
-  const level=state.upgrades[u.id]||0;
-  return Math.floor(u.base*Math.pow(1.48,level));
+function loadGame(){
+try{
+var raw=localStorage.getItem("frogFrenzySave");
+
+if(!raw)return;
+
+var data=JSON.parse(raw);
+
+if(data.state){
+  for(var key in data.state){
+    state[key]=data.state[key];
+  }
 }
 
-function getPetBonus(){
-  let x=0;
-  for(const p of pets) if(state.ownedPets.includes(p.name)) x+=p.bonus;
-  return x/100;
+if(Array.isArray(data.quests)){
+  claimedQuests=data.quests;
 }
 
-function getSkinBonus(){
-  const s=skins.find(x=>x.name===state.skin);
-  return s?s.bonus:0;
+if(Array.isArray(data.achievements)){
+  claimedAchievements=data.achievements;
 }
 
-function getWorldMultiplier(){
-  return worlds[state.world]?.mult||1;
+}catch(e){}
+}
+
+loadGame();
+
+/* ---------- HELPERS ---------- */
+
+function number(n){
+if(!isFinite(n))return "∞";
+
+if(n<1000)return Math.floor(n).toString();
+
+var units=["K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
+var i=-1;
+
+while(n>=1000 && i<units.length-1){
+n/=1000;
+i++;
+}
+
+return n.toFixed(n>=100?0:n>=10?1:2)+units[i];
 }
 
 function totalMultiplier(){
-  return (1+state.mult+getPetBonus()+getSkinBonus())
-    *getWorldMultiplier()*eventMultiplier*(1+state.rebirths*.1)
-    *(1+state.clanLevel*.02);
+var petBonus=0;
+
+pets.forEach(function(p){
+if(state.ownedPets.indexOf(p.name)!==-1){
+petBonus+=p.bonus;
+}
+});
+
+var skinBonus=0;
+
+skins.forEach(function(s){
+if(s.name===state.skin){
+skinBonus=s.bonus;
+}
+});
+
+var worldBonus=worlds[state.world].mult;
+
+return (
+state.multiplier+
+petBonus+
+skinBonus+
+state.rebirths*.1
+)*worldBonus;
 }
 
-/* ---------- SAVE / LOAD ---------- */
-
-function loadGame(){
-  try{
-    const raw=localStorage.getItem("frogFrenzySave");
-    if(!raw)return structuredClone(defaultState);
-    const parsed=JSON.parse(raw);
-    return Object.assign(structuredClone(defaultState),parsed);
-  }catch(e){
-    return structuredClone(defaultState);
-  }
+function xpNeeded(){
+return 100+(state.level-1)*50;
 }
-
-function saveGame(){
-  state.lastSave=Date.now();
-  localStorage.setItem("frogFrenzySave",JSON.stringify(state));
-}
-
-function resetGame(){
-  if(confirm("Reset ALL frog progress? This cannot be undone.")){
-    localStorage.removeItem("frogFrenzySave");
-    location.reload();
-  }
-}
-
-/* ---------- UI ---------- */
-
-function updateUI(){
-  $("coins").textContent=fmt(state.coins);
-  $("gems").textContent=fmt(state.gems);
-  $("energy").textContent=fmt(state.energy)+"/"+fmt(state.maxEnergy);
-  $("level").textContent=state.level;
-  $("clickPower").textContent=fmt(Math.max(1,state.clickPower*totalMultiplier()));
-  $("totalClicks").textContent=fmt(state.totalClicks);
-  $("cps").textContent=fmt(state.auto*totalMultiplier());
-  $("combo").textContent=state.combo+"x";
-  $("rebirths").textContent=state.rebirths;
-  $("crit").textContent=Math.min(100,state.crit*100).toFixed(0)+"%";
-  $("mult").textContent=totalMultiplier().toFixed(1)+"x";
-
-  const need=100+state.level*50;
-  $("xpBar").style.width=Math.min(100,state.xp/need*100)+"%";
-  $("xpText").textContent=fmt(state.xp)+" / "+fmt(need)+" XP";
-
-  $("worldName").textContent=worlds[state.world].name;
-  $("clanLevel").textContent=state.clanLevel;
-  $("clanXPText").textContent=fmt(state.clanXP);
-  $("clanBonus").textContent="+"+(state.clanLevel*2)+"% coins";
-  $("clanInfo").textContent=`Level ${state.clanLevel} • 1 member • ${fmt(state.clanXP)} clan XP`;
-  $("streak").textContent=state.streak+" day"+(state.streak===1?"":"s");
-
-  updateFrogColor();
-}
-
-function updateFrogColor(){
-  const s=skins.find(x=>x.name===state.skin);
-  if(!s)return;
-  $("frog").style.background=s.color;
-}
-
-function renderUpgrades(){
-  $("upgradeList").innerHTML=upgrades.map(u=>{
-    const level=state.upgrades[u.id]||0;
-    const cost=upgradeCost(u);
-    return `<div class="card">
-      <h3>${u.name}</h3>
-      <p>${u.desc}</p>
-      <span class="badge">Level ${level}</span>
-      <p>Next: ${fmt(cost)} 🪙</p>
-      <button class="buy" data-upgrade="${u.id}" ${state.coins<cost?"disabled":""}>BUY</button>
-    </div>`;
-  }).join("");
-}
-
-function renderSkins(){
-  $("skinList").innerHTML=skins.map(s=>{
-    const owned=state.ownedSkins.includes(s.name);
-    const selected=state.skin===s.name;
-    return `<div class="skin ${s.rarity} ${selected?"selected":""}">
-      <div class="mini-frog" style="background:${s.color}"></div>
-      <b>${s.name}</b>
-      <p><span class="badge">${s.rarity}</span></p>
-      <small>+${s.bonus*100}% coins</small>
-      <button class="buy" style="margin-top:7px" data-skin="${s.name}">
-        ${selected?"EQUIPPED":owned?"EQUIP":"Unlock"}
-      </button>
-    </div>`;
-  }).join("");
-}
-
-function renderPets(){
-  $("petList").innerHTML=pets.map(p=>{
-    const owned=state.ownedPets.includes(p.name);
-    return `<div class="card">
-      <h3>${p.name}</h3><p>${p.desc}</p>
-      <button class="buy" data-pet="${p.name}" ${owned||state.coins<p.cost?"disabled":""}>
-        ${owned?"OWNED":fmt(p.cost)+" 🪙"}
-      </button>
-    </div>`;
-  }).join("");
-}
-
-function renderWorlds(){
-  $("worldList").innerHTML=worlds.map((w,i)=>{
-    const unlocked=state.unlockedWorlds.includes(i);
-    const current=state.world===i;
-    return `<div class="card">
-      <h3>${w.name}</h3>
-      <p>${w.mult}x world multiplier</p>
-      <button class="buy" data-world="${i}" ${(!unlocked&&state.coins<w.cost)?"disabled":""}>
-      ${current?"CURRENT":unlocked?"TRAVEL":"Unlock • "+fmt(w.cost)+" 🪙"}
-      </button>
-    </div>`;
-  }).join("");
-}
-
-function renderQuests(){
-  $("questList").innerHTML=questDefs.map(q=>{
-    const current=Math.min(q.target,Number(q.test(state))||0);
-    const done=state.quests[q.id];
-    return `<div class="quest">
-      <div><b>${q.name}</b><br><small>${fmt(current)} / ${fmt(q.target)} • Reward ${fmt(q.reward)} 🪙</small></div>
-      <button class="buy" style="width:auto" data-quest="${q.id}" ${done||current<q.target?"disabled":""}>
-      ${done?"✓":"Claim"}</button>
-    </div>`;
-  }).join("");
-}
-
-function renderAchievements(){
-  $("achievementList").innerHTML=achievementDefs.map(a=>{
-    const done=state.achievements.includes(a[0]);
-    return `<div class="card">
-      <h3>${done?"🏆":"🔒"} ${a[1]}</h3>
-      <p>${a[2]}</p>
-      <span class="badge">${done?"UNLOCKED":"LOCKED"}</span>
-    </div>`;
-  }).join("");
-}
-
-function renderFriends(){
-  if(!state.friends.length){
-    $("friendList").innerHTML='<div class="card"><p>No friends yet. Add a frog name above!</p></div>';
-    return;
-  }
-  $("friendList").innerHTML=state.friends.map((f,i)=>
-    `<div class="quest"><b>🐸 ${escapeHTML(f)}</b><button class="buy" style="width:auto" data-friend="${i}">Remove</button></div>`
-  ).join("");
-}
-
-function escapeHTML(s){
-  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-
-/* ---------- GAMEPLAY ---------- */
 
 function addCoins(amount){
-  if(!Number.isFinite(amount))return;
-  state.coins=Math.min(Number.MAX_VALUE/1000,state.coins+Math.max(0,amount));
+if(!isFinite(amount))return;
+state.coins+=amount;
+
+if(state.coins>1e300){
+state.coins=1e300;
+}
 }
 
-function gainXP(amount){
-  state.xp+=amount;
-  let need=100+state.level*50;
-  while(state.xp>=need){
-    state.xp-=need;
-    state.level++;
-    state.gems+=5+Math.floor(state.level/5);
-    toast("⭐ Level Up! Level "+state.level);
-    need=100+state.level*50;
-  }
+function addXP(amount){
+state.xp+=amount;
+
+while(state.xp>=xpNeeded()){
+state.xp-=xpNeeded();
+state.level++;
+state.gems+=5;
+
+activity("⭐ Level "+state.level+"!");
+
+}
 }
 
-function clickFrog(e){
-  const now=performance.now();
-  if(now-clickCooldown<45)return;
-  clickCooldown=now;
+/* ---------- CLICKING ---------- */
 
-  if(state.energy<1){
-    toast("⚡ Out of energy!");
-    return;
-  }
+var lastClick=0;
 
-  state.energy-=1;
-  state.totalClicks++;
+document.getElementById("frog").addEventListener("click",function(e){
 
-  if(now-lastClickTime<900) state.combo=Math.min(100,state.combo+1);
-  else state.combo=1;
-  lastClickTime=now;
-  state.bestCombo=Math.max(state.bestCombo,state.combo);
+var now=Date.now();
 
-  let amount=state.clickPower;
-  let critical=Math.random()<state.crit;
-  if(critical)amount*=5;
-  amount*=1+Math.min(state.combo,50)*.01;
-  amount*=totalMultiplier();
+if(now-lastClick<35)return;
 
-  addCoins(amount);
-  gainXP(Math.max(1,Math.floor(amount/10)));
+lastClick=now;
 
-  const frog=$("frog");
-  frog.classList.remove("pop");
-  void frog.offsetWidth;
-  frog.classList.add("pop");
+state.clicks++;
 
-  if(e){
-    const fx=document.createElement("div");
-    fx.className="click-fx";
-    fx.textContent=(critical?"CRIT! ":"+")+fmt(amount);
-    fx.style.left=(e.clientX||innerWidth/2)+"px";
-    fx.style.top=(e.clientY||innerHeight/2)+"px";
-    document.body.appendChild(fx);
-    setTimeout(()=>fx.remove(),800);
-  }
-
-  if(state.totalClicks%100===0) addActivity("🐸 "+fmt(state.totalClicks)+" frog clicks!");
-  checkAchievements();
-  updateUI();
+if(now-lastClick<1000){
+state.combo++;
+}else{
+state.combo=1;
 }
 
-/* ---------- REBIRTH ---------- */
-
-function tryRebirth(){
-  const requirement=1e6*Math.pow(10,state.rebirths);
-  if(state.coins<requirement){
-    toast("Need "+fmt(requirement)+" coins to rebirth.");
-    return;
-  }
-  if(confirm("Rebirth? Your coins and upgrades reset, but you gain a permanent +10% multiplier.")){
-    state.coins=0;
-    state.xp=0;
-    state.level=1;
-    state.upgrades={};
-    state.rebirths++;
-    state.energy=state.maxEnergy;
-    toast("✨ Rebirth complete! Permanent power increased.");
-    saveGame();
-    updateAll();
-  }
+if(state.combo>state.bestCombo){
+state.bestCombo=state.combo;
 }
 
-/* ---------- EVENTS ---------- */
+var amount=state.clickPower;
 
-function startEvent(){
-  const events=[
-    ["🪰 FLY STORM!","Flies everywhere! 3x coins for 30 seconds!",3],
-    ["🌈 RAINBOW RAIN!","Lucky rainbow rain! 5x coins for 20 seconds!",5],
-    ["🐸 FROG PARTY!","The frogs are partying! 2x coins for 45 seconds!",2],
-    ["💎 GEM SHOWER!","Free gems have appeared!",1]
-  ];
-  const ev=events[Math.floor(Math.random()*events.length)];
-  eventMultiplier=ev[2];
-  eventEnd=Date.now()+30000;
-  if(ev[0].includes("GEM"))state.gems+=10;
-  $("eventBox").innerHTML=`<div class="event"><b>${ev[0]}</b><br>${ev[1]}</div>`;
-  addActivity(ev[0]);
+if(Math.random()<state.crit){
+amount*=5;
+activity("💥 CRITICAL CLICK!");
 }
 
-function updateEvent(){
-  if(eventEnd && Date.now()>eventEnd){
-    eventEnd=0;eventMultiplier=1;
-    $("eventBox").innerHTML="";
-  }
+amount*=1+Math.min(state.combo,50).01;
+amount=totalMultiplier();
+
+addCoins(amount);
+addXP(Math.max(1,amount/10));
+
+var frog=document.getElementById("frog");
+
+frog.style.transform="scale(.92)";
+
+setTimeout(function(){
+frog.style.transform="";
+},70);
+
+var text=document.createElement("div");
+
+text.textContent="+"+number(amount);
+text.style.position="fixed";
+text.style.left=e.clientX+"px";
+text.style.top=e.clientY+"px";
+text.style.color="#ffe66d";
+text.style.fontWeight="900";
+text.style.pointerEvents="none";
+text.style.zIndex="100";
+text.style.transition="all .7s";
+
+document.body.appendChild(text);
+
+setTimeout(function(){
+text.style.transform="translateY(-70px)";
+text.style.opacity="0";
+},10);
+
+setTimeout(function(){
+text.remove();
+},750);
+
+update();
+});
+
+/* ---------- NAVIGATION ---------- */
+
+var navs=document.querySelectorAll(".nav");
+
+navs.forEach(function(button){
+
+button.addEventListener("click",function(){
+
+navs.forEach(function(b){
+  b.classList.remove("active");
+});
+
+button.classList.add("active");
+
+document.querySelectorAll(".screen").forEach(function(screen){
+  screen.classList.remove("active");
+});
+
+document.getElementById(button.dataset.page).classList.add("active");
+
+render();
+
+});
+});
+
+/* ---------- UPGRADES ---------- */
+
+function renderUpgrades(){
+
+var html="";
+
+upgrades.forEach(function(u){
+
+var level=state.upgrades[u.id]||0;
+var cost=Math.floor(u.cost*Math.pow(1.5,level));
+
+html+=`
+  <div class="card">
+    <h3>${u.name}</h3>
+    <p>${u.desc}</p>
+    <span class="badge">Level ${level}</span>
+    <p>Cost: ${number(cost)} 🪙</p>
+    <button class="buy" onclick="buyUpgrade('${u.id}')" ${state.coins<cost?"disabled":""}>
+      Buy
+    </button>
+  </div>
+`;
+
+});
+
+document.getElementById("upgradeList").innerHTML=html;
 }
 
-/* ---------- DAILY ---------- */
+function buyUpgrade(id){
 
-function claimDaily(){
-  const day=86400000;
-  if(Date.now()-state.lastDaily<day){
-    const left=day-(Date.now()-state.lastDaily);
-    $("dailyText").textContent="Next reward in "+Math.ceil(left/3600000)+"h";
-    return;
-  }
-  state.lastDaily=Date.now();
-  state.streak++;
-  const reward=1000*state.streak;
-  addCoins(reward);
-  state.gems+=Math.min(25,state.streak);
-  $("dailyText").textContent="Claimed! Come back tomorrow.";
-  toast("🎁 Daily reward: "+fmt(reward)+" coins!");
-  checkAchievements();
+var u=upgrades.find(function(x){
+return x.id===id;
+});
+
+if(!u)return;
+
+var level=state.upgrades[id]||0;
+var cost=Math.floor(u.cost*Math.pow(1.5,level));
+
+if(state.coins<cost)return;
+
+state.coins-=cost;
+state.upgrades[id]=level+1;
+
+if(u.type==="click")state.clickPower+=u.value;
+if(u.type==="auto")state.auto+=u.value;
+if(u.type==="crit")state.crit+=u.value;
+if(u.type==="mult")state.multiplier+=u.value;
+
+activity("⬆️ Bought "+u.name);
+
+update();
 }
+
+/* ---------- SKINS ---------- */
+
+function renderSkins(){
+
+var html="";
+
+skins.forEach(function(s){
+
+var owned=state.ownedSkins.indexOf(s.name)!==-1;
+var selected=state.skin===s.name;
+
+html+=`
+  <div class="skin ${selected?"selected":""}">
+    <div class="mini" style="background:${s.color}"></div>
+    <b>${s.name}</b>
+    <p>+${s.bonus*100}% coins</p>
+    <button class="buy" onclick="useSkin('${s.name}')">
+      ${selected?"EQUIPPED":owned?"EQUIP":"Unlock "+number(s.cost)}
+    </button>
+  </div>
+`;
+
+});
+
+document.getElementById("skinList").innerHTML=html;
+}
+
+function useSkin(name){
+
+var s=skins.find(function(x){
+return x.name===name;
+});
+
+if(!s)return;
+
+if(state.ownedSkins.indexOf(name)===-1){
+
+if(state.coins<s.cost){
+  toast("Not enough coins!");
+  return;
+}
+
+state.coins-=s.cost;
+state.ownedSkins.push(name);
+
+activity("🎨 Unlocked "+name);
+
+}
+
+state.skin=name;
+
+update();
+}
+
+/* ---------- PETS ---------- */
+
+function renderPets(){
+
+var html="";
+
+pets.forEach(function(p){
+
+var owned=state.ownedPets.indexOf(p.name)!==-1;
+
+html+=`
+  <div class="card">
+    <h3>${p.name}</h3>
+    <p>+${p.bonus*100}% coin bonus</p>
+    <p>Cost: ${number(p.cost)} 🪙</p>
+    <button class="buy" onclick="buyPet('${p.name}')" ${owned||state.coins<p.cost?"disabled":""}>
+      ${owned?"OWNED":"Adopt"}
+    </button>
+  </div>
+`;
+
+});
+
+document.getElementById("petList").innerHTML=html;
+}
+
+function buyPet(name){
+
+var p=pets.find(function(x){
+return x.name===name;
+});
+
+if(!p)return;
+
+if(state.coins<p.cost)return;
+
+if(state.ownedPets.indexOf(name)!==-1)return;
+
+state.coins-=p.cost;
+state.ownedPets.push(name);
+
+activity("🐣 Adopted "+name);
+
+update();
+}
+
+/* ---------- WORLDS ---------- */
+
+function renderWorlds(){
+
+var html="";
+
+worlds.forEach(function(w,i){
+
+var unlocked=i===0||state.coins>=w.cost||state.world>=i;
+
+html+=`
+  <div class="card">
+    <h3>${w.name}</h3>
+    <p>${w.mult}x world multiplier</p>
+    <p>Cost: ${number(w.cost)} 🪙</p>
+    <button class="buy" onclick="travel(${i})">
+      ${state.world===i?"CURRENT":i===0?"Enter":"Unlock / Travel"}
+    </button>
+  </div>
+`;
+
+});
+
+document.getElementById("worldList").innerHTML=html;
+}
+
+function travel(i){
+
+var w=worlds[i];
+
+if(i===0){
+state.world=0;
+update();
+return;
+}
+
+if(state.world<i && state.coins<w.cost){
+toast("Not enough coins!");
+return;
+}
+
+if(state.world<i){
+state.coins-=w.cost;
+}
+
+state.world=i;
+
+activity("🌎 Travelled to "+w.name);
+
+update();
+}
+
+/* ---------- QUESTS ---------- */
+
+function renderQuests(){
+
+var html="";
+
+quests.forEach(function(q,i){
+
+var value=Math.min(q.target,q.get());
+var claimed=claimedQuests.indexOf(i)!==-1;
+
+html+=`
+  <div class="quest">
+    <div>
+      <b>${q.name}</b><br>
+      <span class="muted">${number(value)} / ${number(q.target)}
+      • Reward ${number(q.reward)} 🪙</span>
+    </div>
+
+    <button class="buy"
+      onclick="claimQuest(${i})"
+      ${claimed||value<q.target?"disabled":""}>
+      ${claimed?"✓":"Claim"}
+    </button>
+  </div>
+`;
+
+});
+
+document.getElementById("questList").innerHTML=html;
+}
+
+function claimQuest(i){
+
+var q=quests[i];
+
+if(!q)return;
+
+if(claimedQuests.indexOf(i)!==-1)return;
+
+if(q.get()<q.target)return;
+
+claimedQuests.push(i);
+
+addCoins(q.reward);
+state.gems+=3;
+
+activity("🎯 Quest completed!");
+
+update();
+}
+
+/* ---------- FRIENDS ---------- */
+
+function renderFriends(){
+
+var box=document.getElementById("friendList");
+
+if(state.friends.length===0){
+box.innerHTML='<div class="card"><p>No friends yet.</p></div>';
+return;
+}
+
+box.innerHTML=state.friends.map(function(name,i){
+
+return `
+  <div class="quest">
+    <b>🐸 ${escapeHTML(name)}</b>
+    <button class="buy" onclick="removeFriend(${i})">Remove</button>
+  </div>
+`;
+
+}).join("");
+}
+
+function escapeHTML(text){
+return String(text).replace(/[&<>"']/g,function(c){
+return {
+"&":"&",
+"<":"<",
+">":">",
+'"':""",
+"'":"'"
+}[c];
+});
+}
+
+document.getElementById("addFriend").addEventListener("click",function(){
+
+var input=document.getElementById("friendName");
+var name=input.value.trim().slice(0,25);
+
+if(!name)return;
+
+if(state.friends.indexOf(name)!==-1){
+toast("Already added!");
+return;
+}
+
+state.friends.push(name);
+input.value="";
+
+activity("👥 Added "+name);
+
+update();
+});
+
+function removeFriend(i){
+state.friends.splice(i,1);
+update();
+}
+
+/* ---------- CLAN ---------- */
+
+document.getElementById("donate").addEventListener("click",function(){
+
+if(state.coins<1000){
+toast("Need 1,000 coins!");
+return;
+}
+
+state.coins-=1000;
+state.clanXP+=10;
+
+var needed=100*state.clanLevel;
+
+if(state.clanXP>=needed){
+state.clanXP-=needed;
+state.clanLevel++;
+
+activity("👑 Clan Level Up!");
+
+}
+
+update();
+});
 
 /* ---------- ACHIEVEMENTS ---------- */
 
-function checkAchievements(){
-  for(const a of achievementDefs){
-    if(!state.achievements.includes(a[0]) && a[3](state)){
-      state.achievements.push(a[0]);
-      state.gems+=2;
-      addActivity("🏆 Achievement: "+a[1]);
-    }
-  }
+function renderAchievements(){
+
+var html="";
+
+achievements.forEach(function(a,i){
+
+var unlocked=a[1]();
+var claimed=claimedAchievements.indexOf(i)!==-1;
+
+if(unlocked&&!claimed){
+  claimedAchievements.push(i);
+  state.gems+=2;
+}
+
+html+=`
+  <div class="card">
+    <h3>${unlocked?"🏆":"🔒"} ${a[0]}</h3>
+    <p>${unlocked?"Achievement unlocked!":"Keep playing to unlock this."}</p>
+    <span class="badge">${unlocked?"UNLOCKED":"LOCKED"}</span>
+  </div>
+`;
+
+});
+
+document.getElementById("achievementList").innerHTML=html;
 }
 
 /* ---------- ACTIVITY ---------- */
 
-function addActivity(text){
-  activity.unshift({text,time:new Date().toLocaleTimeString([],{
-    hour:"2-digit",minute:"2-digit"
-  })});
-  activity=activity.slice(0,8);
-  $("activity").innerHTML=activity.map(x=>
-    `<div class="activity">${x.text}<br><small>${x.time}</small></div>`
-  ).join("");
+var activities=[];
+
+function activity(text){
+
+activities.unshift(text);
+
+if(activities.length>8){
+activities.pop();
+}
+
+document.getElementById("activity").innerHTML=
+activities.map(function(x){
+return '<div class="activity">'+x+'</div>';
+}).join("");
 }
 
 function toast(text){
-  const old=document.querySelector(".toast");
-  if(old)old.remove();
-  const t=document.createElement("div");
-  t.className="toast";t.textContent=text;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(),2200);
+
+var old=document.querySelector(".toast");
+
+if(old)old.remove();
+
+var t=document.createElement("div");
+
+t.className="toast";
+t.textContent=text;
+
+document.body.appendChild(t);
+
+setTimeout(function(){
+t.remove();
+},1800);
 }
 
-/* ---------- CLICK HANDLERS ---------- */
+/* ---------- UPDATE ---------- */
 
-$("frog").addEventListener("pointerdown",clickFrog);
+function update(){
 
-document.querySelectorAll(".nav").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    $(btn.dataset.screen).classList.add("active");
-    updateAll();
-  });
+document.getElementById("coins").textContent=number(state.coins);
+document.getElementById("gems").textContent=number(state.gems);
+document.getElementById("level").textContent=state.level;
+
+document.getElementById("clicks").textContent=number(state.clicks);
+document.getElementById("clickPower").textContent=
+number(state.clickPower*totalMultiplier());
+
+document.getElementById("auto").textContent=
+number(state.auto*totalMultiplier());
+
+document.getElementById("combo").textContent=state.combo+"x";
+document.getElementById("crit").textContent=
+Math.floor(state.crit*100)+"%";
+
+document.getElementById("rebirth").textContent=state.rebirths;
+
+document.getElementById("mult").textContent=
+totalMultiplier().toFixed(1)+"x";
+
+document.getElementById("worldLabel").textContent=
+worlds[state.world].name;
+
+document.getElementById("clanLevel").textContent=
+state.clanLevel;
+
+document.getElementById("clanXP").textContent=
+number(state.clanXP);
+
+document.getElementById("clanBonus").textContent=
+"+"+(state.clanLevel*2)+"%";
+
+var need=xpNeeded();
+
+document.getElementById("xpBar").style.width=
+Math.min(100,state.xp/need*100)+"%";
+
+document.getElementById("xpText").textContent=
+number(state.xp)+" / "+number(need)+" XP";
+
+var currentSkin=skins.find(function(s){
+return s.name===state.skin;
 });
 
-$("upgradeList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-upgrade]");
-  if(!btn)return;
-  const u=upgrades.find(x=>x.id===btn.dataset.upgrade);
-  if(!u)return;
-  const cost=upgradeCost(u);
-  if(state.coins<cost)return;
-  state.coins-=cost;
-  state.upgrades[u.id]=(state.upgrades[u.id]||0)+1;
-
-  if(u.type==="click")state.clickPower+=u.value;
-  if(u.type==="auto")state.auto+=u.value;
-  if(u.type==="crit")state.crit+=u.value;
-  if(u.type==="energy"){state.maxEnergy+=u.value;state.energy=state.maxEnergy}
-  if(u.type==="mult")state.mult+=u.value;
-
-  addActivity("⬆️ Bought "+u.name);
-  updateAll();
-});
-
-$("skinList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-skin]");
-  if(!btn)return;
-  const name=btn.dataset.skin;
-  if(!state.ownedSkins.includes(name)){
-    const skin=skins.find(x=>x.name===name);
-    const cost=skin.rarity==="rare"?5000:skin.rarity==="epic"?50000:
-      skin.rarity==="legendary"?500000:skin.rarity==="mythic"?5000000:0;
-    if(state.coins<cost){
-      toast("Need "+fmt(cost)+" coins to unlock this skin.");
-      return;
-    }
-    state.coins-=cost;
-    state.ownedSkins.push(name);
-    toast("🎨 Unlocked "+name+"!");
-  }
-  state.skin=name;
-  updateAll();
-});
-
-$("petList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-pet]");
-  if(!btn)return;
-  const p=pets.find(x=>x.name===btn.dataset.pet);
-  if(!p||state.ownedPets.includes(p.name)||state.coins<p.cost)return;
-  state.coins-=p.cost;
-  state.ownedPets.push(p.name);
-  toast("🐣 Adopted "+p.name+"!");
-  checkAchievements();
-  updateAll();
-});
-
-$("worldList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-world]");
-  if(!btn)return;
-  const i=Number(btn.dataset.world),w=worlds[i];
-  if(!state.unlockedWorlds.includes(i)){
-    if(state.coins<w.cost)return;
-    state.coins-=w.cost;
-    state.unlockedWorlds.push(i);
-    toast("🌎 World unlocked!");
-  }
-  state.world=i;
-  updateAll();
-});
-
-$("questList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-quest]");
-  if(!btn)return;
-  const q=questDefs.find(x=>x.id===btn.dataset.quest);
-  if(!q||state.quests[q.id])return;
-  if((Number(q.test(state))||0)<q.target)return;
-  state.quests[q.id]=true;
-  addCoins(q.reward);
-  state.gems+=5;
-  toast("🎯 Quest complete! +"+fmt(q.reward)+" coins");
-  updateAll();
-});
-
-$("clanXP").addEventListener("click",()=>{
-  if(state.coins<1000){
-    toast("Need 1,000 coins.");
-    return;
-  }
-  state.coins-=1000;
-  state.clanXP+=10;
-  const need=100*state.clanLevel;
-  if(state.clanXP>=need){
-    state.clanXP-=need;
-    state.clanLevel++;
-    toast("👑 Clan level "+state.clanLevel+"!");
-  }
-  updateAll();
-});
-
-$("addFriend").addEventListener("click",()=>{
-  const input=$("friendInput");
-  const name=input.value.trim().slice(0,20);
-  if(!name)return;
-  if(state.friends.includes(name)){
-    toast("Already added!");
-    return;
-  }
-  state.friends.push(name);
-  input.value="";
-  toast("👥 Friend added!");
-  renderFriends();
-});
-
-$("friendList").addEventListener("click",e=>{
-  const btn=e.target.closest("[data-friend]");
-  if(!btn)return;
-  state.friends.splice(Number(btn.dataset.friend),1);
-  renderFriends();
-});
-
-$("saveBtn").addEventListener("click",()=>{
-  saveGame();toast("💾 Game saved!");
-});
-
-$("resetBtn").addEventListener("click",resetGame);
-
-$("soundBtn").addEventListener("click",()=>{
-  state.sound=!state.sound;
-  $("soundText").textContent=state.sound?"Sound effects enabled":"Sound effects disabled";
-});
-
-$("dailyBtn").addEventListener("click",claimDaily);
-
-/* ---------- GAME LOOP ---------- */
-
-let lastFrame=performance.now();
-
-function gameLoop(now){
-  const dt=Math.min(.25,(now-lastFrame)/1000);
-  lastFrame=now;
-
-  /* Passive income */
-  if(state.auto>0)addCoins(state.auto*totalMultiplier()*dt);
-
-  /* Energy regeneration */
-  state.energy=Math.min(state.maxEnergy,state.energy+dt*3);
-
-  /* Combo decay */
-  if(state.combo>0 && performance.now()-lastClickTime>1200){
-    state.combo=0;
-  }
-
-  updateEvent();
-
-  saveTimer+=dt;
-  if(saveTimer>=5){
-    saveTimer=0;
-    saveGame();
-  }
-
-  updateUI();
-  requestAnimationFrame(gameLoop);
+if(currentSkin){
+document.getElementById("frog").style.background=
+currentSkin.color;
 }
 
-/* ---------- OFFLINE EARNINGS ---------- */
+renderUpgrades();
+renderSkins();
+renderPets();
+renderQuests();
+renderWorlds();
+renderFriends();
+renderAchievements();
 
-function calculateOffline(){
-  const seconds=Math.min(86400,Math.max(0,(Date.now()-state.lastSave)/1000));
-  if(seconds>10 && state.auto>0){
-    const earned=state.auto*totalMultiplier()*seconds;
-    addCoins(earned);
-    state.offline=earned;
-    toast("🌙 Offline earnings: +"+fmt(earned)+" coins");
-  }
+saveGame();
 }
 
-/* ---------- EXTRA MECHANICS ---------- */
+/* ---------- PASSIVE INCOME ---------- */
 
-function randomEvents(){
-  setInterval(()=>{
-    if(Math.random()<.35)startEvent();
-  },45000);
+setInterval(function(){
+
+if(state.auto>0){
+addCoins(state.auto*totalMultiplier());
 }
 
-function luckyBonus(){
-  setInterval(()=>{
-    if(Math.random()<.08){
-      const reward=Math.max(100,state.clickPower*100);
-      addCoins(reward);
-      toast("🍀 Lucky frog! +"+fmt(reward)+" coins");
-      addActivity("🍀 Lucky bonus!");
-    }
-  },20000);
+if(state.combo>0){
+state.combo=0;
 }
 
-/* ---------- INITIALIZATION ---------- */
+update();
 
-function updateAll(){
-  updateUI();
-  renderUpgrades();
-  renderSkins();
-  renderPets();
-  renderQuests();
-  renderWorlds();
-  renderFriends();
-  renderAchievements();
-}
+},1000);
 
-calculateOffline();
-updateAll();
-addActivity("🐸 Welcome to Frog Frenzy!");
-addActivity("💾 Auto-save is enabled.");
-randomEvents();
-luckyBonus();
-requestAnimationFrame(gameLoop);
+/* ---------- AUTOSAVE ---------- */
 
-window.addEventListener("beforeunload",saveGame);
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden)saveGame();
+setInterval(function(){
+saveGame();
+},5000);
+
+/* ---------- SETTINGS ---------- */
+
+document.getElementById("save").addEventListener("click",function(){
+saveGame();
+toast("💾 Game saved!");
 });
 
-/* Keyboard support */
-document.addEventListener("keydown",e=>{
-  if(e.code==="Space" && !e.repeat){
-    e.preventDefault();
-    clickFrog({clientX:innerWidth/2,clientY:innerHeight/2});
-  }
+document.getElementById("reset").addEventListener("click",function(){
+
+if(confirm("Are you sure you want to delete all progress?")){
+
+localStorage.removeItem("frogFrenzySave");
+
+location.reload();
+
+}
 });
 
-/* Easter egg: clicking the logo */
-document.querySelector(".logo").addEventListener("click",()=>{
-  state.gems++;
-  toast("🐸 Secret frog gem!");
-});
-</script>
-</body>
-</html>
+/* ---------- START ---------- */
+
+activity("🐸 Welcome to Frog Frenzy!");
+activity("💾 Your progress saves automatically.");
+update();
+
+</script> </body> </html>
