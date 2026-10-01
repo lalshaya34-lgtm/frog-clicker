@@ -2,3556 +2,1476 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#102f20">
-<title>Frog Clicker — Living Pond</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#55b84a">
+<title>Frog Clicker: Pondbound</title>
 
 <style>
-/* ============================================================
-   FROG CLICKER
-   Single-file browser game
-   Designed for GitHub Pages
-   No external libraries
-   No external images
-   No energy mechanic
-   300 upgrade mechanics
-   ============================================================ */
-
-:root{
-  --sky:#73d7ff;
-  --sky2:#b8efff;
-  --water:#269ac2;
-  --water2:#63d8df;
-  --grass:#3c9e45;
-  --grass2:#82c957;
-  --dark:#102d20;
-  --panel:rgba(255,255,255,.88);
-  --gold:#ffd34d;
-  --green:#45c45a;
-  --shadow:0 12px 30px rgba(0,0,0,.18);
-}
-
 *{
   box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
 }
 
-html{
-  scroll-behavior:smooth;
+:root{
+  --green:#39a852;
+  --dark:#123c29;
+  --lime:#9cff62;
+  --water:#6bd5ed;
+  --panel:#f5fff1;
+  --gold:#ffd84d;
 }
 
-body{
+html,body{
   margin:0;
-  min-height:100vh;
-  overflow-x:hidden;
-  color:var(--dark);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  min-height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#173b29;
   background:
-    linear-gradient(
-      180deg,
-      var(--sky) 0%,
-      var(--sky2) 35%,
-      #8bd66a 65%,
-      #4e9d42 100%
-    );
-  transition:
-    background 2s ease,
-    filter 2s ease;
+    radial-gradient(circle at 20% 10%,#d9ffd0,transparent 30%),
+    linear-gradient(#8bdcf0,#dff8d4 55%,#b8e987);
 }
 
-/* -----------------------------
-   WORLD
------------------------------ */
-
-#world{
-  position:fixed;
-  inset:0;
-  z-index:-10;
-  overflow:hidden;
-  pointer-events:none;
+button,input{
+  font:inherit;
 }
-
-.sun{
-  position:absolute;
-  width:130px;
-  height:130px;
-  right:9%;
-  top:8%;
-  border-radius:50%;
-  background:
-    radial-gradient(circle,#fff7ae 0 28%,#ffe56b 48%,#ffc947 70%,transparent 72%);
-  filter:blur(.2px);
-  box-shadow:
-    0 0 35px #fff0,
-    0 0 80px #fff8,
-    0 0 130px #ffd34d99;
-  animation:sunFloat 8s ease-in-out infinite;
-  transition:all 2s ease;
-}
-
-@keyframes sunFloat{
-  0%,100%{transform:translateY(0) scale(1)}
-  50%{transform:translateY(14px) scale(1.04)}
-}
-
-.moon{
-  position:absolute;
-  width:95px;
-  height:95px;
-  right:12%;
-  top:10%;
-  border-radius:50%;
-  background:#fffbe4;
-  box-shadow:
-    0 0 25px #fff,
-    0 0 80px #dffcff;
-  opacity:0;
-  transition:opacity 2s ease;
-}
-
-.moon:after,
-.moon:before{
-  content:"";
-  position:absolute;
-  border-radius:50%;
-  background:#d9dfc7;
-  opacity:.35;
-}
-
-.moon:after{
-  width:16px;
-  height:16px;
-  left:20px;
-  top:25px;
-}
-
-.moon:before{
-  width:11px;
-  height:11px;
-  right:22px;
-  bottom:20px;
-}
-
-.cloud{
-  position:absolute;
-  width:180px;
-  height:50px;
-  background:#fff9;
-  border-radius:50px;
-  filter:blur(.5px);
-  animation:cloudMove linear infinite;
-}
-
-.cloud:before,
-.cloud:after{
-  content:"";
-  position:absolute;
-  background:inherit;
-  border-radius:50%;
-}
-
-.cloud:before{
-  width:80px;
-  height:80px;
-  left:30px;
-  bottom:10px;
-}
-
-.cloud:after{
-  width:100px;
-  height:100px;
-  right:25px;
-  bottom:5px;
-}
-
-.cloud.one{
-  top:16%;
-  left:-220px;
-  animation-duration:65s;
-}
-
-.cloud.two{
-  top:30%;
-  left:-300px;
-  transform:scale(.65);
-  animation-duration:95s;
-  animation-delay:-35s;
-}
-
-@keyframes cloudMove{
-  from{transform:translateX(0)}
-  to{transform:translateX(calc(100vw + 500px))}
-}
-
-/* -----------------------------
-   STARS
------------------------------ */
-
-#stars{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  transition:opacity 2s ease;
-}
-
-.star{
-  position:absolute;
-  width:3px;
-  height:3px;
-  background:#fff;
-  border-radius:50%;
-  box-shadow:0 0 7px #fff;
-  animation:twinkle 2s ease-in-out infinite;
-}
-
-@keyframes twinkle{
-  0%,100%{opacity:.2;transform:scale(.6)}
-  50%{opacity:1;transform:scale(1.5)}
-}
-
-/* -----------------------------
-   MAIN APP
------------------------------ */
-
-#app{
-  width:min(1450px,96%);
-  margin:auto;
-  padding:18px 0 80px;
-}
-
-.topbar{
-  position:sticky;
-  top:10px;
-  z-index:50;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:14px;
-  padding:12px 16px;
-  border:1px solid #ffffff88;
-  border-radius:20px;
-  background:rgba(9,38,26,.82);
-  backdrop-filter:blur(18px);
-  color:white;
-  box-shadow:var(--shadow);
-}
-
-.logo{
-  font-size:clamp(20px,3vw,31px);
-  font-weight:950;
-  letter-spacing:-1px;
-}
-
-.logo span{
-  color:#79f07b;
-}
-
-.top-actions{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-/* -----------------------------
-   BUTTONS
------------------------------ */
 
 button{
   border:0;
-  border-radius:11px;
-  padding:9px 13px;
-  color:white;
-  background:linear-gradient(180deg,#55ce68,#269945);
-  box-shadow:
-    inset 0 1px #ffffff55,
-    0 4px 10px #0002;
-  font-weight:800;
   cursor:pointer;
-  transition:
-    transform .12s,
-    filter .12s,
-    box-shadow .12s;
 }
 
-button:hover{
-  filter:brightness(1.1);
-  transform:translateY(-1px);
+#app{
+  max-width:1500px;
+  margin:auto;
+  padding:14px;
 }
 
-button:active{
-  transform:translateY(2px) scale(.97);
+/* =========================
+   TOP
+========================= */
+
+.top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 15px;
+  border-radius:20px;
+  background:#ffffffdd;
+  backdrop-filter:blur(12px);
+  box-shadow:0 8px 30px #17462c20;
+  position:sticky;
+  top:8px;
+  z-index:100;
 }
 
-button:disabled{
-  opacity:.38;
-  filter:grayscale(.8);
-  cursor:not-allowed;
-  transform:none;
+.logo{
+  font-size:23px;
+  font-weight:1000;
 }
-
-button.gold{
-  background:linear-gradient(180deg,#ffe36b,#e7a91f);
-  color:#422c00;
-}
-
-button.dark{
-  background:linear-gradient(180deg,#314f42,#182d25);
-}
-
-button.red{
-  background:linear-gradient(180deg,#ee6767,#b52c2c);
-}
-
-/* -----------------------------
-   STATS
------------------------------ */
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:9px;
-  margin-bottom:12px;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
 }
 
 .stat{
-  min-height:78px;
-  padding:11px;
-  border:1px solid #ffffffaa;
-  border-radius:16px;
-  background:var(--panel);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  position:relative;
-}
-
-.stat:after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(110deg,transparent,#fff7,transparent);
-  transform:translateX(-120%);
-  animation:shine 7s linear infinite;
-}
-
-@keyframes shine{
-  0%,75%{transform:translateX(-120%)}
-  100%{transform:translateX(120%)}
-}
-
-.stat-label{
-  color:#4b6655;
+  padding:8px 11px;
+  border-radius:12px;
+  background:#e9f8e5;
   font-size:12px;
-  font-weight:800;
+  font-weight:900;
 }
 
-.stat-value{
-  margin-top:2px;
-  font-size:clamp(19px,2.4vw,29px);
-  font-weight:950;
+.stat b{
+  color:#16853a;
 }
 
-.stat-sub{
-  color:#698172;
-  font-size:11px;
-}
-
-/* -----------------------------
-   GAME GRID
------------------------------ */
-
-.main-grid{
+.main{
   display:grid;
-  grid-template-columns:minmax(0,1.55fr) minmax(300px,.75fr);
-  gap:13px;
+  grid-template-columns:minmax(0,1fr) 390px;
+  gap:14px;
+  margin-top:14px;
 }
 
-/* -----------------------------
-   POND
------------------------------ */
-
-.pond-card{
-  min-height:680px;
-  position:relative;
-  overflow:hidden;
-  border-radius:28px;
-  border:4px solid #245b39;
-  box-shadow:
-    0 25px 60px #102d2040,
-    inset 0 0 60px #fff2;
-  background:
-    linear-gradient(
-      180deg,
-      #a6ebf5 0 8%,
-      #4bc5d3 8% 48%,
-      #1f9bb9 48% 100%
-    );
-}
-
-.pond-surface{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-}
-
-.water-ripple{
-  position:absolute;
-  width:180px;
-  height:55px;
-  border:2px solid #ffffff55;
-  border-radius:50%;
-  animation:ripple 4s ease-out infinite;
-}
-
-.water-ripple.r1{left:10%;top:22%;animation-delay:0s}
-.water-ripple.r2{left:60%;top:35%;animation-delay:1.3s}
-.water-ripple.r3{left:35%;top:70%;animation-delay:2.4s}
-.water-ripple.r4{left:75%;top:78%;animation-delay:3s}
-
-@keyframes ripple{
-  0%{
-    transform:scale(.2);
-    opacity:.8;
-  }
-  80%{
-    transform:scale(1.6);
-    opacity:0;
-  }
-  100%{
-    opacity:0;
+@media(max-width:950px){
+  .main{
+    grid-template-columns:1fr;
   }
 }
 
-.reed{
-  position:absolute;
-  bottom:-5px;
-  width:5px;
-  height:120px;
-  background:#276b37;
-  transform-origin:bottom;
-  animation:reedMove 3s ease-in-out infinite;
-  border-radius:8px;
-}
-
-.reed:before,
-.reed:after{
-  content:"";
-  position:absolute;
-  width:25px;
-  height:7px;
-  background:#348744;
-  border-radius:100%;
-}
-
-.reed:before{
-  top:25px;
-  left:-20px;
-  transform:rotate(-30deg);
-}
-
-.reed:after{
-  top:55px;
-  left:2px;
-  transform:rotate(25deg);
-}
-
-@keyframes reedMove{
-  0%,100%{transform:rotate(-3deg)}
-  50%{transform:rotate(5deg)}
-}
-
-/* -----------------------------
-   LILY PADS
------------------------------ */
-
-.lily{
-  position:absolute;
-  width:90px;
-  height:50px;
-  border-radius:100% 10% 100% 100%;
-  background:
-    radial-gradient(circle at 35% 35%,#82d858,#3b9f43 70%);
-  box-shadow:
-    inset 0 4px 5px #b5f77c88,
-    0 5px 10px #073e3555;
-  animation:lilyFloat 4s ease-in-out infinite;
-}
-
-.lily:after{
-  content:"";
-  position:absolute;
-  right:0;
-  top:0;
-  width:40%;
-  height:100%;
-  background:#20865a;
-  clip-path:polygon(0 0,100% 50%,0 100%);
-  opacity:.7;
-}
-
-.lily.a{left:5%;bottom:15%;transform:rotate(-15deg)}
-.lily.b{right:8%;bottom:23%;transform:scale(.75) rotate(20deg);animation-delay:-1.4s}
-.lily.c{left:50%;top:16%;transform:scale(.6) rotate(-20deg);animation-delay:-2.2s}
-.lily.d{right:35%;bottom:5%;transform:scale(.5);animation-delay:-3s}
-
-@keyframes lilyFloat{
-  0%,100%{margin-top:0}
-  50%{margin-top:-8px}
-}
-
-/* -----------------------------
-   FROG STAGE
------------------------------ */
-
-.frog-stage{
-  position:absolute;
-  left:50%;
-  top:52%;
-  transform:translate(-50%,-50%);
-  width:min(390px,70%);
-  height:350px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.frog-shadow{
-  position:absolute;
-  bottom:32px;
-  width:190px;
-  height:38px;
-  border-radius:50%;
-  background:#073f4260;
-  filter:blur(7px);
-  animation:shadowBounce .6s ease-in-out infinite;
-}
-
-@keyframes shadowBounce{
-  0%,100%{transform:scale(1);opacity:.45}
-  50%{transform:scale(.82);opacity:.25}
-}
-
-/* A deliberately elaborate CSS frog instead of an external image. */
-
-.frog{
-  position:relative;
-  width:245px;
-  height:205px;
-  cursor:pointer;
-  user-select:none;
-  transform-origin:center bottom;
-  filter:
-    drop-shadow(0 15px 8px #063d3855)
-    drop-shadow(0 0 20px #6fff6555);
-  animation:frogIdle 2.4s ease-in-out infinite;
-  z-index:10;
-}
-
-@keyframes frogIdle{
-  0%,100%{transform:translateY(0) rotate(0)}
-  45%{transform:translateY(-5px) rotate(-1deg)}
-  55%{transform:translateY(-7px) rotate(1deg)}
-}
-
-.frog.jumping{
-  animation:frogJump .48s cubic-bezier(.2,.9,.25,1);
-}
-
-@keyframes frogJump{
-  0%{transform:translateY(0) scale(1)}
-  25%{transform:translateY(-45px) scale(1.04,1)}
-  60%{transform:translateY(-70px) scale(.95,1.07) rotate(-3deg)}
-  100%{transform:translateY(0) scale(1)}
-}
-
-.frog-body{
-  position:absolute;
-  left:25px;
-  top:55px;
-  width:195px;
-  height:145px;
-  border-radius:48% 48% 43% 43%;
-  background:
-    radial-gradient(circle at 32% 28%,#b9f96c 0 5%,transparent 6%),
-    radial-gradient(circle at 70% 25%,#a9ec5b 0 4%,transparent 5%),
-    linear-gradient(145deg,#70d34b,#238c42);
-  border:5px solid #1b6e39;
-  box-shadow:
-    inset 0 -18px 30px #135f3d55,
-    inset 15px 10px 25px #d0ff7944;
-}
-
-.frog-body:before{
-  content:"";
-  position:absolute;
-  left:24px;
-  right:24px;
-  bottom:14px;
-  height:55px;
-  border-radius:50%;
-  background:#8ee15a;
-  opacity:.55;
-}
-
-.eye{
-  position:absolute;
-  top:22px;
-  width:68px;
-  height:66px;
-  border-radius:50%;
-  background:
-    radial-gradient(circle at 50% 52%,#101713 0 15%,#e6ffac 16% 25%,#4e7936 26% 100%);
-  border:5px solid #1b6e39;
-  z-index:3;
-  box-shadow:inset 0 -5px 8px #0003;
-}
-
-.eye.left{left:15px}
-.eye.right{right:15px}
-
-.eye:after{
-  content:"";
-  position:absolute;
-  width:12px;
-  height:12px;
-  border-radius:50%;
-  background:white;
-  left:14px;
-  top:12px;
-  box-shadow:0 0 8px white;
-}
-
-.mouth{
-  position:absolute;
-  left:47px;
-  bottom:28px;
-  width:100px;
-  height:34px;
-  border-bottom:7px solid #194f31;
-  border-radius:50%;
-}
-
-.cheek{
-  position:absolute;
-  bottom:45px;
-  width:45px;
-  height:28px;
-  border-radius:50%;
-  background:#66c64e;
-  opacity:.65;
-}
-
-.cheek.left{left:12px}
-.cheek.right{right:12px}
-
-.leg{
-  position:absolute;
-  bottom:-10px;
-  width:90px;
-  height:65px;
-  border-radius:50%;
-  background:#328e3f;
-  border:4px solid #1d6837;
-  z-index:-1;
-}
-
-.leg.left{left:-5px;transform:rotate(15deg)}
-.leg.right{right:-5px;transform:rotate(-15deg)}
-
-.toe{
-  position:absolute;
-  bottom:-5px;
-  width:27px;
-  height:19px;
-  border-radius:50%;
-  background:#62c951;
-  border:3px solid #226b37;
-}
-
-.toe.t1{left:-18px}
-.toe.t2{left:5px}
-.toe.t3{right:5px}
-.toe.t4{right:-18px}
-
-/* -----------------------------
-   TONGUE
------------------------------ */
-
-.tongue{
-  position:absolute;
-  width:125px;
-  height:9px;
-  background:#ff7097;
-  border-radius:10px;
-  left:105px;
-  top:150px;
-  transform-origin:left center;
-  transform:scaleX(0);
-  z-index:20;
-  box-shadow:0 2px 3px #6d234055;
-}
-
-.tongue.out{
-  animation:tongueStrike .35s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes tongueStrike{
-  0%{transform:scaleX(0)}
-  55%{transform:scaleX(1.2)}
-  100%{transform:scaleX(0)}
-}
-
-.tongue:after{
-  content:"";
-  position:absolute;
-  right:-9px;
-  top:-4px;
-  width:17px;
-  height:17px;
-  border-radius:50%;
-  background:#ff6d92;
-}
-
-/* -----------------------------
-   BUGS
------------------------------ */
-
-.insect{
-  position:absolute;
-  z-index:12;
-  font-size:24px;
-  filter:drop-shadow(0 2px 2px #0005);
-  pointer-events:none;
-}
-
-.fly{
-  animation:flyPath 8s linear infinite;
-}
-
-.fly:nth-child(1){animation-delay:-2s}
-.fly:nth-child(2){animation-delay:-5s}
-.fly:nth-child(3){animation-delay:-7s}
-
-@keyframes flyPath{
-  0%{
-    left:0%;
-    top:45%;
-    transform:rotate(15deg);
-  }
-  25%{
-    left:35%;
-    top:15%;
-    transform:rotate(-20deg);
-  }
-  50%{
-    left:80%;
-    top:38%;
-    transform:rotate(15deg);
-  }
-  75%{
-    left:55%;
-    top:75%;
-    transform:rotate(-15deg);
-  }
-  100%{
-    left:0%;
-    top:45%;
-    transform:rotate(15deg);
-  }
-}
-
-.firefly{
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#eaff65;
-  box-shadow:0 0 8px #eaff65,0 0 20px #eaff65;
-  animation:fireflyMove 6s ease-in-out infinite;
-}
-
-@keyframes fireflyMove{
-  0%,100%{transform:translate(0,0);opacity:.2}
-  25%{transform:translate(40px,-25px);opacity:1}
-  50%{transform:translate(90px,20px);opacity:.5}
-  75%{transform:translate(30px,50px);opacity:1}
-}
-
-/* -----------------------------
-   PARTICLES
------------------------------ */
-
-.particle{
-  position:fixed;
-  pointer-events:none;
-  z-index:100;
-  font-weight:950;
-  font-size:18px;
-  text-shadow:0 2px 4px #0006;
-  animation:particleFly .9s ease-out forwards;
-}
-
-@keyframes particleFly{
-  from{
-    transform:translate(-50%,-50%) scale(.7);
-    opacity:1;
-  }
-  to{
-    transform:translate(
-      calc(-50% + var(--x)),
-      calc(-50% + var(--y))
-    ) scale(1.1);
-    opacity:0;
-  }
-}
-
-.coin-pop{
-  color:#ffe45b;
-}
-
-.crit-pop{
-  color:#ff715f;
-  font-size:25px;
-}
-
-/* -----------------------------
-   SIDE PANELS
------------------------------ */
+/* =========================
+   PANELS
+========================= */
 
 .panel{
-  border:1px solid #ffffffaa;
-  border-radius:20px;
-  background:var(--panel);
-  box-shadow:var(--shadow);
+  background:#ffffffde;
+  backdrop-filter:blur(12px);
+  border:1px solid #ffffff;
+  border-radius:22px;
   padding:15px;
-  margin-bottom:13px;
-}
-
-.panel h2{
-  margin:0 0 10px;
-  font-size:20px;
+  box-shadow:0 12px 40px #17462c20;
+  margin-bottom:14px;
 }
 
 .panel-title{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
+  gap:8px;
+  margin-bottom:10px;
 }
 
-/* -----------------------------
-   XP
------------------------------ */
-
-.xp-wrap{
-  margin:10px 0;
+.panel-title h2{
+  margin:0;
+  font-size:18px;
 }
 
-.xp-top{
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  font-weight:900;
+.small{
+  font-size:10px;
+  color:#708373;
 }
 
-.xp-bar{
-  height:15px;
-  overflow:hidden;
-  background:#cde1d1;
-  border-radius:20px;
-  border:1px solid #9fbaa5;
-}
+/* =========================
+   POND
+========================= */
 
-.xp-fill{
-  width:0%;
-  height:100%;
-  background:
-    linear-gradient(90deg,#2fae51,#8be05a,#2fae51);
-  background-size:200% 100%;
-  animation:xpShimmer 2s linear infinite;
-  transition:width .3s;
-}
-
-@keyframes xpShimmer{
-  to{background-position:200% 0}
-}
-
-/* -----------------------------
-   WEATHER
------------------------------ */
-
-.world-info{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-}
-
-.world-box{
-  padding:9px;
-  border-radius:12px;
-  background:#dff5e3;
-  font-size:12px;
-  font-weight:850;
-}
-
-/* -----------------------------
-   SHOP
------------------------------ */
-
-.scroll{
-  max-height:470px;
-  overflow:auto;
-  padding-right:4px;
-}
-
-.upgrade{
+.pond{
+  min-height:610px;
   position:relative;
   overflow:hidden;
-  margin-bottom:8px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid #c9e3cc;
-  background:linear-gradient(135deg,#f9fff7,#eaf9e9);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 30% 30%,#ffffff55 0 3px,transparent 4px),
+    radial-gradient(circle at 70% 65%,#ffffff44 0 2px,transparent 3px),
+    linear-gradient(#65cfe9,#48b9d9 45%,#2c9b8d);
+  border:6px solid #237d62;
+  box-shadow:
+    inset 0 0 80px #155b4730,
+    0 20px 40px #194b3825;
 }
 
-.upgrade.locked{
-  opacity:.62;
+.pond:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:.3;
+  background:
+    repeating-radial-gradient(
+      ellipse at 20% 80%,
+      transparent 0 35px,
+      #b7f5ff 36px 38px,
+      transparent 39px 80px
+    );
 }
 
-.upgrade.owned{
-  border-color:#65c66c;
-  background:linear-gradient(135deg,#efffed,#d8f8d8);
+.lilypad{
+  position:absolute;
+  width:100px;
+  height:58px;
+  border-radius:70% 30% 70% 30%;
+  background:linear-gradient(135deg,#75d44d,#2e8d43);
+  box-shadow:inset -8px -8px 10px #145d3928;
 }
 
-.upgrade-name{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  font-weight:950;
+.lilypad:after{
+  content:"";
+  position:absolute;
+  left:48%;
+  top:0;
+  height:100%;
+  width:3px;
+  background:#1e703d88;
+  transform:rotate(25deg);
 }
 
-.upgrade-desc{
-  color:#607667;
+.lp1{
+  left:7%;
+  bottom:13%;
+  transform:rotate(-10deg);
+}
+
+.lp2{
+  right:8%;
+  top:14%;
+  transform:rotate(18deg);
+}
+
+.lp3{
+  right:20%;
+  bottom:9%;
+  transform:scale(.7) rotate(-12deg);
+}
+
+.pond-text{
+  position:absolute;
+  left:20px;
+  top:18px;
+  z-index:2;
+  color:white;
+  text-shadow:0 2px 5px #154d55;
+}
+
+.pond-text h1{
+  margin:0;
+  font-size:28px;
+}
+
+.pond-text span{
   font-size:11px;
-  margin:4px 0;
 }
 
-.upgrade-footer{
+/* =========================
+   FROG
+========================= */
+
+.frog-stage{
+  position:absolute;
+  left:50%;
+  top:52%;
+  width:300px;
+  height:300px;
+  transform:translate(-50%,-50%);
+  z-index:10;
+}
+
+.frog-shadow{
+  position:absolute;
+  width:225px;
+  height:45px;
+  left:38px;
+  bottom:18px;
+  border-radius:50%;
+  background:#063c3744;
+  filter:blur(7px);
+}
+
+.frog{
+  position:absolute;
+  left:10px;
+  top:20px;
+  width:280px;
+  height:245px;
+  cursor:pointer;
+  user-select:none;
+  transform-origin:center bottom;
+  filter:drop-shadow(0 22px 12px #003f3044);
+  animation:breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes breathe{
+  0%,100%{
+    transform:translateY(0) scaleY(1);
+  }
+
+  50%{
+    transform:translateY(-5px) scaleY(1.025);
+  }
+}
+
+.frog.jump{
+  animation:jump .62s cubic-bezier(.15,.85,.2,1);
+}
+
+@keyframes jump{
+  0%{
+    transform:translateY(0) scale(1);
+  }
+
+  18%{
+    transform:translateY(5px) scale(1.08,.9);
+  }
+
+  45%{
+    transform:translateY(-115px) scale(.9,1.1) rotate(-4deg);
+  }
+
+  68%{
+    transform:translateY(-100px) scale(.9,1.1) rotate(4deg);
+  }
+
+  100%{
+    transform:translateY(0) scale(1);
+  }
+}
+
+.frog-body{
+  position:absolute;
+  left:30px;
+  top:70px;
+  width:220px;
+  height:160px;
+  border-radius:47%;
+  background:
+    radial-gradient(circle at 27% 25%,#e0ff9b 0 4%,transparent 5%),
+    radial-gradient(circle at 73% 28%,#caff8d 0 3%,transparent 4%),
+    radial-gradient(circle at 40% 75%,#1c743d 0 10%,transparent 11%),
+    linear-gradient(145deg,#91df55,#4db747 42%,#218344);
+  border:5px solid #176137;
+  box-shadow:
+    inset 14px 12px 25px #e1ff9d44,
+    inset -15px -25px 35px #003c234d;
+}
+
+.frog-body:before{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border-radius:45%;
+  background:
+    radial-gradient(circle at 20% 30%,#1f773c 0 3px,transparent 4px),
+    radial-gradient(circle at 75% 40%,#2c883f 0 4px,transparent 5px),
+    radial-gradient(circle at 60% 70%,#257b3a 0 3px,transparent 4px),
+    radial-gradient(circle at 35% 65%,#2d883e 0 3px,transparent 4px);
+  opacity:.55;
+}
+
+.frog-belly{
+  position:absolute;
+  left:43px;
+  bottom:12px;
+  width:135px;
+  height:70px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,#d5ed9b,#a8d968 55%,#71ad4e);
+  animation:belly 2.8s ease-in-out infinite;
+}
+
+@keyframes belly{
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.04,.97);
+  }
+}
+
+.eye-socket{
+  position:absolute;
+  top:12px;
+  width:85px;
+  height:82px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#78c84d,#287a3c);
+  border:5px solid #155b35;
+  box-shadow:
+    inset 0 8px 12px #dcff9633,
+    0 5px 9px #00281438;
+  z-index:5;
+}
+
+.eye-socket.left{
+  left:10px;
+}
+
+.eye-socket.right{
+  right:10px;
+}
+
+.real-eye{
+  position:absolute;
+  left:15px;
+  top:12px;
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle,
+      #050908 0 14%,
+      #101c0f 15% 27%,
+      #d9e996 28% 52%,
+      #789047 53% 75%,
+      #344b29 76%
+    );
+  border:3px solid #203d24;
+  box-shadow:inset 0 4px 6px #fff5;
+  transition:transform .08s linear;
+}
+
+.real-eye:before{
+  content:"";
+  position:absolute;
+  width:13px;
+  height:13px;
+  left:11px;
+  top:9px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 0 8px white;
+}
+
+.eye-lid{
+  position:absolute;
+  left:5px;
+  top:-2px;
+  width:75px;
+  height:25px;
+  border-radius:50%;
+  background:#4ba947;
+  z-index:8;
+  transform-origin:center top;
+  animation:blink 7s infinite;
+}
+
+@keyframes blink{
+  0%,91%,100%{
+    transform:scaleY(0);
+  }
+
+  94%,97%{
+    transform:scaleY(1);
+  }
+}
+
+.frog-nose{
+  position:absolute;
+  left:75px;
+  top:92px;
+  width:70px;
+  height:25px;
+  border-radius:50%;
+  background:linear-gradient(#78c84d66,transparent);
+  z-index:8;
+}
+
+.nostril{
+  position:absolute;
+  top:103px;
+  width:8px;
+  height:5px;
+  border-radius:50%;
+  background:#173e29;
+  z-index:10;
+}
+
+.nostril.left{
+  left:93px;
+}
+
+.nostril.right{
+  right:93px;
+}
+
+.real-mouth{
+  position:absolute;
+  left:48px;
+  bottom:27px;
+  width:125px;
+  height:48px;
+  border-bottom:7px solid #164b30;
+  border-radius:0 0 60% 60%;
+  z-index:12;
+}
+
+.real-mouth:after{
+  content:"";
+  position:absolute;
+  left:20px;
+  bottom:-3px;
+  width:85px;
+  height:5px;
+  border-radius:50%;
+  background:#78bf55;
+}
+
+.throat{
+  position:absolute;
+  left:75px;
+  bottom:3px;
+  width:75px;
+  height:43px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,#72bb58,#3d9348);
+  animation:throat 2.8s ease-in-out infinite;
+}
+
+@keyframes throat{
+  0%,100%{
+    transform:scaleY(.82);
+  }
+
+  50%{
+    transform:scaleY(1.1);
+  }
+}
+
+.frog-foot{
+  position:absolute;
+  bottom:-15px;
+  width:105px;
+  height:70px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#5fc94c,#278b40);
+  border:4px solid #1d6638;
+  z-index:1;
+}
+
+.frog-foot.left{
+  left:-5px;
+  transform:rotate(12deg);
+}
+
+.frog-foot.right{
+  right:-5px;
+  transform:rotate(-12deg);
+}
+
+.frog-toe{
+  position:absolute;
+  bottom:-9px;
+  width:29px;
+  height:22px;
+  border-radius:50%;
+  background:#70d35c;
+  border:3px solid #226d3c;
+}
+
+.t1{
+  left:-10px;
+}
+
+.t2{
+  left:18px;
+}
+
+.t3{
+  right:18px;
+}
+
+.t4{
+  right:-10px;
+}
+
+/* =========================
+   SKINS
+========================= */
+
+.skin-golden .frog-body{
+  background:
+    radial-gradient(circle at 30% 20%,#fffbd1 0 4%,transparent 5%),
+    linear-gradient(145deg,#fff16b,#e5a51e,#a86b12);
+}
+
+.skin-blue .frog-body{
+  background:
+    radial-gradient(circle at 28% 30%,#eaffff 0 4%,transparent 5%),
+    linear-gradient(145deg,#82f5ff,#299bd0,#145d9d);
+}
+
+.skin-red .frog-body{
+  background:
+    radial-gradient(circle at 28% 25%,#ffd1c8 0 4%,transparent 5%),
+    linear-gradient(145deg,#ff8b76,#df3f40,#871e35);
+}
+
+.frog.poison .frog-body{
+  background:
+    radial-gradient(circle at 25% 25%,#ffe900 0 7px,transparent 8px),
+    radial-gradient(circle at 72% 31%,#ff304d 0 8px,transparent 9px),
+    radial-gradient(circle at 46% 70%,#16c9ff 0 7px,transparent 8px),
+    radial-gradient(circle at 78% 72%,#ffd400 0 5px,transparent 6px),
+    linear-gradient(145deg,#148550,#062f29);
+
+  box-shadow:
+    inset 14px 12px 25px #8cffdb33,
+    0 0 25px #20ff8266;
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+.particle{
+  position:fixed;
+  pointer-events:none;
+  z-index:999;
+  font-weight:1000;
+  color:#fff;
+  text-shadow:0 2px 5px #003c27;
+  animation:particle .8s ease-out forwards;
+}
+
+@keyframes particle{
+  to{
+    transform:
+      translate(var(--x),var(--y))
+      scale(.7);
+    opacity:0;
+  }
+}
+
+/* =========================
+   UI
+========================= */
+
+.tabs{
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
+}
+
+.tab{
+  flex:1;
+  padding:9px;
+  border-radius:11px;
+  background:#e2f2df;
+  color:#285637;
+  font-size:11px;
+  font-weight:900;
+  text-align:center;
+  cursor:pointer;
+}
+
+.tab.active{
+  background:#39a852;
+  color:white;
+}
+
+.tabpage{
+  display:none;
+}
+
+.tabpage.active{
+  display:block;
+}
+
+.action{
+  width:100%;
+  padding:11px;
+  margin:4px 0;
+  border-radius:11px;
+  background:#3ba952;
+  color:white;
+  font-weight:900;
+  box-shadow:0 3px 0 #267638;
+}
+
+.action:hover{
+  filter:brightness(1.06);
+}
+
+.action:active{
+  transform:translateY(2px);
+  box-shadow:0 1px 0 #267638;
+}
+
+.action.gold{
+  background:#e9b927;
+  box-shadow:0 3px 0 #a57910;
+}
+
+.action.red{
+  background:#d64a4a;
+  box-shadow:0 3px 0 #913333;
+}
+
+.action.dark{
+  background:#244e39;
+  box-shadow:0 3px 0 #153024;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  border:1px solid #bfd5c0;
+  border-radius:10px;
+  outline:none;
+  background:white;
+}
+
+input:focus{
+  border-color:#4caf50;
+  box-shadow:0 0 0 3px #4caf5020;
+}
+
+.progress{
+  height:11px;
+  overflow:hidden;
+  border-radius:20px;
+  background:#dceadc;
+}
+
+.progress>div{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#40b74e,#b2f34c);
+  transition:.3s;
+}
+
+.card{
+  padding:10px;
+  border-radius:13px;
+  background:#eef8eb;
+  margin:7px 0;
+  border:1px solid #d3e6d1;
+}
+
+.row{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:5px;
-}
-
-.cost{
-  color:#7a5c00;
-  font-weight:900;
-  font-size:12px;
-}
-
-/* -----------------------------
-   SKINS
------------------------------ */
-
-.skin-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
   gap:8px;
 }
 
-.skin{
-  position:relative;
-  min-height:105px;
-  padding:7px;
-  border-radius:14px;
-  background:#f0faed;
-  border:2px solid #c8e1c7;
-  cursor:pointer;
-  transition:.15s;
-  text-align:center;
+.mini{
+  font-size:10px;
+  color:#708171;
 }
-
-.skin:hover{
-  transform:translateY(-3px);
-}
-
-.skin.selected{
-  border-color:#ffd229;
-  box-shadow:0 0 0 3px #ffd22955;
-}
-
-.skin.locked{
-  filter:grayscale(.9);
-  opacity:.65;
-}
-
-.skin-icon{
-  font-size:40px;
-  line-height:45px;
-  filter:drop-shadow(0 4px 4px #0003);
-}
-
-.skin-name{
-  font-size:11px;
-  font-weight:950;
-}
-
-.skin-cost{
-  color:#6b765e;
-  font-size:9px;
-}
-
-/* -----------------------------
-   LOG
------------------------------ */
 
 .log{
-  height:155px;
+  max-height:150px;
   overflow:auto;
-  padding:9px;
+  font:10px monospace;
+  color:#baf6bf;
   background:#102d20;
-  color:#baffbf;
-  border-radius:12px;
-  font-family:monospace;
-  font-size:11px;
-  text-align:left;
+  padding:8px;
+  border-radius:10px;
 }
 
 .log div{
   padding:3px 0;
-  border-bottom:1px solid #ffffff0d;
+  border-bottom:1px solid #ffffff0c;
 }
 
-/* -----------------------------
-   ACHIEVEMENTS
------------------------------ */
+/* =========================
+   SKINS
+========================= */
 
-.achievement-grid{
+.skin{
+  padding:10px;
+  margin:6px 0;
+  border-radius:13px;
+  background:#eef8eb;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+
+.skin:hover{
+  background:#e2f4df;
+}
+
+.skin.selected{
+  border-color:#43ad4e;
+}
+
+.skin.locked{
+  opacity:.5;
+}
+
+.skin-icon{
+  width:44px;
+  height:44px;
+  border-radius:50%;
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
+  place-items:center;
+  background:#55b74b;
+  font-size:25px;
 }
+
+/* =========================
+   FRIENDS
+========================= */
+
+.friend{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:9px;
+  margin:5px 0;
+  background:#eef8eb;
+  border-radius:12px;
+}
+
+.avatar{
+  width:39px;
+  height:39px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#cdecc8;
+  font-size:22px;
+}
+
+.friend-info{
+  flex:1;
+  min-width:0;
+}
+
+.friend-name{
+  font-weight:900;
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.friend-status{
+  font-size:9px;
+  color:#748175;
+}
+
+.dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#4ad15b;
+}
+
+.dot.off{
+  background:#929d94;
+}
+
+/* =========================
+   CLAN
+========================= */
+
+.clan{
+  overflow:hidden;
+  border-radius:15px;
+  color:white;
+  background:
+    radial-gradient(circle at 20% 20%,#79e878,transparent 28%),
+    linear-gradient(135deg,#164f31,#2d8b51);
+  padding:15px;
+}
+
+.clan h3{
+  margin:0;
+}
+
+.clan-tag{
+  font-size:10px;
+  opacity:.7;
+}
+
+.clanbar{
+  height:9px;
+  background:#ffffff2b;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.clanbar div{
+  height:100%;
+  background:#e8ff73;
+}
+
+.member{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding:8px;
+  border-bottom:1px solid #d7e5d5;
+}
+
+.member:last-child{
+  border:0;
+}
+
+.member .avatar{
+  width:34px;
+  height:34px;
+}
+
+.role{
+  margin-left:auto;
+  padding:4px 6px;
+  background:#e4f0e1;
+  border-radius:6px;
+  font-size:9px;
+  font-weight:900;
+}
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
 
 .achievement{
-  padding:8px;
-  border-radius:12px;
-  background:#e8f2e8;
-  font-size:11px;
-  border:1px solid #c9ddc9;
+  padding:9px;
+  margin:5px 0;
+  border-radius:11px;
+  background:#edf8eb;
 }
 
 .achievement.done{
-  background:#fff5b6;
-  border-color:#e6c638;
+  background:#d7f5ca;
+  border:1px solid #7dcc65;
 }
 
-.achievement.locked{
-  opacity:.55;
-}
+/* =========================
+   TOAST
+========================= */
 
-/* -----------------------------
-   MODAL
------------------------------ */
-
-.modal{
+#toast{
   position:fixed;
-  inset:0;
-  z-index:200;
-  display:none;
-  place-items:center;
-  background:#051b1288;
-  backdrop-filter:blur(8px);
-  padding:20px;
-}
-
-.modal.show{
-  display:grid;
-}
-
-.modal-box{
-  width:min(600px,100%);
-  max-height:85vh;
-  overflow:auto;
-  border-radius:24px;
-  background:#f5fff2;
-  padding:20px;
-  box-shadow:0 30px 100px #0008;
-  animation:modalIn .25s ease-out;
-}
-
-@keyframes modalIn{
-  from{transform:translateY(30px) scale(.95);opacity:0}
-  to{transform:translateY(0) scale(1);opacity:1}
-}
-
-/* -----------------------------
-   RAIN
------------------------------ */
-
-#rain{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:90;
-  overflow:hidden;
+  right:18px;
+  bottom:18px;
+  z-index:1000;
+  padding:12px 16px;
+  border-radius:13px;
+  background:#163e2b;
+  color:white;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 15px 40px #0004;
   opacity:0;
-  transition:opacity 1s;
+  transform:translateY(20px);
+  pointer-events:none;
+  transition:.25s;
 }
 
-.raindrop{
-  position:absolute;
-  top:-40px;
-  width:2px;
-  height:22px;
-  background:linear-gradient(transparent,#bcecff);
-  transform:rotate(12deg);
-  animation:rainFall linear infinite;
-}
-
-@keyframes rainFall{
-  to{transform:translate(100px,110vh) rotate(12deg)}
-}
-
-/* -----------------------------
-   RESPONSIVE
------------------------------ */
-
-@media(max-width:1000px){
-  .stats{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .main-grid{
-    grid-template-columns:1fr;
-  }
-
-  .pond-card{
-    min-height:620px;
-  }
-}
-
-@media(max-width:600px){
-  #app{
-    width:96%;
-    padding-top:7px;
-  }
-
-  .topbar{
-    position:relative;
-    top:auto;
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  .top-actions{
-    justify-content:center;
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .pond-card{
-    min-height:560px;
-    border-radius:20px;
-  }
-
-  .frog-stage{
-    width:100%;
-  }
-
-  .frog{
-    transform:scale(.8);
-  }
-
-  .skin-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .achievement-grid{
-    grid-template-columns:1fr;
-  }
+#toast.show{
+  opacity:1;
+  transform:translateY(0);
 }
 </style>
 </head>
 
 <body>
 
-<!-- ==========================================================
-     WORLD
-========================================================== -->
-
-<div id="world">
-
-  <div class="sun" id="sun"></div>
-  <div class="moon" id="moon"></div>
-
-  <div id="stars"></div>
-
-  <div class="cloud one"></div>
-  <div class="cloud two"></div>
-
-</div>
-
-<div id="rain"></div>
-
-<!-- ==========================================================
-     APPLICATION
-========================================================== -->
-
 <div id="app">
 
-  <header class="topbar">
+<header class="top">
 
-    <div class="logo">
-      🐸 <span>FROG</span> CLICKER
-    </div>
+  <div class="logo">
+    🐸 Frog Clicker
+  </div>
 
-    <div class="top-actions">
-      <button class="dark" onclick="openGuide()">📖 Guide</button>
-      <button class="dark" onclick="saveGame()">💾 Save</button>
-      <button class="dark" onclick="loadGame()">📂 Load</button>
-      <button class="red" onclick="resetGame()">Reset</button>
-    </div>
-
-  </header>
-
-  <!-- STATS -->
-
-  <section class="stats">
+  <div class="stats">
 
     <div class="stat">
-      <div class="stat-label">🍃 LILYPAD COINS</div>
-      <div class="stat-value" id="coins">0</div>
-      <div class="stat-sub">Your frog fortune</div>
+      🪙 <b id="coins">0</b>
     </div>
 
     <div class="stat">
-      <div class="stat-label">👅 CLICK POWER</div>
-      <div class="stat-value" id="power">1</div>
-      <div class="stat-sub">Coins per tongue hit</div>
+      ⭐ Lv <b id="level">1</b>
     </div>
 
     <div class="stat">
-      <div class="stat-label">🪰 FROGS / SEC</div>
-      <div class="stat-value" id="fps">0</div>
-      <div class="stat-sub">Automatic pond income</div>
+      👆 <b id="clicks">0</b>
     </div>
 
     <div class="stat">
-      <div class="stat-label">⭐ LEVEL</div>
-      <div class="stat-value" id="level">1</div>
-      <div class="stat-sub">Frog evolution</div>
+      🏆 <b id="achievements">0</b>
     </div>
-
-    <div class="stat">
-      <div class="stat-label">🔥 COMBO</div>
-      <div class="stat-value" id="combo">0</div>
-      <div class="stat-sub">Keep clicking!</div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label">👆 TOTAL CLICKS</div>
-      <div class="stat-value" id="clicks">0</div>
-      <div class="stat-sub">Tongue strikes</div>
-    </div>
-
-  </section>
-
-  <!-- MAIN -->
-
-  <div class="main-grid">
-
-    <!-- POND -->
-
-    <main>
-
-      <section class="pond-card" id="pond">
-
-        <div class="pond-surface">
-
-          <div class="water-ripple r1"></div>
-          <div class="water-ripple r2"></div>
-          <div class="water-ripple r3"></div>
-          <div class="water-ripple r4"></div>
-
-          <div class="reed" style="left:4%;height:150px"></div>
-          <div class="reed" style="left:8%;height:100px;animation-delay:-1s"></div>
-          <div class="reed" style="right:4%;height:130px;animation-delay:-2s"></div>
-          <div class="reed" style="right:9%;height:90px"></div>
-
-          <div class="lily a"></div>
-          <div class="lily b"></div>
-          <div class="lily c"></div>
-          <div class="lily d"></div>
-
-          <div class="insect fly">🪰</div>
-          <div class="insect fly">🪰</div>
-          <div class="insect fly">🦋</div>
-
-          <div class="insect firefly" style="left:15%;top:30%"></div>
-          <div class="insect firefly" style="left:82%;top:25%;animation-delay:-2s"></div>
-          <div class="insect firefly" style="left:70%;top:60%;animation-delay:-4s"></div>
-          <div class="insect firefly" style="left:25%;top:70%;animation-delay:-1s"></div>
-
-        </div>
-
-        <!-- FROG -->
-
-        <div class="frog-stage">
-
-          <div class="frog-shadow"></div>
-
-          <div class="frog" id="frog">
-
-            <div class="leg left">
-              <div class="toe t1"></div>
-              <div class="toe t2"></div>
-            </div>
-
-            <div class="leg right">
-              <div class="toe t3"></div>
-              <div class="toe t4"></div>
-            </div>
-
-            <div class="frog-body">
-
-              <div class="eye left"></div>
-              <div class="eye right"></div>
-
-              <div class="cheek left"></div>
-              <div class="cheek right"></div>
-
-              <div class="mouth"></div>
-
-              <div class="tongue" id="tongue"></div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- BOTTOM POND UI -->
-
-        <div style="
-          position:absolute;
-          left:15px;
-          right:15px;
-          bottom:15px;
-          z-index:30;
-        ">
-
-          <div class="xp-wrap">
-
-            <div class="xp-top">
-              <span>⭐ Frog Experience</span>
-              <span>
-                <span id="xp">0</span> /
-                <span id="nextxp">100</span>
-              </span>
-            </div>
-
-            <div class="xp-bar">
-              <div class="xp-fill" id="xpbar"></div>
-            </div>
-
-          </div>
-
-          <div style="
-            text-align:center;
-            color:white;
-            text-shadow:0 2px 5px #0008;
-            font-size:12px;
-            font-weight:900;
-          ">
-            CLICK THE FROG • PRESS SPACE • CATCH THE FLY
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- WORLD STATUS -->
-
-      <section class="panel">
-
-        <div class="panel-title">
-          <h2>🌎 Living Pond</h2>
-          <span class="badge" id="worldStatus">DAY</span>
-        </div>
-
-        <div class="world-info">
-
-          <div class="world-box">
-            🌤️ Weather:
-            <span id="weather">Sunny</span>
-          </div>
-
-          <div class="world-box">
-            🍂 Season:
-            <span id="season">Spring</span>
-          </div>
-
-          <div class="world-box">
-            🐸 Skin:
-            <span id="currentSkin">Classic Frog</span>
-          </div>
-
-          <div class="world-box">
-            🍃 Total Earned:
-            <span id="totalCoins">0</span>
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- ACHIEVEMENTS -->
-
-      <section class="panel">
-
-        <div class="panel-title">
-          <h2>🏆 Achievements</h2>
-          <span id="achievementCount">0 / 0</span>
-        </div>
-
-        <div class="achievement-grid" id="achievements"></div>
-
-      </section>
-
-    </main>
-
-    <!-- SIDEBAR -->
-
-    <aside>
-
-      <!-- SKINS -->
-
-      <section class="panel">
-
-        <div class="panel-title">
-          <h2>🎨 Frog Skins</h2>
-          <span class="small">15 skins</span>
-        </div>
-
-        <div class="skin-grid" id="skins"></div>
-
-      </section>
-
-      <!-- UPGRADES -->
-
-      <section class="panel">
-
-        <div class="panel-title">
-          <h2>🧬 Frog Mechanics</h2>
-          <span class="small">300 total</span>
-        </div>
-
-        <p style="font-size:11px;color:#607567">
-          Every family has 10 levels. There is no energy limit.
-          Your frog can click forever.
-        </p>
-
-        <div class="scroll" id="shop"></div>
-
-      </section>
-
-      <!-- LOG -->
-
-      <section class="panel">
-
-        <div class="panel-title">
-          <h2>📜 Pond Journal</h2>
-          <button onclick="clearLog()">Clear</button>
-        </div>
-
-        <div class="log" id="log"></div>
-
-      </section>
-
-    </aside>
 
   </div>
 
-</div>
+</header>
 
-<!-- ==========================================================
-     GUIDE MODAL
-========================================================== -->
 
-<div class="modal" id="guideModal">
+<div class="main">
 
-  <div class="modal-box">
+<div>
 
-    <div class="panel-title">
-      <h2>🐸 How To Play</h2>
-      <button class="red" onclick="closeGuide()">Close</button>
+<section class="panel">
+
+  <div class="pond">
+
+    <div class="pond-text">
+      <h1>Your Pond</h1>
+      <span>Click your frog • Unlimited energy</span>
     </div>
 
-    <p>
-      Welcome to your living frog pond.
-      Click the frog to make it stick out its tongue and collect
-      Lilypad Coins.
-    </p>
+    <div class="lilypad lp1"></div>
+    <div class="lilypad lp2"></div>
+    <div class="lilypad lp3"></div>
 
-    <h3>👅 Clicking</h3>
-    <p>
-      Every click generates coins and XP. Rapid clicks create a
-      combo multiplier. Critical hits can produce much larger rewards.
-    </p>
+    <div class="frog-stage">
 
-    <h3>🪰 Living Pond</h3>
-    <p>
-      Flies, butterflies, fireflies, ripples, reeds, lily pads,
-      weather and day/night effects continuously animate the pond.
-    </p>
+      <div class="frog-shadow"></div>
 
-    <h3>🧬 300 Mechanics</h3>
-    <p>
-      There are 30 upgrade families with 10 levels each.
-      The mechanics affect click power, passive income, luck,
-      critical hits, XP, weather and more.
-    </p>
+      <div
+        id="frog"
+        class="frog"
+        onclick="clickFrog(event)"
+        aria-label="Click frog"
+        role="button"
+        tabindex="0"
+      >
 
-    <h3>🎨 Skins</h3>
-    <p>
-      Unlock frog skins by accumulating lifetime coins.
-      The final skin is the <b>☠️ Poison Dart Frog</b>.
-    </p>
+        <div class="frog-foot left">
+          <div class="frog-toe t1"></div>
+          <div class="frog-toe t2"></div>
+        </div>
 
-    <h3>⚡ Energy</h3>
-    <p>
-      There is <b>NO ENERGY SYSTEM</b>.
-      Click as much as you want.
-    </p>
+        <div class="frog-foot right">
+          <div class="frog-toe t3"></div>
+          <div class="frog-toe t4"></div>
+        </div>
+
+        <div class="frog-body">
+
+          <div class="frog-belly"></div>
+
+          <div class="eye-socket left">
+            <div class="real-eye"></div>
+            <div class="eye-lid"></div>
+          </div>
+
+          <div class="eye-socket right">
+            <div class="real-eye"></div>
+            <div class="eye-lid"></div>
+          </div>
+
+          <div class="frog-nose"></div>
+
+          <div class="nostril left"></div>
+          <div class="nostril right"></div>
+
+          <div class="real-mouth"></div>
+          <div class="throat"></div>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
+</section>
+
+
+<section class="panel">
+
+  <div class="panel-title">
+    <h2>⚡ Game Mechanics</h2>
+    <span class="small">No energy system</span>
+  </div>
+
+  <div class="card">
+
+    <div class="row">
+      <b>Click Power</b>
+      <b id="power">1</b>
+    </div>
+
+    <div class="mini">
+      Coins earned per frog click
+    </div>
+
+  </div>
+
+  <button
+    class="action"
+    onclick="upgradePower()"
+  >
+    🪙 Upgrade Click Power
+  </button>
+
+  <button
+    class="action gold"
+    onclick="buyAutoFrog()"
+  >
+    🤖 Buy Auto Frog
+  </button>
+
+  <button
+    class="action dark"
+    onclick="prestige()"
+  >
+    🌟 Pond Rebirth
+  </button>
+
+</section>
+
 </div>
+
+
+<div>
+
+<section class="panel">
+
+  <div class="tabs">
+
+    <div
+      class="tab active"
+      onclick="tab('skins',this)"
+    >
+      🎨 Skins
+    </div>
+
+    <div
+      class="tab"
+      onclick="tab('social',this)"
+    >
+      👥 Social
+    </div>
+
+    <div
+      class="tab"
+      onclick="tab('clan',this)"
+    >
+      🏰 Clan
+    </div>
+
+  </div>
+
+
+<div
+  id="skins"
+  class="tabpage active"
+>
+
+  <div id="skinList"></div>
+
+</div>
+
+
+<div
+  id="social"
+  class="tabpage"
+>
+
+  <h3>👥 Friends</h3>
+
+  <div class="row">
+
+    <input
+      id="friendInput"
+      placeholder="Frog username"
+      maxlength="24"
+    >
+
+    <button
+      class="action"
+      style="width:auto"
+      onclick="addFriend()"
+    >
+      Add
+    </button>
+
+  </div>
+
+  <div id="friends"></div>
+
+  <h3>📨 Requests</h3>
+
+  <div id="requests"></div>
+
+</div>
+
+
+<div
+  id="clan"
+  class="tabpage"
+>
+
+  <div id="clanArea"></div>
+
+</div>
+
+</section>
+
+
+<section class="panel">
+
+  <div class="panel-title">
+    <h2>🏆 Achievements</h2>
+  </div>
+
+  <div id="achievementList"></div>
+
+</section>
+
+
+<section class="panel">
+
+  <div class="panel-title">
+    <h2>📜 Activity</h2>
+  </div>
+
+  <div id="log" class="log"></div>
+
+</section>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
 
 <script>
 "use strict";
 
 /* ============================================================
-   GAME DATA
+   CONSTANTS
 ============================================================ */
 
-const $ = id => document.getElementById(id);
+const SAVE_KEY = "frog_clicker_complete_v2";
 
-const clamp = (n,min,max) =>
-  Math.max(min,Math.min(max,n));
-
-const format = n =>
-  Math.floor(n).toLocaleString();
-
-let G = {
-  coins:0,
-  totalCoins:0,
-  power:1,
-  fps:0,
-  level:1,
-  xp:0,
-  clicks:0,
-  combo:0,
-  maxCombo:0,
-  criticals:0,
-  jumps:0,
-  flies:0,
-  selectedSkin:0,
-  weather:0,
-  season:0,
-  achievements:[],
-  upgrades:{},
-  lastTick:Date.now()
+const DEFAULT_STATS = {
+  totalCoins: 0,
+  biggestClick: 0,
+  skinsBought: 0,
+  friendsAdded: 0,
+  clanDonations: 0,
+  clanCreated: 0
 };
 
-/* ============================================================
-   300 MECHANICS
-   30 families x 10 levels
-============================================================ */
-
-const mechanicFamilies = [
-
-  ["Sticky Tongue","Increase click power"],
-  ["Strong Legs","Increase passive income"],
-  ["Big Eyes","Increase critical chance"],
-  ["Golden Belly","Increase coin multiplier"],
-  ["Fast Blinks","Improve combo growth"],
-
-  ["Loud Croak","Increase passive income"],
-  ["Long Leap","Increase click power"],
-  ["Fly Radar","Increase fly rewards"],
-  ["Rain Dance","Increase weather rewards"],
-  ["Lily Training","Increase XP gain"],
-
-  ["Moonlight","Increase night bonuses"],
-  ["Sunlight","Increase daytime bonuses"],
-  ["Pond Luck","Increase random reward chance"],
-  ["Dragonfly Charm","Increase critical rewards"],
-  ["Mosquito Net","Increase luck"],
-
-  ["Bubble Shield","Improve event rewards"],
-  ["Moss Armor","Increase rare rewards"],
-  ["Crystal Tongue","Increase critical chance"],
-  ["Royal Crown","Increase global income"],
-  ["Swamp Boots","Increase passive income"],
-
-  ["Jungle Instinct","Increase rare rewards"],
-  ["Tree Climber","Increase jump rewards"],
-  ["Water Sprint","Increase passive income"],
-  ["Mud Power","Increase click power"],
-  ["Lotus Blessing","Increase XP"],
-
-  ["Firefly Friend","Increase combo rewards"],
-  ["Frog Choir","Increase passive income"],
-  ["Rain Collector","Increase weather income"],
-  ["Meteor Lily","Increase global multiplier"],
-  ["Ancient Croak","Increase level rewards"]
-
-];
-
-const mechanics=[];
-
-for(let family=0;family<30;family++){
-
-  for(let level=1;level<=10;level++){
-
-    const id=family*10+(level-1);
-
-    mechanics.push({
-      id,
-      family,
-      level,
-      name:
-        mechanicFamilies[family][0] +
-        " " +
-        level,
-      description:
-        mechanicFamilies[family][1],
-      cost:
-        Math.floor(
-          15 *
-          Math.pow(1.55,id)
-        )
-    });
-
+const DEFAULT_GAME = {
+  coins: 0,
+  clicks: 0,
+  level: 1,
+  xp: 0,
+  power: 1,
+  auto: 0,
+  rebirths: 0,
+  skin: "classic",
+  unlocked: {
+    classic: true
+  },
+  friends: [],
+  requests: [
+    {
+      name: "LilyHopper",
+      level: 12,
+      online: true
+    }
+  ],
+  clan: null,
+  achievements: {},
+  statistics: {
+    ...DEFAULT_STATS
   }
+};
 
-}
+const G = structuredClone
+  ? structuredClone(DEFAULT_GAME)
+  : JSON.parse(JSON.stringify(DEFAULT_GAME));
+
 
 /* ============================================================
    SKINS
-   FINAL SKIN = POISON DART FROG
 ============================================================ */
 
-const skins = [
+const SKINS = [
 
   {
+    id:"classic",
+    name:"Green Tree Frog",
+    price:0,
+    className:"",
     icon:"🐸",
-    name:"Classic Frog",
-    cost:0,
-    color:"#49b94c"
+    description:"Your original pond frog."
   },
 
   {
-    icon:"🐸",
-    name:"Green Frog",
-    cost:50,
-    color:"#55ce4d"
-  },
-
-  {
-    icon:"🐸",
-    name:"Tree Frog",
-    cost:250,
-    color:"#44b9c9"
-  },
-
-  {
-    icon:"🐸",
+    id:"golden",
     name:"Golden Frog",
-    cost:1000,
-    color:"#ffd83d"
+    price:2500,
+    className:"skin-golden",
+    icon:"🌟",
+    description:"A rare golden frog."
   },
 
   {
-    icon:"🐸",
-    name:"Blue Frog",
-    cost:5000,
-    color:"#359cff"
+    id:"blue",
+    name:"Blue Glass Frog",
+    price:10000,
+    className:"skin-blue",
+    icon:"💎",
+    description:"A beautiful tropical blue frog."
   },
 
   {
-    icon:"🐸",
+    id:"red",
     name:"Red-Eyed Frog",
-    cost:20000,
-    color:"#ed4a4a"
+    price:25000,
+    className:"skin-red",
+    icon:"👁️",
+    description:"A colorful rainforest frog."
   },
 
   {
-    icon:"🐸",
-    name:"Marsh Frog",
-    cost:75000,
-    color:"#779d45"
-  },
-
-  {
-    icon:"🐸",
-    name:"Glass Frog",
-    cost:250000,
-    color:"#a9eee0"
-  },
-
-  {
-    icon:"🐸",
-    name:"Rainbow Frog",
-    cost:1000000,
-    color:"#f061cf"
-  },
-
-  {
-    icon:"🐸",
-    name:"Galaxy Frog",
-    cost:5000000,
-    color:"#6c45ff"
-  },
-
-  {
-    icon:"🐸",
-    name:"Royal Frog",
-    cost:25000000,
-    color:"#f1c83d"
-  },
-
-  {
-    icon:"🐸",
-    name:"Ancient Frog",
-    cost:100000000,
-    color:"#745bdb"
-  },
-
-  {
-    icon:"🐸",
-    name:"Cosmic Frog",
-    cost:500000000,
-    color:"#20d9dc"
-  },
-
-  {
-    icon:"🐸",
-    name:"Legendary Frog",
-    cost:2500000000,
-    color:"#ff873b"
-  },
-
-  {
-    icon:"☠️",
+    id:"poison",
     name:"Poison Dart Frog",
-    cost:10000000000,
-    color:"#117242"
+    price:100000,
+    className:"poison",
+    icon:"☠️",
+    description:"The legendary final frog skin."
   }
 
 ];
+
 
 /* ============================================================
    ACHIEVEMENTS
 ============================================================ */
 
-const achievementList = [
+const ACHIEVEMENTS = [
 
-  ["First Hop",()=>G.clicks>=1],
-  ["Tongue Beginner",()=>G.clicks>=100],
-  ["Tongue Master",()=>G.clicks>=1000],
-  ["Tongue Legend",()=>G.clicks>=10000],
-  ["Million Frog",()=>G.totalCoins>=1000000],
-  ["Billion Frog",()=>G.totalCoins>=1000000000],
-  ["Combo 10",()=>G.maxCombo>=10],
-  ["Combo 50",()=>G.maxCombo>=50],
-  ["Combo 100",()=>G.maxCombo>=100],
-  ["Critical Frog",()=>G.criticals>=10],
-  ["Critical Legend",()=>G.criticals>=100],
-  ["Jump Champion",()=>G.jumps>=100],
-  ["Fly Hunter",()=>G.flies>=100],
-  ["Upgrade Hunter",()=>totalUpgradeLevels()>=10],
-  ["Upgrade Master",()=>totalUpgradeLevels()>=50],
-  ["Mechanic Collector",()=>totalUpgradeLevels()>=100],
-  ["Mechanic Master",()=>totalUpgradeLevels()>=200],
-  ["All Mechanics",()=>totalUpgradeLevels()>=300],
-  ["Skin Collector",()=>G.totalCoins>=500000000],
-  ["Poison Dart",()=>G.selectedSkin===14]
+  ["first","First Ribbit","Click the frog once."],
+
+  ["100","Tiny Hopper","Reach 100 clicks."],
+
+  ["1000","Pond Regular","Reach 1,000 clicks."],
+
+  ["10000","Frog Addict","Reach 10,000 clicks."],
+
+  ["million","Millionaire","Earn 1,000,000 coins."],
+
+  ["power10","Strong Legs","Reach 10 click power."],
+
+  ["power50","Mega Hopper","Reach 50 click power."],
+
+  ["auto","Lazy Frog","Buy an Auto Frog."],
+
+  ["rebirth","New Pond","Perform a rebirth."],
+
+  ["skins","Fashion Frog","Unlock another skin."],
+
+  ["poison","Toxic Beauty","Unlock the Poison Dart Frog."],
+
+  ["friend","Social Frog","Add a friend."],
+
+  ["clan","Clan Frog","Create a clan."],
+
+  ["donate","Team Player","Donate to your clan."
+
+  ]
 
 ];
 
-/* ============================================================
-   UPGRADE MATH
-============================================================ */
-
-function familyLevel(family){
-
-  return Number(G.upgrades[family] || 0);
-
-}
-
-function totalUpgradeLevels(){
-
-  return Object
-    .values(G.upgrades)
-    .reduce((a,b)=>a+Number(b||0),0);
-
-}
-
-function upgradeEffect(family,level){
-
-  switch(family){
-
-    case 0:return 1+level*.35;
-
-    case 1:return level*.5;
-
-    case 2:return level*.01;
-
-    case 3:return 1+level*.025;
-
-    case 4:return 1+level*.08;
-
-    case 5:return level*.25;
-
-    case 6:return 1+level*.40;
-
-    case 7:return level*.15;
-
-    case 8:return 1+level*.10;
-
-    case 9:return 1+level*.05;
-
-    case 10:return 1+level*.04;
-
-    case 11:return 1+level*.04;
-
-    case 12:return level*.02;
-
-    case 13:return 1+level*.12;
-
-    case 14:return level*.02;
-
-    case 15:return 1+level*.05;
-
-    case 16:return 1+level*.03;
-
-    case 17:return level*.015;
-
-    case 18:return 1+level*.04;
-
-    case 19:return level*.40;
-
-    case 20:return level*.025;
-
-    case 21:return level*.30;
-
-    case 22:return level*.35;
-
-    case 23:return 1+level*.30;
-
-    case 24:return 1+level*.07;
-
-    case 25:return level*.10;
-
-    case 26:return level*.10;
-
-    case 27:return 1+level*.30;
-
-    case 28:return 1+level*.08;
-
-    case 29:return 1+level*.10;
-
-    default:return 1;
-
-  }
-
-}
-
-function calculateStats(){
-
-  let clickPower = 1;
-  let passive = 0;
-  let crit = .05;
-  let multiplier = 1;
-  let xpMultiplier = 1;
-  let luck = 0;
-  let rewardMultiplier = 1;
-
-  for(let family=0;family<30;family++){
-
-    const level = familyLevel(family);
-
-    if(level<=0)continue;
-
-    const effect =
-      upgradeEffect(
-        family,
-        level
-      );
-
-    if(
-      family===0 ||
-      family===6 ||
-      family===23
-    ){
-      clickPower*=effect;
-    }
-
-    if(
-      family===1 ||
-      family===5 ||
-      family===19 ||
-      family===21 ||
-      family===22 ||
-      family===26
-    ){
-      passive+=effect;
-    }
-
-    if(
-      family===2 ||
-      family===17
-    ){
-      crit+=effect;
-    }
-
-    if(
-      family===3 ||
-      family===18 ||
-      family===28 ||
-      family===29
-    ){
-      multiplier*=effect;
-    }
-
-    if(
-      family===9 ||
-      family===24
-    ){
-      xpMultiplier*=effect;
-    }
-
-    if(
-      family===12 ||
-      family===14 ||
-      family===20
-    ){
-      luck+=effect;
-    }
-
-    if(
-      family===13 ||
-      family===15 ||
-      family===16 ||
-      family===25
-    ){
-      rewardMultiplier*=effect;
-    }
-
-  }
-
-  return {
-
-    clickPower,
-
-    passive,
-
-    crit:clamp(
-      crit,
-      0,
-      .95
-    ),
-
-    multiplier,
-
-    xpMultiplier,
-
-    luck,
-
-    rewardMultiplier
-
-  };
-
-}
 
 /* ============================================================
-   FROG CLICK
+   BASIC HELPERS
 ============================================================ */
 
-function clickFrog(event){
+function $(id){
+  return document.getElementById(id);
+}
 
-  const stats =
-    calculateStats();
+function finiteNumber(value,fallback=0){
 
-  let amount =
-    stats.clickPower *
-    stats.multiplier *
-    stats.rewardMultiplier;
+  const number =
+    Number(value);
 
-  /* Combo */
+  return Number.isFinite(number)
+    ? number
+    : fallback;
+}
 
-  G.combo++;
+function positiveNumber(value,fallback=0){
 
-  G.maxCombo =
-    Math.max(
-      G.maxCombo,
-      G.combo
+  const number =
+    finiteNumber(
+      value,
+      fallback
     );
 
-  const comboMultiplier =
-    1 +
+  return number < 0
+    ? fallback
+    : number;
+}
+
+function format(number){
+
+  number =
+    positiveNumber(
+      number,
+      0
+    );
+
+  if(number >= 1e15){
+    return (
+      number / 1e15
+    ).toFixed(2)+"Q";
+  }
+
+  if(number >= 1e12){
+    return (
+      number / 1e12
+    ).toFixed(2)+"T";
+  }
+
+  if(number >= 1e9){
+    return (
+      number / 1e9
+    ).toFixed(2)+"B";
+  }
+
+  if(number >= 1e6){
+    return (
+      number / 1e6
+    ).toFixed(2)+"M";
+  }
+
+  if(number >= 1e3){
+    return (
+      number / 1e3
+    ).toFixed(1)+"K";
+  }
+
+  return Math.floor(number)
+    .toLocaleString();
+}
+
+function clamp(value,min,max){
+
+  return Math.max(
+    min,
     Math.min(
-      G.combo,
-      100
-    ) *
-    .01;
-
-  amount *= comboMultiplier;
-
-  /* Critical */
-
-  const critical =
-    Math.random() <
-    stats.crit;
-
-  if(critical){
-
-    amount *=
-      3 +
-      stats.luck*.1;
-
-    G.criticals++;
-
-    createFloatingText(
-      event,
-      "CRITICAL!",
-      "crit-pop"
-    );
-
-    playSound(
-      "critical"
-    );
-
-  }
-
-  /* Lucky reward */
-
-  if(
-    Math.random() <
-    .01 +
-    stats.luck*.001
-  ){
-
-    const bonus =
-      Math.max(
-        10,
-        amount*10
-      );
-
-    giveCoins(
-      bonus
-    );
-
-    createFloatingText(
-      event,
-      "+"+format(bonus),
-      "coin-pop"
-    );
-
-    log(
-      "🍀 Lucky pond reward: +" +
-      format(bonus)
-    );
-
-  }
-
-  /* Rare burst */
-
-  if(
-    Math.random() >
-    .996
-  ){
-
-    amount*=10;
-
-    log(
-      "🌈 RARE FROG BURST ×10!"
-    );
-
-  }
-
-  giveCoins(amount);
-
-  G.clicks++;
-
-  G.xp +=
-    stats.xpMultiplier;
-
-  if(
-    Math.random()<.08
-  ){
-    G.jumps++;
-  }
-
-  if(
-    Math.random()<.05
-  ){
-    G.flies++;
-  }
-
-  createFloatingText(
-    event,
-    "+"+format(amount),
-    "coin-pop"
-  );
-
-  tongueAnimation();
-
-  frogJump();
-
-  playSound(
-    critical
-      ?"critical"
-      :"click"
-  );
-
-  levelCheck();
-
-  checkAchievements();
-
-  updateUI();
-
-}
-
-/* ============================================================
-   COINS
-============================================================ */
-
-function giveCoins(amount){
-
-  if(!Number.isFinite(amount))return;
-
-  G.coins += amount;
-  G.totalCoins += amount;
-
-}
-
-/* ============================================================
-   PASSIVE TICK
-============================================================ */
-
-function gameTick(){
-
-  const now =
-    Date.now();
-
-  const dt =
-    Math.min(
-      3,
-      (now-G.lastTick)/1000
-    );
-
-  G.lastTick=now;
-
-  const stats =
-    calculateStats();
-
-  let income =
-    stats.passive *
-    stats.multiplier *
-    stats.rewardMultiplier *
-    dt;
-
-  /* Weather */
-
-  if(G.weather===1){
-    income*=2;
-  }
-
-  if(G.weather===2){
-    income*=.75;
-  }
-
-  if(G.weather===3){
-    income*=3;
-  }
-
-  /* Seasons */
-
-  if(G.season===1){
-    income*=1.25;
-  }
-
-  if(G.season===2){
-    income*=1.5;
-  }
-
-  if(G.season===3){
-    income*=1.75;
-  }
-
-  /* Day/night */
-
-  if(isNight()){
-
-    income *=
-      1 +
-      familyLevel(10)*.04;
-
-  }else{
-
-    income *=
-      1 +
-      familyLevel(11)*.04;
-
-  }
-
-  /* Combo passive */
-
-  income *=
-    1 +
-    Math.min(
-      G.combo,
-      100
-    )*.005;
-
-  giveCoins(income);
-
-  G.fps =
-    stats.passive;
-
-  /* Combo slowly fades */
-
-  if(G.combo>0){
-
-    G.combo =
-      Math.max(
-        0,
-        G.combo -
-        dt*.7
-      );
-
-  }
-
-  /* Random world events */
-
-  if(
-    Math.random() <
-    dt*.004
-  ){
-
-    randomWorldEvent(
-      income
-    );
-
-  }
-
-  levelCheck();
-
-  checkAchievements();
-
-  updateUI();
-
-}
-
-/* ============================================================
-   RANDOM EVENTS
-============================================================ */
-
-function randomWorldEvent(income){
-
-  const events = [
-
-    [
-      "🪰",
-      "A huge fly swarm visited!",
-      5
-    ],
-
-    [
-      "🌧️",
-      "Rain filled the pond!",
-      10
-    ],
-
-    [
-      "🦋",
-      "A butterfly blessed your frog!",
-      15
-    ],
-
-    [
-      "🍄",
-      "A magical mushroom appeared!",
-      25
-    ],
-
-    [
-      "⭐",
-      "A shooting star crossed the pond!",
-      50
-    ],
-
-    [
-      "🌈",
-      "A rainbow appeared!",
-      100
-    ]
-
-  ];
-
-  const event =
-    events[
-      Math.floor(
-        Math.random() *
-        events.length
-      )
-    ];
-
-  const bonus =
-    Math.max(
-      10,
-      income*event[2]
-    );
-
-  giveCoins(bonus);
-
-  log(
-    event[0]+" "+
-    event[1]+" +"+
-    format(bonus)
-  );
-
-}
-
-/* ============================================================
-   LEVELS
-============================================================ */
-
-function requiredXP(){
-
-  return Math.floor(
-    100 *
-    Math.pow(
-      1.18,
-      G.level-1
+      max,
+      value
     )
   );
-
 }
 
-function levelCheck(){
+function escapeHTML(value){
 
-  let needed =
-    requiredXP();
-
-  while(
-    G.xp >= needed
-  ){
-
-    G.xp -= needed;
-
-    G.level++;
-
-    const reward =
-      G.level *
-      100;
-
-    giveCoins(
-      reward
-    );
-
-    log(
-      "🎉 LEVEL "+G.level+
-      "! +"+format(reward)+
-      " coins"
-    );
-
-    createCelebration();
-
-    needed =
-      requiredXP();
-
-  }
-
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
+
 
 /* ============================================================
-   FROG ANIMATION
+   TOAST
 ============================================================ */
 
-function frogJump(){
+let toastTimer = null;
 
-  const frog =
-    $("frog");
+function toast(message){
 
-  frog.classList.remove(
-    "jumping"
+  const element =
+    $("toast");
+
+  if(!element)
+    return;
+
+  element.textContent =
+    message;
+
+  element.classList.add(
+    "show"
   );
 
-  void frog.offsetWidth;
-
-  frog.classList.add(
-    "jumping"
+  clearTimeout(
+    toastTimer
   );
 
-}
-
-function tongueAnimation(){
-
-  const tongue =
-    $("tongue");
-
-  tongue.classList.remove(
-    "out"
-  );
-
-  void tongue.offsetWidth;
-
-  tongue.classList.add(
-    "out"
-  );
-
-}
-
-/* ============================================================
-   FLOATING TEXT
-============================================================ */
-
-function createFloatingText(
-  event,
-  text,
-  className
-){
-
-  const particle =
-    document.createElement(
-      "div"
-    );
-
-  particle.className =
-    "particle "+className;
-
-  particle.textContent =
-    text;
-
-  let x =
-    window.innerWidth/2;
-
-  let y =
-    window.innerHeight/2;
-
-  if(event){
-
-    if(
-      event.clientX !== undefined
-    ){
-      x=event.clientX;
-      y=event.clientY;
-    }
-
-  }
-
-  particle.style.left =
-    x+"px";
-
-  particle.style.top =
-    y+"px";
-
-  particle.style.setProperty(
-    "--x",
-    (Math.random()*120-60)+"px"
-  );
-
-  particle.style.setProperty(
-    "--y",
-    (-70-Math.random()*80)+"px"
-  );
-
-  document.body.appendChild(
-    particle
-  );
-
-  setTimeout(
-    ()=>particle.remove(),
-    1000
-  );
-
-}
-
-/* ============================================================
-   CELEBRATION
-============================================================ */
-
-function createCelebration(){
-
-  for(
-    let i=0;
-    i<25;
-    i++
-  ){
-
+  toastTimer =
     setTimeout(
       ()=>{
-
-        const particle =
-          document.createElement(
-            "div"
-          );
-
-        particle.className =
-          "particle";
-
-        particle.textContent =
-          ["⭐","🍃","🐸","✨","🪰"][
-            Math.floor(
-              Math.random()*5
-            )
-          ];
-
-        particle.style.left =
-          (30+
-          Math.random()*40)+
-          "vw";
-
-        particle.style.top =
-          (45+
-          Math.random()*15)+
-          "vh";
-
-        particle.style.setProperty(
-          "--x",
-          (Math.random()*500-250)+"px"
+        element.classList.remove(
+          "show"
         );
-
-        particle.style.setProperty(
-          "--y",
-          (-100-Math.random()*300)+"px"
-        );
-
-        document.body.appendChild(
-          particle
-        );
-
-        setTimeout(
-          ()=>particle.remove(),
-          1100
-        );
-
       },
-      i*25
+      2200
     );
-
-  }
-
 }
 
-/* ============================================================
-   SKINS
-============================================================ */
-
-function renderSkins(){
-
-  $("skins").innerHTML =
-    skins.map(
-      (skin,index)=>{
-
-        const unlocked =
-          G.totalCoins >=
-          skin.cost;
-
-        const selected =
-          G.selectedSkin ===
-          index;
-
-        return `
-
-          <div
-            class="
-              skin
-              ${selected?"selected":""}
-              ${!unlocked?"locked":""}
-            "
-            onclick="selectSkin(${index})"
-          >
-
-            <div
-              class="skin-icon"
-              style="
-                filter:
-                drop-shadow(
-                  0 4px 4px
-                  ${skin.color}
-                );
-              "
-            >
-              ${skin.icon}
-            </div>
-
-            <div class="skin-name">
-              ${skin.name}
-            </div>
-
-            <div class="skin-cost">
-              ${
-                unlocked
-                  ? selected
-                    ? "✓ EQUIPPED"
-                    : "UNLOCKED"
-                  : "🍃 "+format(skin.cost)
-              }
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-/* ============================================================
-   SELECT SKIN
-============================================================ */
-
-function selectSkin(index){
-
-  const skin =
-    skins[index];
-
-  if(
-    G.totalCoins <
-    skin.cost
-  ){
-
-    log(
-      "🔒 "+skin.name+
-      " requires "+
-      format(skin.cost)+
-      " lifetime coins."
-    );
-
-    return;
-
-  }
-
-  G.selectedSkin =
-    index;
-
-  applySkin();
-
-  renderSkins();
-
-  updateUI();
-
-  saveGame();
-
-  log(
-    "🎨 Equipped "+
-    skin.name+
-    "!"
-  );
-
-}
-
-/* ============================================================
-   APPLY SKIN
-============================================================ */
-
-function applySkin(){
-
-  const skin =
-    skins[
-      G.selectedSkin
-    ];
-
-  const body =
-    document.querySelector(
-      ".frog-body"
-    );
-
-  const eyes =
-    document.querySelectorAll(
-      ".eye"
-    );
-
-  const legs =
-    document.querySelectorAll(
-      ".leg"
-    );
-
-  body.style.background =
-    `
-    radial-gradient(
-      circle at 32% 28%,
-      #ffffff66 0 5%,
-      transparent 6%
-    ),
-    linear-gradient(
-      145deg,
-      ${skin.color},
-      #155d36
-    )
-    `;
-
-  eyes.forEach(
-    eye=>{
-      eye.style.boxShadow =
-        `0 0 18px ${skin.color}55`;
-    }
-  );
-
-  legs.forEach(
-    leg=>{
-      leg.style.background =
-        skin.color;
-    }
-  );
-
-  if(
-    G.selectedSkin===9
-  ){
-
-    body.style.background =
-      `
-      radial-gradient(
-        circle at 20% 30%,
-        #ff00e655 0 4%,
-        transparent 5%
-      ),
-      radial-gradient(
-        circle at 70% 50%,
-        #00ffff88 0 4%,
-        transparent 5%
-      ),
-      linear-gradient(
-        135deg,
-        #351a91,
-        #09032f
-      )
-      `;
-
-  }
-
-  if(
-    G.selectedSkin===14
-  ){
-
-    body.style.background =
-      `
-      radial-gradient(
-        circle at 20% 30%,
-        #ffe900 0 7%,
-        transparent 8%
-      ),
-      radial-gradient(
-        circle at 72% 35%,
-        #ff2c50 0 6%,
-        transparent 7%
-      ),
-      radial-gradient(
-        circle at 48% 70%,
-        #24c9ff 0 5%,
-        transparent 6%
-      ),
-      linear-gradient(
-        145deg,
-        #126b40,
-        #072d24
-      )
-      `;
-
-    body.style.boxShadow =
-      `
-      inset 0 -18px 30px #001f1855,
-      0 0 30px #28ff8a77
-      `;
-
-  }
-
-}
-
-/* ============================================================
-   SHOP
-============================================================ */
-
-function renderShop(){
-
-  const maxVisible =
-    Math.min(
-      mechanics.length,
-      Math.max(
-        30,
-        30+
-        G.level*10
-      )
-    );
-
-  $("shop").innerHTML =
-    mechanics
-      .slice(
-        0,
-        maxVisible
-      )
-      .map(
-        mechanic=>{
-
-          const ownedLevel =
-            familyLevel(
-              mechanic.family
-            );
-
-          const owned =
-            ownedLevel >=
-            mechanic.level;
-
-          const next =
-            ownedLevel+1 ===
-            mechanic.level;
-
-          const affordable =
-            G.coins >=
-            mechanic.cost;
-
-          return `
-
-            <div
-              class="
-                upgrade
-                ${owned?"owned":""}
-                ${!next&&!owned?"locked":""}
-              "
-            >
-
-              <div
-                class="upgrade-name"
-              >
-
-                <span>
-                  #${mechanic.id+1}
-                  ${mechanic.name}
-                </span>
-
-                <span>
-                  Lv.${mechanic.level}
-                </span>
-
-              </div>
-
-              <div
-                class="upgrade-desc"
-              >
-                ${mechanic.description}
-              </div>
-
-              <div
-                class="upgrade-footer"
-              >
-
-                <span
-                  class="cost"
-                >
-                  ${
-                    owned
-                      ? "✓ ACTIVE"
-                      : "🍃 "+
-                        format(
-                          mechanic.cost
-                        )
-                  }
-                </span>
-
-                ${
-                  owned
-                    ? `<span
-                         class="badge"
-                       >
-                         OWNED
-                       </span>`
-                    : `
-                      <button
-                        ${next&&affordable
-                          ?""
-                          :"disabled"
-                        }
-                        onclick="
-                          buyUpgrade(
-                            ${mechanic.id}
-                          )
-                        "
-                      >
-                        Buy
-                      </button>
-                    `
-                }
-
-              </div>
-
-            </div>
-
-          `;
-
-        }
-      )
-      .join("");
-
-}
-
-/* ============================================================
-   BUY UPGRADE
-============================================================ */
-
-function buyUpgrade(id){
-
-  const mechanic =
-    mechanics[id];
-
-  if(!mechanic)
-    return;
-
-  const current =
-    familyLevel(
-      mechanic.family
-    );
-
-  if(
-    current !==
-    mechanic.level-1
-  ){
-    return;
-  }
-
-  if(
-    G.coins <
-    mechanic.cost
-  ){
-    return;
-  }
-
-  G.coins -=
-    mechanic.cost;
-
-  G.upgrades[
-    mechanic.family
-  ] =
-    mechanic.level;
-
-  log(
-    "🧬 Mechanic #"+
-    (id+1)+
-    " unlocked: "+
-    mechanic.name
-  );
-
-  playSound(
-    "upgrade"
-  );
-
-  renderShop();
-
-  updateUI();
-
-  saveGame();
-
-}
-
-/* ============================================================
-   ACHIEVEMENTS
-============================================================ */
-
-function checkAchievements(){
-
-  achievementList.forEach(
-    (achievement,index)=>{
-
-      if(
-        achievement[1]() &&
-        !G.achievements.includes(
-          index
-        )
-      ){
-
-        G.achievements.push(
-          index
-        );
-
-        const reward =
-          1000 +
-          index*250;
-
-        giveCoins(
-          reward
-        );
-
-        log(
-          "🏆 Achievement unlocked: "+
-          achievement[0]+
-          " +"+
-          format(reward)
-        );
-
-        createCelebration();
-
-      }
-
-    }
-  );
-
-  renderAchievements();
-
-}
-
-function renderAchievements(){
-
-  $("achievements").innerHTML =
-    achievementList.map(
-      (achievement,index)=>{
-
-        const done =
-          G.achievements.includes(
-            index
-          );
-
-        return `
-
-          <div
-            class="
-              achievement
-              ${done?"done":"locked"}
-            "
-          >
-
-            ${
-              done
-                ? "🏆"
-                : "🔒"
-            }
-
-            <b>
-              ${achievement[0]}
-            </b>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
-  $("achievementCount")
-    .textContent =
-      G.achievements.length+
-      " / "+
-      achievementList.length;
-
-}
-
-/* ============================================================
-   WORLD / DAY NIGHT
-============================================================ */
-
-function isNight(){
-
-  const hour =
-    new Date()
-      .getHours();
-
-  return hour>=19 ||
-         hour<6;
-
-}
-
-function updateWorld(){
-
-  const night =
-    isNight();
-
-  const body =
-    document.body;
-
-  const sun =
-    $("sun");
-
-  const moon =
-    $("moon");
-
-  const stars =
-    $("stars");
-
-  if(night){
-
-    body.style.setProperty(
-      "--sky",
-      "#081d3a"
-    );
-
-    body.style.setProperty(
-      "--sky2",
-      "#173c5a"
-    );
-
-    sun.style.opacity =
-      "0";
-
-    moon.style.opacity =
-      "1";
-
-    stars.style.opacity =
-      "1";
-
-    $("worldStatus")
-      .textContent =
-      "🌙 NIGHT";
-
-  }else{
-
-    body.style.setProperty(
-      "--sky",
-      "#73d7ff"
-    );
-
-    body.style.setProperty(
-      "--sky2",
-      "#b8efff"
-    );
-
-    sun.style.opacity =
-      "1";
-
-    moon.style.opacity =
-      "0";
-
-    stars.style.opacity =
-      "0";
-
-    $("worldStatus")
-      .textContent =
-      "☀️ DAY";
-
-  }
-
-}
-
-/* ============================================================
-   WEATHER
-============================================================ */
-
-const weatherNames = [
-  "☀️ Sunny",
-  "🌧️ Rainy",
-  "🌩️ Stormy",
-  "🌈 Rainbow"
-];
-
-const seasonNames = [
-  "🌱 Spring",
-  "☀️ Summer",
-  "🍂 Autumn",
-  "❄️ Winter"
-];
-
-function changeWorldWeather(){
-
-  G.weather =
-    Math.floor(
-      Math.random()*4
-    );
-
-  G.season =
-    Math.floor(
-      Math.random()*4
-    );
-
-  $("weather")
-    .textContent =
-    weatherNames[
-      G.weather
-    ];
-
-  $("season")
-    .textContent =
-    seasonNames[
-      G.season
-    ];
-
-  updateRain();
-
-  log(
-    weatherNames[
-      G.weather
-    ]+
-    " weather • "+
-    seasonNames[
-      G.season
-    ]
-  );
-
-}
-
-/* ============================================================
-   RAIN
-============================================================ */
-
-function createRain(){
-
-  const rain =
-    $("rain");
-
-  for(
-    let i=0;
-    i<100;
-    i++
-  ){
-
-    const drop =
-      document.createElement(
-        "div"
-      );
-
-    drop.className =
-      "raindrop";
-
-    drop.style.left =
-      Math.random()*100+
-      "%";
-
-    drop.style.animationDuration =
-      (.3+
-       Math.random()*.5)+
-      "s";
-
-    drop.style.animationDelay =
-      -Math.random()+
-      "s";
-
-    rain.appendChild(
-      drop
-    );
-
-  }
-
-}
-
-function updateRain(){
-
-  $("rain").style.opacity =
-    G.weather===1 ||
-    G.weather===2
-      ? ".55"
-      : "0";
-
-}
-
-/* ============================================================
-   STAR GENERATOR
-============================================================ */
-
-function createStars(){
-
-  const stars =
-    $("stars");
-
-  for(
-    let i=0;
-    i<90;
-    i++
-  ){
-
-    const star =
-      document.createElement(
-        "div"
-      );
-
-    star.className =
-      "star";
-
-    star.style.left =
-      Math.random()*100+
-      "%";
-
-    star.style.top =
-      Math.random()*65+
-      "%";
-
-    star.style.animationDelay =
-      Math.random()*3+
-      "s";
-
-    stars.appendChild(
-      star
-    );
-
-  }
-
-}
-
-/* ============================================================
-   AUDIO
-   Uses browser Web Audio only.
-============================================================ */
-
-let audioContext=null;
-
-function getAudio(){
-
-  if(
-    !audioContext
-  ){
-
-    const AudioContext =
-      window.AudioContext ||
-      window.webkitAudioContext;
-
-    if(!AudioContext)
-      return null;
-
-    audioContext =
-      new AudioContext();
-
-  }
-
-  return audioContext;
-
-}
-
-function playSound(type){
-
-  const ctx =
-    getAudio();
-
-  if(!ctx)
-    return;
-
-  if(
-    ctx.state===
-    "suspended"
-  ){
-
-    ctx.resume();
-
-  }
-
-  const osc =
-    ctx.createOscillator();
-
-  const gain =
-    ctx.createGain();
-
-  osc.connect(gain);
-
-  gain.connect(
-    ctx.destination
-  );
-
-  const now =
-    ctx.currentTime;
-
-  if(type==="click"){
-
-    osc.frequency
-      .setValueAtTime(
-        260,
-        now
-      );
-
-    osc.frequency
-      .exponentialRampToValueAtTime(
-        520,
-        now+.07
-      );
-
-    gain.gain
-      .setValueAtTime(
-        .055,
-        now
-      );
-
-    gain.gain
-      .exponentialRampToValueAtTime(
-        .001,
-        now+.09
-      );
-
-    osc.start(now);
-    osc.stop(now+.1);
-
-  }
-
-  else if(
-    type==="critical"
-  ){
-
-    osc.type =
-      "triangle";
-
-    osc.frequency
-      .setValueAtTime(
-        480,
-        now
-      );
-
-    osc.frequency
-      .exponentialRampToValueAtTime(
-        1000,
-        now+.2
-      );
-
-    gain.gain
-      .setValueAtTime(
-        .08,
-        now
-      );
-
-    gain.gain
-      .exponentialRampToValueAtTime(
-        .001,
-        now+.25
-      );
-
-    osc.start(now);
-    osc.stop(now+.26);
-
-  }
-
-  else if(
-    type==="upgrade"
-  ){
-
-    osc.type =
-      "sine";
-
-    osc.frequency
-      .setValueAtTime(
-        300,
-        now
-      );
-
-    osc.frequency
-      .exponentialRampToValueAtTime(
-        800,
-        now+.18
-      );
-
-    gain.gain
-      .setValueAtTime(
-        .06,
-        now
-      );
-
-    gain.gain
-      .exponentialRampToValueAtTime(
-        .001,
-        now+.22
-      );
-
-    osc.start(now);
-    osc.stop(now+.23);
-
-  }
-
-}
-
-/* ============================================================
-   UI UPDATE
-============================================================ */
-
-function updateUI(){
-
-  const stats =
-    calculateStats();
-
-  $("coins")
-    .textContent =
-      format(G.coins);
-
-  $("power")
-    .textContent =
-      format(
-        stats.clickPower *
-        stats.multiplier
-      );
-
-  $("fps")
-    .textContent =
-      stats.passive
-        .toFixed(1);
-
-  $("level")
-    .textContent =
-      G.level;
-
-  $("combo")
-    .textContent =
-      Math.floor(
-        G.combo
-      );
-
-  $("clicks")
-    .textContent =
-      format(
-        G.clicks
-      );
-
-  $("xp")
-    .textContent =
-      format(
-        G.xp
-      );
-
-  $("nextxp")
-    .textContent =
-      format(
-        requiredXP()
-      );
-
-  $("xpbar")
-    .style.width =
-      clamp(
-        G.xp/
-        requiredXP()*
-        100,
-        0,
-        100
-      )+
-      "%";
-
-  $("totalCoins")
-    .textContent =
-      format(
-        G.totalCoins
-      );
-
-  $("currentSkin")
-    .textContent =
-      skins[
-        G.selectedSkin
-      ].name;
-
-  $("weather")
-    .textContent =
-      weatherNames[
-        G.weather
-      ];
-
-  $("season")
-    .textContent =
-      seasonNames[
-        G.season
-      ];
-
-}
 
 /* ============================================================
    LOG
@@ -3559,51 +1479,40 @@ function updateUI(){
 
 function log(message){
 
-  const logBox =
+  const box =
     $("log");
 
-  const line =
+  if(!box)
+    return;
+
+  const item =
     document.createElement(
       "div"
     );
 
-  line.textContent =
-    "["+
+  item.textContent =
     new Date()
       .toLocaleTimeString()+
-    "] "+
+    " • "+
     message;
 
-  logBox.prepend(
-    line
-  );
+  box.prepend(item);
 
   while(
-    logBox.children.length>
-    80
+    box.children.length > 40
   ){
 
-    logBox.lastChild
-      .remove();
+    box.lastElementChild.remove();
 
   }
-
 }
 
-function clearLog(){
-
-  $("log").innerHTML="";
-
-}
 
 /* ============================================================
-   SAVE / LOAD
+   SAFE SAVE
 ============================================================ */
 
-const SAVE_KEY =
-  "frog_clicker_living_pond_v4";
-
-function saveGame(){
+function save(){
 
   try{
 
@@ -3612,460 +1521,2372 @@ function saveGame(){
       JSON.stringify(G)
     );
 
-    log(
-      "💾 Game saved locally."
+  }catch(error){
+
+    console.warn(
+      "Game could not be saved:",
+      error
     );
+
+  }
+}
+
+
+/* ============================================================
+   SAFE LOAD + MIGRATION
+============================================================ */
+
+function load(){
+
+  let raw = null;
+
+  try{
+
+    raw =
+      localStorage.getItem(
+        SAVE_KEY
+      );
 
   }catch(error){
 
-    console.error(
-      "Save error:",
+    console.warn(
+      "localStorage unavailable:",
+      error
+    );
+
+    return;
+
+  }
+
+  if(!raw)
+    return;
+
+  try{
+
+    const saved =
+      JSON.parse(raw);
+
+    if(
+      !saved ||
+      typeof saved !== "object"
+    ){
+
+      return;
+
+    }
+
+    /*
+      Only copy known primitive/object
+      structures. This prevents a broken
+      save from replacing the whole game.
+    */
+
+    const numericFields = [
+      "coins",
+      "clicks",
+      "level",
+      "xp",
+      "power",
+      "auto",
+      "rebirths"
+    ];
+
+    numericFields.forEach(
+      key=>{
+
+        if(
+          Object.prototype.hasOwnProperty.call(
+            saved,
+            key
+          )
+        ){
+
+          const value =
+            finiteNumber(
+              saved[key],
+              G[key]
+            );
+
+          G[key] =
+            Math.max(
+              0,
+              value
+            );
+
+        }
+
+      }
+    );
+
+
+    if(
+      typeof saved.skin === "string" &&
+      SKINS.some(
+        skin=>
+          skin.id === saved.skin
+      )
+    ){
+
+      G.skin =
+        saved.skin;
+
+    }
+
+
+    if(
+      saved.unlocked &&
+      typeof saved.unlocked === "object"
+    ){
+
+      G.unlocked = {
+        classic:true
+      };
+
+      Object.keys(
+        saved.unlocked
+      ).forEach(
+        key=>{
+
+          if(
+            SKINS.some(
+              skin=>
+                skin.id === key
+            )
+          ){
+
+            G.unlocked[key] =
+              Boolean(
+                saved.unlocked[key]
+              );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    if(
+      Array.isArray(
+        saved.friends
+      )
+    ){
+
+      G.friends =
+        saved.friends
+          .filter(
+            friend=>
+              friend &&
+              typeof friend.name === "string"
+          )
+          .slice(0,100)
+          .map(
+            friend=>({
+              name:
+                friend.name
+                  .slice(0,24),
+
+              level:
+                clamp(
+                  Math.floor(
+                    finiteNumber(
+                      friend.level,
+                      1
+                    )
+                  ),
+                  1,
+                  999999
+                ),
+
+              online:
+                Boolean(
+                  friend.online
+                )
+            })
+          );
+
+    }
+
+
+    if(
+      Array.isArray(
+        saved.requests
+      )
+    ){
+
+      G.requests =
+        saved.requests
+          .filter(
+            request=>
+              request &&
+              typeof request.name === "string"
+          )
+          .slice(0,100)
+          .map(
+            request=>({
+              name:
+                request.name
+                  .slice(0,24),
+
+              level:
+                clamp(
+                  Math.floor(
+                    finiteNumber(
+                      request.level,
+                      1
+                    )
+                  ),
+                  1,
+                  999999
+                ),
+
+              online:
+                Boolean(
+                  request.online
+                )
+            })
+          );
+
+    }
+
+
+    if(
+      saved.achievements &&
+      typeof saved.achievements === "object"
+    ){
+
+      G.achievements = {};
+
+      ACHIEVEMENTS.forEach(
+        achievement=>{
+
+          const id =
+            achievement[0];
+
+          if(
+            saved.achievements[id]
+          ){
+
+            G.achievements[id] =
+              true;
+
+          }
+
+        }
+      );
+
+    }
+
+
+    if(
+      saved.statistics &&
+      typeof saved.statistics === "object"
+    ){
+
+      G.statistics = {
+        ...DEFAULT_STATS
+      };
+
+      Object.keys(
+        DEFAULT_STATS
+      ).forEach(
+        key=>{
+
+          G.statistics[key] =
+            positiveNumber(
+              saved.statistics[key],
+              DEFAULT_STATS[key]
+            );
+
+        }
+      );
+
+    }
+
+
+    if(
+      saved.clan &&
+      typeof saved.clan === "object"
+    ){
+
+      if(
+        typeof saved.clan.name === "string" &&
+        typeof saved.clan.tag === "string"
+      ){
+
+        G.clan = {
+
+          name:
+            saved.clan.name
+              .slice(0,30),
+
+          tag:
+            saved.clan.tag
+              .slice(0,5)
+              .toUpperCase(),
+
+          level:
+            Math.max(
+              1,
+              Math.floor(
+                finiteNumber(
+                  saved.clan.level,
+                  1
+                )
+              )
+            ),
+
+          xp:
+            positiveNumber(
+              saved.clan.xp,
+              0
+            ),
+
+          members:
+            Array.isArray(
+              saved.clan.members
+            )
+              ? saved.clan.members
+                  .filter(
+                    member=>
+                      member &&
+                      typeof member.name==="string"
+                  )
+                  .slice(0,50)
+              : [],
+
+          feed:
+            Array.isArray(
+              saved.clan.feed
+            )
+              ? saved.clan.feed
+                  .filter(
+                    item=>
+                      typeof item==="string"
+                  )
+                  .slice(0,30)
+              : []
+
+        };
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "Save was corrupted. Starting with safe defaults.",
       error
     );
 
   }
 
+  repairGame();
 }
 
-function loadGame(){
 
-  try{
+/* ============================================================
+   REPAIR GAME
+============================================================ */
 
-    const raw =
-      localStorage.getItem(
-        SAVE_KEY
+function repairGame(){
+
+  G.coins =
+    positiveNumber(
+      G.coins,
+      0
+    );
+
+  G.clicks =
+    Math.floor(
+      positiveNumber(
+        G.clicks,
+        0
+      )
+    );
+
+  G.level =
+    Math.max(
+      1,
+      Math.floor(
+        positiveNumber(
+          G.level,
+          1
+        )
+      )
+    );
+
+  G.xp =
+    positiveNumber(
+      G.xp,
+      0
+    );
+
+  G.power =
+    Math.max(
+      1,
+      Math.floor(
+        positiveNumber(
+          G.power,
+          1
+        )
+      )
+    );
+
+  G.auto =
+    Math.floor(
+      positiveNumber(
+        G.auto,
+        0
+      )
+    );
+
+  G.rebirths =
+    Math.floor(
+      positiveNumber(
+        G.rebirths,
+        0
+      )
+    );
+
+
+  if(
+    !G.unlocked ||
+    typeof G.unlocked !== "object"
+  ){
+
+    G.unlocked = {};
+
+  }
+
+  G.unlocked.classic = true;
+
+
+  if(
+    !SKINS.some(
+      skin=>
+        skin.id === G.skin
+    )
+  ){
+
+    G.skin =
+      "classic";
+
+  }
+
+
+  if(
+    !G.friends ||
+    !Array.isArray(
+      G.friends
+    )
+  ){
+
+    G.friends = [];
+
+  }
+
+
+  if(
+    !G.requests ||
+    !Array.isArray(
+      G.requests
+    )
+  ){
+
+    G.requests = [];
+
+  }
+
+
+  if(
+    !G.achievements ||
+    typeof G.achievements !== "object"
+  ){
+
+    G.achievements = {};
+
+  }
+
+
+  if(
+    !G.statistics ||
+    typeof G.statistics !== "object"
+  ){
+
+    G.statistics = {};
+
+  }
+
+
+  Object.keys(
+    DEFAULT_STATS
+  ).forEach(
+    key=>{
+
+      G.statistics[key] =
+        positiveNumber(
+          G.statistics[key],
+          DEFAULT_STATS[key]
+        );
+
+    }
+  );
+
+
+  if(
+    G.clan &&
+    typeof G.clan === "object"
+  ){
+
+    G.clan.level =
+      Math.max(
+        1,
+        Math.floor(
+          positiveNumber(
+            G.clan.level,
+            1
+          )
+        )
       );
 
-    if(!raw){
+    G.clan.xp =
+      positiveNumber(
+        G.clan.xp,
+        0
+      );
 
-      log(
-        "📂 No previous save found."
+    if(
+      !Array.isArray(
+        G.clan.members
+      )
+    ){
+
+      G.clan.members = [];
+
+    }
+
+    if(
+      !Array.isArray(
+        G.clan.feed
+      )
+    ){
+
+      G.clan.feed = [];
+
+    }
+
+  }
+
+}
+
+
+/* ============================================================
+   XP
+============================================================ */
+
+function xpRequired(){
+
+  return Math.floor(
+    100 *
+    Math.pow(
+      1.35,
+      G.level - 1
+    )
+  );
+
+}
+
+function addXP(amount){
+
+  amount =
+    positiveNumber(
+      amount,
+      0
+    );
+
+  G.xp += amount;
+
+  let safety = 0;
+
+  while(
+    G.xp >= xpRequired() &&
+    safety < 1000
+  ){
+
+    G.xp -= xpRequired();
+
+    G.level++;
+
+    G.power++;
+
+    toast(
+      "⭐ Level "+G.level+"!"
+    );
+
+    log(
+      "Reached level "+
+      G.level
+    );
+
+    safety++;
+
+  }
+
+}
+
+
+/* ============================================================
+   CLICKING
+============================================================ */
+
+function clickFrog(event){
+
+  const earned =
+    Math.max(
+      1,
+      Math.floor(
+        finiteNumber(
+          G.power,
+          1
+        )
+      )
+    );
+
+  G.coins += earned;
+
+  G.clicks++;
+
+  G.statistics.totalCoins +=
+    earned;
+
+  G.statistics.biggestClick =
+    Math.max(
+      G.statistics.biggestClick,
+      earned
+    );
+
+  addXP(
+    Math.max(
+      1,
+      Math.ceil(
+        earned / 3
+      )
+    )
+  );
+
+  animateFrog();
+
+  if(event){
+
+    particle(
+      event.clientX,
+      event.clientY,
+      "+"+format(earned)
+    );
+
+  }
+
+  checkAchievements();
+
+  update();
+
+  save();
+
+}
+
+
+/* ============================================================
+   KEYBOARD ACCESS
+============================================================ */
+
+$("frog").addEventListener(
+  "keydown",
+  event=>{
+
+    if(
+      event.key === "Enter" ||
+      event.key === " "
+    ){
+
+      event.preventDefault();
+
+      clickFrog({
+        clientX:
+          window.innerWidth/2,
+
+        clientY:
+          window.innerHeight/2
+      });
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   FROG ANIMATION
+============================================================ */
+
+function animateFrog(){
+
+  const frog =
+    $("frog");
+
+  if(!frog)
+    return;
+
+  frog.classList.remove(
+    "jump"
+  );
+
+  void frog.offsetWidth;
+
+  frog.classList.add(
+    "jump"
+  );
+
+  setTimeout(
+    ()=>{
+      frog.classList.remove(
+        "jump"
+      );
+    },
+    700
+  );
+
+}
+
+
+/* ============================================================
+   PARTICLES
+============================================================ */
+
+function particle(x,y,text){
+
+  const p =
+    document.createElement(
+      "div"
+    );
+
+  p.className =
+    "particle";
+
+  p.textContent =
+    text;
+
+  p.style.left =
+    x+"px";
+
+  p.style.top =
+    y+"px";
+
+  p.style.setProperty(
+    "--x",
+    (Math.random()*80-40)+"px"
+  );
+
+  p.style.setProperty(
+    "--y",
+    (-70-Math.random()*80)+"px"
+  );
+
+  document.body.appendChild(
+    p
+  );
+
+  setTimeout(
+    ()=>{
+      p.remove();
+    },
+    850
+  );
+
+}
+
+
+/* ============================================================
+   UPGRADES
+============================================================ */
+
+function powerUpgradeCost(){
+
+  return Math.floor(
+    50 *
+    Math.pow(
+      1.55,
+      Math.max(
+        0,
+        G.power-1
+      )
+    )
+  );
+
+}
+
+function autoCost(){
+
+  return Math.floor(
+    1000 *
+    Math.pow(
+      1.7,
+      Math.max(
+        0,
+        G.auto
+      )
+    )
+  );
+
+}
+
+
+function upgradePower(){
+
+  const cost =
+    powerUpgradeCost();
+
+  if(
+    G.coins < cost
+  ){
+
+    toast(
+      "You need "+
+      format(cost)+
+      " coins."
+    );
+
+    return;
+
+  }
+
+  G.coins -= cost;
+
+  G.power++;
+
+  toast(
+    "💪 Click Power: "+
+    G.power
+  );
+
+  log(
+    "Upgraded Click Power to "+
+    G.power
+  );
+
+  checkAchievements();
+
+  update();
+
+  save();
+
+}
+
+
+function buyAutoFrog(){
+
+  const cost =
+    autoCost();
+
+  if(
+    G.coins < cost
+  ){
+
+    toast(
+      "You need "+
+      format(cost)+
+      " coins."
+    );
+
+    return;
+
+  }
+
+  G.coins -= cost;
+
+  G.auto++;
+
+  toast(
+    "🤖 Auto Frog purchased!"
+  );
+
+  log(
+    "Bought Auto Frog #"+
+    G.auto
+  );
+
+  checkAchievements();
+
+  update();
+
+  save();
+
+}
+
+
+/* ============================================================
+   AUTO FROGS
+============================================================ */
+
+setInterval(
+  ()=>{
+
+    if(G.auto <= 0)
+      return;
+
+    const earned =
+      Math.max(
+        1,
+        G.auto *
+        Math.max(
+          1,
+          G.power
+        )
+      );
+
+    G.coins += earned;
+
+    G.statistics.totalCoins +=
+      earned;
+
+    addXP(
+      Math.max(
+        1,
+        Math.floor(
+          G.auto / 2
+        )
+      )
+    );
+
+    checkAchievements();
+
+    update();
+
+    save();
+
+  },
+  1000
+);
+
+
+/* ============================================================
+   REBIRTH
+============================================================ */
+
+function prestige(){
+
+  if(
+    G.level < 25
+  ){
+
+    toast(
+      "Reach level 25 first."
+    );
+
+    return;
+
+  }
+
+  const confirmed =
+    window.confirm(
+      "Rebirth resets coins, level, power and Auto Frogs, but increases your permanent starting power. Continue?"
+    );
+
+  if(!confirmed)
+    return;
+
+  G.rebirths++;
+
+  G.coins = 0;
+
+  G.level = 1;
+
+  G.xp = 0;
+
+  G.power =
+    1 + G.rebirths;
+
+  G.auto = 0;
+
+  toast(
+    "🌟 Pond reborn!"
+  );
+
+  log(
+    "Performed Pond Rebirth #"+
+    G.rebirths
+  );
+
+  checkAchievements();
+
+  update();
+
+  save();
+
+}
+
+
+/* ============================================================
+   SKINS
+============================================================ */
+
+function renderSkins(){
+
+  const box =
+    $("skinList");
+
+  if(!box)
+    return;
+
+  box.innerHTML =
+    SKINS.map(
+      skin=>{
+
+        const unlocked =
+          Boolean(
+            G.unlocked[
+              skin.id
+            ]
+          );
+
+        const selected =
+          G.skin === skin.id;
+
+        return `
+
+          <div
+            class="skin
+              ${selected?"selected":""}
+              ${unlocked?"":"locked"}"
+            onclick="selectSkin('${skin.id}')"
+          >
+
+            <div class="row">
+
+              <div
+                style="
+                  display:flex;
+                  gap:9px;
+                  align-items:center
+                "
+              >
+
+                <div class="skin-icon">
+                  ${skin.icon}
+                </div>
+
+                <div>
+
+                  <b>
+                    ${escapeHTML(
+                      skin.name
+                    )}
+                  </b>
+
+                  <div class="mini">
+                    ${escapeHTML(
+                      skin.description
+                    )}
+                  </div>
+
+                </div>
+
+              </div>
+
+              <b>
+                ${
+                  unlocked
+                    ? "✓"
+                    : format(skin.price)
+                }
+              </b>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+function selectSkin(id){
+
+  const skin =
+    SKINS.find(
+      item=>
+        item.id === id
+    );
+
+  if(!skin)
+    return;
+
+  if(
+    !G.unlocked[id]
+  ){
+
+    if(
+      G.coins < skin.price
+    ){
+
+      toast(
+        "You need "+
+        format(skin.price)+
+        " coins."
       );
 
       return;
 
     }
 
-    const loaded =
-      JSON.parse(raw);
+    G.coins -=
+      skin.price;
 
-    G={
-      ...G,
-      ...loaded
-    };
+    G.unlocked[id] =
+      true;
 
-    G.upgrades =
-      loaded.upgrades ||
-      {};
+    G.statistics.skinsBought++;
 
-    G.achievements =
-      loaded.achievements ||
-      [];
-
-    G.lastTick =
-      Date.now();
-
-    applySkin();
-
-    renderEverything();
-
-    log(
-      "📂 Game loaded."
-    );
-
-  }catch(error){
-
-    console.error(
-      "Load error:",
-      error
+    toast(
+      "🎨 Unlocked "+
+      skin.name
     );
 
     log(
-      "⚠️ Could not load save."
+      "Unlocked "+
+      skin.name
     );
 
   }
 
-}
+  G.skin = id;
 
-function resetGame(){
-
-  const answer =
-    confirm(
-      "Reset ALL frog progress? This cannot be undone."
-    );
-
-  if(!answer)
-    return;
-
-  localStorage.removeItem(
-    SAVE_KEY
-  );
-
-  location.reload();
-
-}
-
-/* ============================================================
-   GUIDE
-============================================================ */
-
-function openGuide(){
-
-  $("guideModal")
-    .classList
-    .add("show");
-
-}
-
-function closeGuide(){
-
-  $("guideModal")
-    .classList
-    .remove("show");
-
-}
-
-/* ============================================================
-   EVERYTHING RENDER
-============================================================ */
-
-function renderEverything(){
+  applySkin();
 
   renderSkins();
 
-  renderShop();
+  checkAchievements();
 
-  renderAchievements();
+  update();
 
-  updateUI();
-
-  updateWorld();
-
-  updateRain();
+  save();
 
 }
 
-/* ============================================================
-   INPUT
-============================================================ */
 
-$("frog")
-  .addEventListener(
-    "click",
-    clickFrog
-  );
+function applySkin(){
 
-document.addEventListener(
-  "keydown",
-  event=>{
+  const frog =
+    $("frog");
 
-    if(
-      event.code===
-      "Space"
-    ){
+  if(!frog)
+    return;
 
-      event.preventDefault();
+  frog.className =
+    "frog";
 
-      clickFrog();
+  const skin =
+    SKINS.find(
+      item=>
+        item.id === G.skin
+    );
 
-    }
+  if(
+    skin &&
+    skin.className
+  ){
+
+    frog.classList.add(
+      skin.className
+    );
 
   }
-);
 
-/* Close modal by clicking outside */
+}
 
-$("guideModal")
-  .addEventListener(
-    "click",
-    event=>{
+
+/* ============================================================
+   TABS
+============================================================ */
+
+function tab(id,element){
+
+  document
+    .querySelectorAll(
+      ".tab"
+    )
+    .forEach(
+      item=>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+  document
+    .querySelectorAll(
+      ".tabpage"
+    )
+    .forEach(
+      item=>
+        item.classList.remove(
+          "active"
+        )
+    );
+
+  if(element){
+
+    element.classList.add(
+      "active"
+    );
+
+  }
+
+  const page =
+    $(id);
+
+  if(page){
+
+    page.classList.add(
+      "active"
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   FRIENDS
+============================================================ */
+
+function addFriend(){
+
+  const input =
+    $("friendInput");
+
+  if(!input)
+    return;
+
+  const name =
+    input.value
+      .trim()
+      .slice(0,24);
+
+  if(!name){
+
+    toast(
+      "Enter a frog username."
+    );
+
+    return;
+
+  }
+
+  if(
+    G.friends.some(
+      friend=>
+        friend.name
+          .toLowerCase() ===
+        name.toLowerCase()
+    )
+  ){
+
+    toast(
+      "Already your friend."
+    );
+
+    return;
+
+  }
+
+  G.friends.push({
+
+    name:name,
+
+    level:
+      1 +
+      Math.floor(
+        Math.random()*30
+      ),
+
+    online:
+      Math.random() > .3
+
+  });
+
+  G.statistics.friendsAdded++;
+
+  input.value = "";
+
+  renderFriends();
+
+  checkAchievements();
+
+  save();
+
+  toast(
+    "👥 Added "+name
+  );
+
+}
+
+
+function renderFriends(){
+
+  const box =
+    $("friends");
+
+  if(!box)
+    return;
+
+  if(
+    G.friends.length === 0
+  ){
+
+    box.innerHTML =
+      `<div class="card">
+        No friends yet.
+      </div>`;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    G.friends.map(
+      (friend,index)=>`
+
+        <div class="friend">
+
+          <div class="avatar">
+            🐸
+          </div>
+
+          <div class="friend-info">
+
+            <div class="friend-name">
+              ${escapeHTML(
+                friend.name
+              )}
+            </div>
+
+            <div class="friend-status">
+
+              <span
+                class="dot
+                ${friend.online?"":"off"}"
+              ></span>
+
+              ${
+                friend.online
+                  ? "Online"
+                  : "Offline"
+              }
+
+              • Level ${friend.level}
+
+            </div>
+
+          </div>
+
+          <button
+            class="action red"
+            style="width:auto"
+            onclick="removeFriend(${index})"
+          >
+            ×
+          </button>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+function removeFriend(index){
+
+  if(
+    !Number.isInteger(index) ||
+    index < 0 ||
+    index >= G.friends.length
+  ){
+
+    return;
+
+  }
+
+  const name =
+    G.friends[index].name;
+
+  G.friends.splice(
+    index,
+    1
+  );
+
+  renderFriends();
+
+  save();
+
+  toast(
+    name+
+    " removed."
+  );
+
+}
+
+
+function renderRequests(){
+
+  const box =
+    $("requests");
+
+  if(!box)
+    return;
+
+  if(
+    G.requests.length === 0
+  ){
+
+    box.innerHTML =
+      `<div class="card">
+        No requests.
+      </div>`;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    G.requests.map(
+      (request,index)=>`
+
+        <div class="friend">
+
+          <div class="avatar">
+            🐸
+          </div>
+
+          <div class="friend-info">
+
+            <div class="friend-name">
+              ${escapeHTML(
+                request.name
+              )}
+            </div>
+
+            <div class="friend-status">
+              Level ${request.level}
+            </div>
+
+          </div>
+
+          <button
+            class="action"
+            style="width:auto"
+            onclick="acceptRequest(${index})"
+          >
+            ✓
+          </button>
+
+        </div>
+
+      `
+    ).join("");
+
+}
+
+
+function acceptRequest(index){
+
+  if(
+    !Number.isInteger(index) ||
+    index < 0 ||
+    index >= G.requests.length
+  ){
+
+    return;
+
+  }
+
+  const request =
+    G.requests[index];
+
+  if(
+    G.friends.some(
+      friend=>
+        friend.name.toLowerCase() ===
+        request.name.toLowerCase()
+    )
+  ){
+
+    G.requests.splice(
+      index,
+      1
+    );
+
+    renderRequests();
+
+    save();
+
+    return;
+
+  }
+
+  G.friends.push({
+    name:
+      request.name,
+    level:
+      request.level,
+    online:
+      request.online
+  });
+
+  G.requests.splice(
+    index,
+    1
+  );
+
+  renderFriends();
+  renderRequests();
+
+  checkAchievements();
+
+  save();
+
+  toast(
+    "👥 Friend accepted!"
+  );
+
+}
+
+
+/* ============================================================
+   CLANS
+============================================================ */
+
+function clanXPRequired(){
+
+  if(!G.clan)
+    return 1000;
+
+  return Math.floor(
+    1000 *
+    Math.pow(
+      1.45,
+      Math.max(
+        0,
+        G.clan.level - 1
+      )
+    )
+  );
+
+}
+
+
+function createClan(){
+
+  if(G.clan){
+
+    toast(
+      "You already have a clan."
+    );
+
+    return;
+
+  }
+
+  const nameInput =
+    $("newClanName");
+
+  const tagInput =
+    $("newClanTag");
+
+  if(
+    !nameInput ||
+    !tagInput
+  ){
+
+    return;
+
+  }
+
+  const name =
+    nameInput.value
+      .trim()
+      .slice(0,30);
+
+  const tag =
+    tagInput.value
+      .trim()
+      .toUpperCase()
+      .replace(
+        /[^A-Z0-9]/g,
+        ""
+      )
+      .slice(0,5);
+
+  if(
+    !name ||
+    !tag
+  ){
+
+    toast(
+      "Enter a clan name and tag."
+    );
+
+    return;
+
+  }
+
+  G.clan = {
+
+    name:name,
+
+    tag:tag,
+
+    level:1,
+
+    xp:0,
+
+    members:[
+
+      {
+        name:"You",
+        role:"Leader",
+        level:G.level
+      },
+
+      {
+        name:"LilyHopper",
+        role:"Officer",
+        level:17
+      },
+
+      {
+        name:"BogMaster",
+        role:"Member",
+        level:11
+      },
+
+      {
+        name:"TinyTadpole",
+        role:"Member",
+        level:6
+      }
+
+    ],
+
+    feed:[
+      "You created the clan."
+    ]
+
+  };
+
+  G.statistics.clanCreated++;
+
+  checkAchievements();
+
+  renderClan();
+
+  save();
+
+  toast(
+    "🏰 Clan created!"
+  );
+
+}
+
+
+function donateClan(){
+
+  if(!G.clan){
+
+    toast(
+      "Create a clan first."
+    );
+
+    return;
+
+  }
+
+  const maximum =
+    Math.floor(
+      positiveNumber(
+        G.coins,
+        0
+      ) * .05
+    );
+
+  const amount =
+    Math.min(
+      G.coins,
+      Math.max(
+        100,
+        maximum
+      )
+    );
+
+  if(
+    amount < 100
+  ){
+
+    toast(
+      "You need at least 100 coins."
+    );
+
+    return;
+
+  }
+
+  G.coins -= amount;
+
+  G.clan.xp += amount;
+
+  G.statistics.clanDonations++;
+
+  G.clan.feed.unshift(
+    "You donated "+
+    format(amount)+
+    " coins."
+  );
+
+  while(
+    G.clan.xp >=
+    clanXPRequired()
+  ){
+
+    G.clan.xp -=
+      clanXPRequired();
+
+    G.clan.level++;
+
+    G.clan.feed.unshift(
+      "🏆 Clan reached level "+
+      G.clan.level+"!"
+    );
+
+    toast(
+      "🏆 Clan Level Up!"
+    );
+
+  }
+
+  G.clan.feed =
+    G.clan.feed.slice(
+      0,
+      30
+    );
+
+  checkAchievements();
+
+  renderClan();
+
+  update();
+
+  save();
+
+}
+
+
+function leaveClan(){
+
+  if(!G.clan)
+    return;
+
+  if(
+    !window.confirm(
+      "Leave your clan?"
+    )
+  ){
+
+    return;
+
+  }
+
+  G.clan = null;
+
+  renderClan();
+
+  save();
+
+  toast(
+    "You left the clan."
+  );
+
+}
+
+
+function renderClan(){
+
+  const box =
+    $("clanArea");
+
+  if(!box)
+    return;
+
+  if(!G.clan){
+
+    box.innerHTML = `
+
+      <div class="card">
+
+        <h3>🏰 Create a Clan</h3>
+
+        <p class="mini">
+          Build a frog community and
+          level your clan together.
+        </p>
+
+        <input
+          id="newClanName"
+          placeholder="Clan name"
+          maxlength="30"
+        >
+
+        <br><br>
+
+        <input
+          id="newClanTag"
+          placeholder="Tag"
+          maxlength="5"
+        >
+
+        <button
+          class="action"
+          onclick="createClan()"
+        >
+          Create Clan
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  const required =
+    clanXPRequired();
+
+  const percent =
+    clamp(
+      G.clan.xp /
+      required *
+      100,
+      0,
+      100
+    );
+
+  box.innerHTML = `
+
+    <div class="clan">
+
+      <h3>
+        🐸 ${escapeHTML(
+          G.clan.name
+        )}
+      </h3>
+
+      <div class="clan-tag">
+        [${escapeHTML(
+          G.clan.tag
+        )}]
+      </div>
+
+      <div style="margin-top:10px">
+        Clan Level ${G.clan.level}
+      </div>
+
+      <div
+        class="mini"
+        style="color:white"
+      >
+        ${format(G.clan.xp)}
+        /
+        ${format(required)}
+        XP
+      </div>
+
+      <div class="clanbar">
+        <div
+          style="width:${percent}%"
+        ></div>
+      </div>
+
+    </div>
+
+    <button
+      class="action"
+      onclick="donateClan()"
+    >
+      🍃 Donate Coins
+    </button>
+
+    <button
+      class="action dark"
+      onclick="leaveClan()"
+    >
+      Leave Clan
+    </button>
+
+    <h3>👥 Members</h3>
+
+    ${
+      G.clan.members.map(
+        member=>`
+
+          <div class="member">
+
+            <div class="avatar">
+              🐸
+            </div>
+
+            <div style="flex:1">
+
+              <b>
+                ${escapeHTML(
+                  member.name
+                )}
+              </b>
+
+              <div class="mini">
+                Level ${
+                  finiteNumber(
+                    member.level,
+                    1
+                  )
+                }
+              </div>
+
+            </div>
+
+            <span class="role">
+              ${escapeHTML(
+                member.role || "Member"
+              )}
+            </span>
+
+          </div>
+
+        `
+      ).join("")
+    }
+
+    <h3>📜 Clan Feed</h3>
+
+    <div class="log">
+
+      ${
+        G.clan.feed
+          .map(
+            item=>
+              `<div>
+                ${escapeHTML(item)}
+              </div>`
+          )
+          .join("")
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* ============================================================
+   ACHIEVEMENTS
+============================================================ */
+
+function checkAchievements(){
+
+  const checks = {
+
+    first:
+      G.clicks >= 1,
+
+    "100":
+      G.clicks >= 100,
+
+    "1000":
+      G.clicks >= 1000,
+
+    "10000":
+      G.clicks >= 10000,
+
+    million:
+      G.statistics.totalCoins >= 1000000,
+
+    power10:
+      G.power >= 10,
+
+    power50:
+      G.power >= 50,
+
+    auto:
+      G.auto >= 1,
+
+    rebirth:
+      G.rebirths >= 1,
+
+    skins:
+      G.statistics.skinsBought >= 1,
+
+    poison:
+      Boolean(
+        G.unlocked.poison
+      ),
+
+    friend:
+      G.friends.length >= 1,
+
+    clan:
+      Boolean(G.clan),
+
+    donate:
+      G.statistics.clanDonations >= 1
+
+  };
+
+
+  ACHIEVEMENTS.forEach(
+    achievement=>{
+
+      const id =
+        achievement[0];
 
       if(
-        event.target===
-        $("guideModal")
+        checks[id] &&
+        !G.achievements[id]
       ){
 
-        closeGuide();
+        G.achievements[id] =
+          true;
+
+        toast(
+          "🏆 Achievement: "+
+          achievement[1]
+        );
+
+        log(
+          "Achievement unlocked: "+
+          achievement[1]
+        );
 
       }
 
     }
   );
 
-/* ============================================================
-   BUG SELF TEST
-============================================================ */
-
-function selfTest(){
-
-  const tests=[
-
-    [
-      "Game state exists",
-      !!G
-    ],
-
-    [
-      "Exactly 300 mechanics",
-      mechanics.length===300
-    ],
-
-    [
-      "30 mechanic families",
-      mechanicFamilies.length===30
-    ],
-
-    [
-      "10 levels per family",
-      mechanics.every(
-        (m,index)=>
-          m.level===
-          index%10+1
-      )
-    ],
-
-    [
-      "Unique mechanic IDs",
-      new Set(
-        mechanics.map(
-          m=>m.id
-        )
-      ).size===300
-    ],
-
-    [
-      "Every mechanic has cost",
-      mechanics.every(
-        m=>m.cost>0
-      )
-    ],
-
-    [
-      "Every mechanic has description",
-      mechanics.every(
-        m=>m.description
-      )
-    ],
-
-    [
-      "15 frog skins",
-      skins.length===15
-    ],
-
-    [
-      "Final skin is Poison Dart Frog",
-      skins[14].name===
-      "Poison Dart Frog"
-    ],
-
-    [
-      "No energy variable",
-      !Object.prototype
-        .hasOwnProperty
-        .call(
-          G,
-          "energy"
-        )
-    ],
-
-    [
-      "No max energy variable",
-      !Object.prototype
-        .hasOwnProperty
-        .call(
-          G,
-          "maxEnergy"
-        )
-    ],
-
-    [
-      "Click function exists",
-      typeof clickFrog===
-      "function"
-    ],
-
-    [
-      "Passive function exists",
-      typeof gameTick===
-      "function"
-    ],
-
-    [
-      "Save function exists",
-      typeof saveGame===
-      "function"
-    ],
-
-    [
-      "Load function exists",
-      typeof loadGame===
-      "function"
-    ],
-
-    [
-      "Upgrade function exists",
-      typeof buyUpgrade===
-      "function"
-    ],
-
-    [
-      "Skin function exists",
-      typeof selectSkin===
-      "function"
-    ],
-
-    [
-      "Stats calculation works",
-      Number.isFinite(
-        calculateStats()
-          .clickPower
-      )
-    ],
-
-    [
-      "XP calculation works",
-      requiredXP()>0
-    ],
-
-    [
-      "All skins have costs",
-      skins.every(
-        skin=>
-          skin.cost>=0
-      )
-    ]
-
-  ];
-
-  const failed =
-    tests.filter(
-      test=>!test[1]
-    );
-
-  console.group(
-    "🐸 Frog Clicker Self Test"
-  );
-
-  tests.forEach(
-    test=>{
-      console.log(
-        test[1]?"✅":"❌",
-        test[0]
-      );
-    }
-  );
-
-  console.groupEnd();
-
-  if(
-    failed.length===0
-  ){
-
-    log(
-      "✅ Self-test passed: "+
-      tests.length+
-      " checks."
-    );
-
-  }else{
-
-    console.error(
-      "Failed tests:",
-      failed
-    );
-
-    log(
-      "⚠️ Self-test found "+
-      failed.length+
-      " problem(s)."
-    );
-
-  }
+  renderAchievements();
 
 }
+
+
+function renderAchievements(){
+
+  const box =
+    $("achievementList");
+
+  if(!box)
+    return;
+
+  box.innerHTML =
+    ACHIEVEMENTS.map(
+      achievement=>{
+
+        const done =
+          Boolean(
+            G.achievements[
+              achievement[0]
+            ]
+          );
+
+        return `
+
+          <div
+            class="
+              achievement
+              ${done?"done":""}
+            "
+          >
+
+            <div class="row">
+
+              <b>
+                ${done?"🏆":"🔒"}
+                ${escapeHTML(
+                  achievement[1]
+                )}
+              </b>
+
+              <span>
+                ${done?"✓":""}
+              </span>
+
+            </div>
+
+            <div class="mini">
+              ${escapeHTML(
+                achievement[2]
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* ============================================================
+   UPDATE
+============================================================ */
+
+function update(){
+
+  $("coins").textContent =
+    format(G.coins);
+
+  $("level").textContent =
+    format(G.level);
+
+  $("clicks").textContent =
+    format(G.clicks);
+
+  $("power").textContent =
+    format(G.power);
+
+  $("achievements").textContent =
+    Object.keys(
+      G.achievements
+    ).filter(
+      key=>
+        G.achievements[key]
+    ).length;
+
+}
+
+
+/* ============================================================
+   EYE TRACKING
+============================================================ */
+
+document.addEventListener(
+  "mousemove",
+  event=>{
+
+    document
+      .querySelectorAll(
+        ".real-eye"
+      )
+      .forEach(
+        eye=>{
+
+          const rect =
+            eye.getBoundingClientRect();
+
+          const centerX =
+            rect.left +
+            rect.width / 2;
+
+          const centerY =
+            rect.top +
+            rect.height / 2;
+
+          const dx =
+            event.clientX -
+            centerX;
+
+          const dy =
+            event.clientY -
+            centerY;
+
+          const angle =
+            Math.atan2(
+              dy,
+              dx
+            );
+
+          const distance =
+            Math.min(
+              7,
+              Math.hypot(
+                dx,
+                dy
+              ) / 35
+            );
+
+          eye.style.transform =
+            `translate(
+              ${Math.cos(angle)*distance}px,
+              ${Math.sin(angle)*distance}px
+            )`;
+
+        }
+      );
+
+  }
+);
+
+
+/* ============================================================
+   RANDOM POND EVENTS
+============================================================ */
+
+const WORLD_EVENTS = [
+
+  [
+    "🪰 A fly landed on the pond!",
+    5
+  ],
+
+  [
+    "🌧️ A tiny rain shower passed by.",
+    3
+  ],
+
+  [
+    "🦋 A butterfly visited your frog.",
+    4
+  ],
+
+  [
+    "🌿 New plants grew around the pond.",
+    3
+  ],
+
+  [
+    "🐸 Your frog made a suspicious ribbit.",
+    2
+  ],
+
+  [
+    "💧 A water droplet splashed nearby.",
+    3
+  ],
+
+  [
+    "🌱 A new leaf appeared.",
+    4
+  ]
+
+];
+
+
+setInterval(
+  ()=>{
+
+    const random =
+      WORLD_EVENTS[
+        Math.floor(
+          Math.random() *
+          WORLD_EVENTS.length
+        )
+      ];
+
+    addXP(
+      random[1]
+    );
+
+    log(
+      random[0]
+    );
+
+    update();
+
+    save();
+
+  },
+  12000
+);
+
+
+/* ============================================================
+   FRIEND ONLINE SIMULATION
+============================================================ */
+
+setInterval(
+  ()=>{
+
+    G.friends.forEach(
+      friend=>{
+
+        friend.online =
+          Math.random() > .3;
+
+      }
+    );
+
+    renderFriends();
+
+    save();
+
+  },
+  15000
+);
+
+
+/* ============================================================
+   AUTOSAVE
+============================================================ */
+
+setInterval(
+  ()=>{
+    save();
+  },
+  10000
+);
+
 
 /* ============================================================
    STARTUP
 ============================================================ */
 
-createStars();
+function startGame(){
 
-createRain();
+  load();
 
-loadGame();
+  repairGame();
 
-if(
-  !localStorage.getItem(
-    SAVE_KEY
-  )
-){
+  applySkin();
+
+  renderSkins();
+
+  renderFriends();
+
+  renderRequests();
+
+  renderClan();
+
+  renderAchievements();
+
+  update();
 
   log(
-    "🐸 Welcome to your new pond!"
+    "🐸 Frog Clicker loaded successfully."
   );
 
   log(
-    "👅 Click the frog to begin."
+    "⚡ Energy system disabled."
   );
 
-  log(
-    "⚡ There is NO energy system."
-  );
-
-  log(
-    "☠️ The final skin is Poison Dart Frog."
-  );
+  save();
 
 }
 
-renderEverything();
-
-selfTest();
-
-changeWorldWeather();
-
-/* Passive game loop */
-
-setInterval(
-  gameTick,
-  100
-);
-
-/* UI refresh */
-
-setInterval(
-  updateUI,
-  500
-);
-
-/* World clock */
-
-setInterval(
-  updateWorld,
-  10000
-);
-
-/* Weather / seasons */
-
-setInterval(
-  changeWorldWeather,
-  60000
-);
-
-/* Autosave */
-
-setInterval(
-  saveGame,
-  30000
-);
-
-/* Save when leaving */
-
-window.addEventListener(
-  "beforeunload",
-  saveGame
-);
+startGame();
 
 </script>
 
