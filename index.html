@@ -1,3894 +1,1243 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#55b84a">
-<title>Frog Clicker: Pondbound</title>
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> <title>🐸 Frog Frenzy Infinity</title> <style> *{box-sizing:border-box} :root{ --bg:#06100a;--panel:#0e2114;--panel2:#14351e;--border:#285b35; --green:#57e86b;--lime:#b7ff72;--gold:#ffd84d;--blue:#5ccfff; --red:#ff6767;--text:#f0ffe9;--muted:#94bd9b } html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%,#1d5a2d,#06100a 60%);color:var(--text);font-family:Arial,sans-serif} body{overflow-x:hidden} button{ background:#245c32;color:white;border:1px solid #3b7b49;border-radius:12px; padding:10px 14px;font-weight:800;cursor:pointer;transition:.12s } button:hover{background:#347b45;transform:translateY(-1px)} button:active{transform:scale(.97)} button:disabled{opacity:.45;cursor:not-allowed;transform:none} input{ width:100%;padding:11px;background:#07150b;color:white;border:1px solid #356744; border-radius:10px;outline:none } header{ position:sticky;top:0;z-index:10;background:#06100beF;backdrop-filter:blur(12px); border-bottom:1px solid var(--border);padding:10px } .brand{font-size:24px;font-weight:1000;color:var(--lime)} .stats{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px} .stat{background:var(--panel);border:1px solid var(--border);padding:7px 10px;border-radius:10px} .tabs{display:flex;gap:6px;overflow:auto;margin-top:9px;padding-bottom:2px} .tabs button{white-space:nowrap} main{width:min(1250px,100%);margin:auto;padding:14px} section{animation:fade .15s ease} @keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}} .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px} .card{ background:linear-gradient(145deg,var(--panel),#09190e); border:1px solid var(--border);border-radius:17px;padding:15px; box-shadow:0 7px 25px #0005 } .hero{text-align:center} #frog{ display:inline-block;font-size:145px;line-height:1;margin:12px; cursor:pointer;touch-action:manipulation;user-select:none; filter:drop-shadow(0 14px 12px #0008) } #frog.pop{animation:pop .08s} @keyframes pop{50%{transform:scale(.87) rotate(-3deg)}} .big{font-size:28px;font-weight:1000} .muted,small{color:var(--muted)} .bar{height:10px;background:#030804;border-radius:20px;overflow:hidden} .fill{height:100%;background:linear-gradient(90deg,var(--green),var(--lime));transition:width .2s} .badge{ display:inline-block;background:#214a2a;border:1px solid #32643d; padding:4px 8px;border-radius:20px;font-size:12px;margin:2px } .item{ display:flex;align-items:center;justify-content:space-between;gap:8px; border-bottom:1px solid #1e4128;padding:10px 0 } .item:last-child{border:0} .skin{ text-align:center;font-size:55px;border:2px solid transparent;border-radius:14px; padding:8px;cursor:pointer } .skin.selected{border-color:var(--gold);background:#24472a} .hidden{display:none!important} .toast{ position:fixed;right:14px;bottom:14px;z-index:100; background:#173d20;border:1px solid var(--green);padding:13px 16px; border-radius:13px;box-shadow:0 8px 30px #0008;display:none } .log{ height:135px;overflow:hidden;background:#030804;border-radius:10px; padding:9px;font-size:13px } .log div{margin-bottom:5px} h1,h2,h3{margin-top:4px} .center{text-align:center} .danger{background:#713333} .pill{padding:4px 8px;border-radius:99px;background:#172d1c} .float{ position:fixed;pointer-events:none;font-weight:1000;color:#b7ff72; text-shadow:0 2px 5px #000;animation:floatUp .7s forwards;z-index:50 } @keyframes floatUp{to{transform:translateY(-80px);opacity:0}} .notice{ padding:10px;border-radius:10px;background:#102d18;border:1px solid #285b35 } </style> </head> <body> <header> <div class="brand">🐸 FROG FRENZY INFINITY</div> <div class="stats"> <div class="stat">🪙 <span id="coins">0</span></div> <div class="stat">💎 <span id="gems">0</span></div> <div class="stat">⭐ Lv <span id="level">1</span></div> <div class="stat">⚡ <span id="income">0</span>/s</div> <div class="stat">🔥 x<span id="combo">1</span></div> <div class="stat">🏆 <span id="prestige">0</span></div> </div> <nav class="tabs"> <button onclick="openTab('home')">🐸 Home</button> <button onclick="openTab('upgrades')">⬆️ Upgrades</button> <button onclick="openTab('skins')">🎨 Skins</button> <button onclick="openTab('pets')">🐾 Pets</button> <button onclick="openTab('quests')">📜 Quests</button> <button onclick="openTab('clans')">🏰 Clans</button> <button onclick="openTab('friends')">👥 Friends</button> <button onclick="openTab('worlds')">🌎 Worlds</button> <button onclick="openTab('mechanics')">⚙️ Mechanics</button> <button onclick="openTab('achievements')">🏆 Achievements</button> <button onclick="openTab('shop')">🛒 Shop</button> <button onclick="openTab('stats')">📊 Stats</button> </nav> </header> <main> <section id="home"> <div class="grid"> <div class="card hero"> <div id="worldText" class="muted"></div> <div id="frog" aria-label="Click frog">🐸</div> <div class="big"><span id="clickPower">1</span> 🪙 / click</div> <p>Clicks: <span id="clicks">0</span></p> <button onclick="frogClick()">🐸 RIBBIT!</button> <button onclick="superJump()">💥 Super Jump</button> <div style="margin-top:12px"> <small>Level XP</small> <div class="bar"><div id="xpbar" class="fill"></div></div> <small id="xptext"></small> </div> </div> <div class="card"> <h2>🔥 Combo</h2> <p>Rapid clicks increase your multiplier.</p> <div class="big">x<span id="comboBig">1.00</span></div> <button onclick="frenzy()">🔥 Frenzy — 5 💎</button> <p id="frenzyText" class="muted"></p> </div> <div class="card"> <h2>🎁 Daily Reward</h2> <p id="dailyText"></p> <button id="dailyButton" onclick="daily()">Collect</button> </div> <div class="card"> <h2>📜 Activity</h2> <div id="log" class="log"></div> </div> </div> </section> <section id="upgrades" class="hidden"> <h1>⬆️ Upgrades</h1> <div id="upgradeList" class="grid"></div> </section> <section id="skins" class="hidden"> <h1>🎨 Skins</h1> <p class="muted">100 collectible frogs with unique multipliers.</p> <div id="skinList" class="grid"></div> </section> <section id="pets" class="hidden"> <h1>🐾 Pets</h1> <div id="petList" class="grid"></div> </section> <section id="quests" class="hidden"> <h1>📜 Quests</h1> <div id="questList" class="grid"></div> </section> <section id="clans" class="hidden"> <h1>🏰 Clans</h1> <div class="card"> <input id="clanInput" placeholder="Clan name"> <br><br> <button onclick="createClan()">Create Clan</button> </div> <br> <div id="clanList" class="grid"></div> </section> <section id="friends" class="hidden"> <h1>👥 Friends</h1> <div class="card"> <input id="friendInput" placeholder="Friend name"> <br><br> <button onclick="addFriend()">Add Friend</button> </div> <br> <div id="friendList" class="grid"></div> </section> <section id="worlds" class="hidden"> <h1>🌎 Worlds</h1> <div id="worldList" class="grid"></div> </section> <section id="mechanics" class="hidden"> <h1>⚙️ Game Mechanics</h1> <div class="notice"> This version contains <b>500 independently tracked mechanics</b>. Mechanics level up while you play and contribute to your global bonus. </div> <br> <div id="mechanicList" class="grid"></div> </section> <section id="achievements" class="hidden"> <h1>🏆 Achievements</h1> <div id="achievementList" class="grid"></div> </section> <section id="shop" class="hidden"> <h1>🛒 Shop</h1> <div id="shopList" class="grid"></div> </section> <section id="stats" class="hidden"> <h1>📊 Statistics</h1> <div id="statsList" class="grid"></div> <br> <div class="card"> <button onclick="saveGame()">💾 Save</button> <button onclick="exportSave()">📤 Export</button> <button onclick="importSave()">📥 Import</button> <button class="danger" onclick="resetGame()">🗑️ Reset</button> </div> </section> </main> <div id="toast" class="toast"></div> <script> "use strict";
+/* ==========================================================
+SAFE BIG NUMBER SYSTEM
+Keeps values as mantissa + exponent.
+
+Examples:
+1234 -> 1.234e3
+1e100000 -> still works
+999e999999 -> still works
+
+This prevents normal JavaScript numbers from becoming
+Infinity and avoids enormous string/array operations.
+========================================================== */
+
+class BigNum{
+constructor(m=0,e=0){
+this.m=Number(m);
+this.e=Number(e)||0;
+this.normalize();
+}
+normalize(){
+if(!Number.isFinite(this.m)){
+this.m=this.m>0?9.999999999999999:0;
+this.e=1e9;
+return this;
+}
+if(this.m===0){this.e=0;return this}
+const shift=Math.floor(Math.log10(Math.abs(this.m)));
+this.m/=Math.pow(10,shift);
+this.e+=shift;
+if(this.e>1e9)this.e=1e9;
+return this;
+}
+clone(){return new BigNum(this.m,this.e)}
+add(v){
+v=BN(v);
+if(this.m===0)return v.clone();
+if(v.m===0)return this.clone();
+const d=this.e-v.e;
+if(d>15)return this.clone();
+if(d<-15)return v.clone();
+if(d>=0)this.m+=v.mMath.pow(10,d);
+else{
+this.m=v.m+this.mMath.pow(10,-d);
+this.e=v.e;
+}
+return this.normalize();
+}
+sub(v){
+v=BN(v);
+return this.add(new BigNum(-v.m,v.e));
+}
+mul(v){
+v=BN(v);
+this.m*=v.m;
+this.e+=v.e;
+return this.normalize();
+}
+div(v){
+v=BN(v);
+if(v.m===0)return new BigNum(0);
+this.m/=v.m;
+this.e-=v.e;
+return this.normalize();
+}
+pow(n){
+if(this.m<=0)return new BigNum(0);
+const x=Math.log10(this.m)+this.e;
+return fromLog10(xn);
+}
+cmp(v){
+v=BN(v);
+if(this.m===0&&v.m===0)return 0;
+if(this.e!==v.e)return this.e>v.e?1:-1;
+return this.m===v.m?0:this.m>v.m?1:-1;
+}
+toNumber(){
+if(this.e>308)return Infinity;
+return this.mMath.pow(10,this.e);
+}
+toString(){
+if(this.m===0)return"0";
+if(this.e<4)return Math.floor(this.toNumber()).toLocaleString();
+if(this.e<6)return (this.toNumber()).toFixed(0);
+return this.m.toFixed(this.e<100?2:3)+"e"+Math.floor(this.e);
+}
+}
+
+function BN(x){
+if(x instanceof BigNum)return x;
+if(typeof x==="number")return new BigNum(x);
+if(typeof x==="string"){
+if(x.includes("e")){
+const p=x.split("e");
+return new BigNum(Number(p[0]),Number(p[1]));
+}
+return new BigNum(Number(x)||0);
+}
+if(x&&typeof x.m==="number")return new BigNum(x.m,x.e);
+return new BigNum(0);
+}
 
-<style>
-*{
-  box-sizing:border-box;
-}
-
-:root{
-  --green:#39a852;
-  --dark:#123c29;
-  --lime:#9cff62;
-  --water:#6bd5ed;
-  --panel:#f5fff1;
-  --gold:#ffd84d;
-}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  font-family:Arial,Helvetica,sans-serif;
-  color:#173b29;
-  background:
-    radial-gradient(circle at 20% 10%,#d9ffd0,transparent 30%),
-    linear-gradient(#8bdcf0,#dff8d4 55%,#b8e987);
-}
-
-button,input{
-  font:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-#app{
-  max-width:1500px;
-  margin:auto;
-  padding:14px;
-}
-
-/* =========================
-   TOP
-========================= */
-
-.top{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 15px;
-  border-radius:20px;
-  background:#ffffffdd;
-  backdrop-filter:blur(12px);
-  box-shadow:0 8px 30px #17462c20;
-  position:sticky;
-  top:8px;
-  z-index:100;
-}
-
-.logo{
-  font-size:23px;
-  font-weight:1000;
-}
-
-.stats{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.stat{
-  padding:8px 11px;
-  border-radius:12px;
-  background:#e9f8e5;
-  font-size:12px;
-  font-weight:900;
-}
-
-.stat b{
-  color:#16853a;
-}
-
-.main{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 390px;
-  gap:14px;
-  margin-top:14px;
-}
-
-@media(max-width:950px){
-  .main{
-    grid-template-columns:1fr;
-  }
-}
-
-/* =========================
-   PANELS
-========================= */
-
-.panel{
-  background:#ffffffde;
-  backdrop-filter:blur(12px);
-  border:1px solid #ffffff;
-  border-radius:22px;
-  padding:15px;
-  box-shadow:0 12px 40px #17462c20;
-  margin-bottom:14px;
-}
-
-.panel-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:10px;
-}
-
-.panel-title h2{
-  margin:0;
-  font-size:18px;
-}
-
-.small{
-  font-size:10px;
-  color:#708373;
-}
-
-/* =========================
-   POND
-========================= */
-
-.pond{
-  min-height:610px;
-  position:relative;
-  overflow:hidden;
-  border-radius:28px;
-  background:
-    radial-gradient(circle at 30% 30%,#ffffff55 0 3px,transparent 4px),
-    radial-gradient(circle at 70% 65%,#ffffff44 0 2px,transparent 3px),
-    linear-gradient(#65cfe9,#48b9d9 45%,#2c9b8d);
-  border:6px solid #237d62;
-  box-shadow:
-    inset 0 0 80px #155b4730,
-    0 20px 40px #194b3825;
-}
-
-.pond:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  opacity:.3;
-  background:
-    repeating-radial-gradient(
-      ellipse at 20% 80%,
-      transparent 0 35px,
-      #b7f5ff 36px 38px,
-      transparent 39px 80px
-    );
-}
-
-.lilypad{
-  position:absolute;
-  width:100px;
-  height:58px;
-  border-radius:70% 30% 70% 30%;
-  background:linear-gradient(135deg,#75d44d,#2e8d43);
-  box-shadow:inset -8px -8px 10px #145d3928;
-}
-
-.lilypad:after{
-  content:"";
-  position:absolute;
-  left:48%;
-  top:0;
-  height:100%;
-  width:3px;
-  background:#1e703d88;
-  transform:rotate(25deg);
-}
-
-.lp1{
-  left:7%;
-  bottom:13%;
-  transform:rotate(-10deg);
-}
-
-.lp2{
-  right:8%;
-  top:14%;
-  transform:rotate(18deg);
-}
-
-.lp3{
-  right:20%;
-  bottom:9%;
-  transform:scale(.7) rotate(-12deg);
-}
-
-.pond-text{
-  position:absolute;
-  left:20px;
-  top:18px;
-  z-index:2;
-  color:white;
-  text-shadow:0 2px 5px #154d55;
-}
-
-.pond-text h1{
-  margin:0;
-  font-size:28px;
-}
-
-.pond-text span{
-  font-size:11px;
-}
-
-/* =========================
-   FROG
-========================= */
-
-.frog-stage{
-  position:absolute;
-  left:50%;
-  top:52%;
-  width:300px;
-  height:300px;
-  transform:translate(-50%,-50%);
-  z-index:10;
-}
-
-.frog-shadow{
-  position:absolute;
-  width:225px;
-  height:45px;
-  left:38px;
-  bottom:18px;
-  border-radius:50%;
-  background:#063c3744;
-  filter:blur(7px);
-}
-
-.frog{
-  position:absolute;
-  left:10px;
-  top:20px;
-  width:280px;
-  height:245px;
-  cursor:pointer;
-  user-select:none;
-  transform-origin:center bottom;
-  filter:drop-shadow(0 22px 12px #003f3044);
-  animation:breathe 2.8s ease-in-out infinite;
-}
-
-@keyframes breathe{
-  0%,100%{
-    transform:translateY(0) scaleY(1);
-  }
-
-  50%{
-    transform:translateY(-5px) scaleY(1.025);
-  }
-}
-
-.frog.jump{
-  animation:jump .62s cubic-bezier(.15,.85,.2,1);
-}
-
-@keyframes jump{
-  0%{
-    transform:translateY(0) scale(1);
-  }
-
-  18%{
-    transform:translateY(5px) scale(1.08,.9);
-  }
-
-  45%{
-    transform:translateY(-115px) scale(.9,1.1) rotate(-4deg);
-  }
-
-  68%{
-    transform:translateY(-100px) scale(.9,1.1) rotate(4deg);
-  }
-
-  100%{
-    transform:translateY(0) scale(1);
-  }
-}
-
-.frog-body{
-  position:absolute;
-  left:30px;
-  top:70px;
-  width:220px;
-  height:160px;
-  border-radius:47%;
-  background:
-    radial-gradient(circle at 27% 25%,#e0ff9b 0 4%,transparent 5%),
-    radial-gradient(circle at 73% 28%,#caff8d 0 3%,transparent 4%),
-    radial-gradient(circle at 40% 75%,#1c743d 0 10%,transparent 11%),
-    linear-gradient(145deg,#91df55,#4db747 42%,#218344);
-  border:5px solid #176137;
-  box-shadow:
-    inset 14px 12px 25px #e1ff9d44,
-    inset -15px -25px 35px #003c234d;
-}
-
-.frog-body:before{
-  content:"";
-  position:absolute;
-  inset:12px;
-  border-radius:45%;
-  background:
-    radial-gradient(circle at 20% 30%,#1f773c 0 3px,transparent 4px),
-    radial-gradient(circle at 75% 40%,#2c883f 0 4px,transparent 5px),
-    radial-gradient(circle at 60% 70%,#257b3a 0 3px,transparent 4px),
-    radial-gradient(circle at 35% 65%,#2d883e 0 3px,transparent 4px);
-  opacity:.55;
-}
-
-.frog-belly{
-  position:absolute;
-  left:43px;
-  bottom:12px;
-  width:135px;
-  height:70px;
-  border-radius:50%;
-  background:radial-gradient(ellipse,#d5ed9b,#a8d968 55%,#71ad4e);
-  animation:belly 2.8s ease-in-out infinite;
-}
-
-@keyframes belly{
-  0%,100%{
-    transform:scale(1);
-  }
-
-  50%{
-    transform:scale(1.04,.97);
-  }
-}
-
-.eye-socket{
-  position:absolute;
-  top:12px;
-  width:85px;
-  height:82px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#78c84d,#287a3c);
-  border:5px solid #155b35;
-  box-shadow:
-    inset 0 8px 12px #dcff9633,
-    0 5px 9px #00281438;
-  z-index:5;
-}
-
-.eye-socket.left{
-  left:10px;
-}
-
-.eye-socket.right{
-  right:10px;
-}
-
-.real-eye{
-  position:absolute;
-  left:15px;
-  top:12px;
-  width:54px;
-  height:54px;
-  border-radius:50%;
-  background:
-    radial-gradient(
-      circle,
-      #050908 0 14%,
-      #101c0f 15% 27%,
-      #d9e996 28% 52%,
-      #789047 53% 75%,
-      #344b29 76%
-    );
-  border:3px solid #203d24;
-  box-shadow:inset 0 4px 6px #fff5;
-  transition:transform .08s linear;
-}
-
-.real-eye:before{
-  content:"";
-  position:absolute;
-  width:13px;
-  height:13px;
-  left:11px;
-  top:9px;
-  border-radius:50%;
-  background:white;
-  box-shadow:0 0 8px white;
-}
-
-.eye-lid{
-  position:absolute;
-  left:5px;
-  top:-2px;
-  width:75px;
-  height:25px;
-  border-radius:50%;
-  background:#4ba947;
-  z-index:8;
-  transform-origin:center top;
-  animation:blink 7s infinite;
-}
-
-@keyframes blink{
-  0%,91%,100%{
-    transform:scaleY(0);
-  }
-
-  94%,97%{
-    transform:scaleY(1);
-  }
-}
-
-.frog-nose{
-  position:absolute;
-  left:75px;
-  top:92px;
-  width:70px;
-  height:25px;
-  border-radius:50%;
-  background:linear-gradient(#78c84d66,transparent);
-  z-index:8;
-}
-
-.nostril{
-  position:absolute;
-  top:103px;
-  width:8px;
-  height:5px;
-  border-radius:50%;
-  background:#173e29;
-  z-index:10;
-}
-
-.nostril.left{
-  left:93px;
-}
-
-.nostril.right{
-  right:93px;
-}
-
-.real-mouth{
-  position:absolute;
-  left:48px;
-  bottom:27px;
-  width:125px;
-  height:48px;
-  border-bottom:7px solid #164b30;
-  border-radius:0 0 60% 60%;
-  z-index:12;
-}
-
-.real-mouth:after{
-  content:"";
-  position:absolute;
-  left:20px;
-  bottom:-3px;
-  width:85px;
-  height:5px;
-  border-radius:50%;
-  background:#78bf55;
-}
-
-.throat{
-  position:absolute;
-  left:75px;
-  bottom:3px;
-  width:75px;
-  height:43px;
-  border-radius:50%;
-  background:radial-gradient(ellipse,#72bb58,#3d9348);
-  animation:throat 2.8s ease-in-out infinite;
-}
-
-@keyframes throat{
-  0%,100%{
-    transform:scaleY(.82);
-  }
-
-  50%{
-    transform:scaleY(1.1);
-  }
-}
-
-.frog-foot{
-  position:absolute;
-  bottom:-15px;
-  width:105px;
-  height:70px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#5fc94c,#278b40);
-  border:4px solid #1d6638;
-  z-index:1;
-}
-
-.frog-foot.left{
-  left:-5px;
-  transform:rotate(12deg);
-}
-
-.frog-foot.right{
-  right:-5px;
-  transform:rotate(-12deg);
-}
-
-.frog-toe{
-  position:absolute;
-  bottom:-9px;
-  width:29px;
-  height:22px;
-  border-radius:50%;
-  background:#70d35c;
-  border:3px solid #226d3c;
-}
-
-.t1{
-  left:-10px;
-}
-
-.t2{
-  left:18px;
-}
-
-.t3{
-  right:18px;
-}
-
-.t4{
-  right:-10px;
-}
-
-/* =========================
-   SKINS
-========================= */
-
-.skin-golden .frog-body{
-  background:
-    radial-gradient(circle at 30% 20%,#fffbd1 0 4%,transparent 5%),
-    linear-gradient(145deg,#fff16b,#e5a51e,#a86b12);
-}
-
-.skin-blue .frog-body{
-  background:
-    radial-gradient(circle at 28% 30%,#eaffff 0 4%,transparent 5%),
-    linear-gradient(145deg,#82f5ff,#299bd0,#145d9d);
-}
-
-.skin-red .frog-body{
-  background:
-    radial-gradient(circle at 28% 25%,#ffd1c8 0 4%,transparent 5%),
-    linear-gradient(145deg,#ff8b76,#df3f40,#871e35);
-}
-
-.frog.poison .frog-body{
-  background:
-    radial-gradient(circle at 25% 25%,#ffe900 0 7px,transparent 8px),
-    radial-gradient(circle at 72% 31%,#ff304d 0 8px,transparent 9px),
-    radial-gradient(circle at 46% 70%,#16c9ff 0 7px,transparent 8px),
-    radial-gradient(circle at 78% 72%,#ffd400 0 5px,transparent 6px),
-    linear-gradient(145deg,#148550,#062f29);
-
-  box-shadow:
-    inset 14px 12px 25px #8cffdb33,
-    0 0 25px #20ff8266;
-}
-
-/* =========================
-   PARTICLES
-========================= */
-
-.particle{
-  position:fixed;
-  pointer-events:none;
-  z-index:999;
-  font-weight:1000;
-  color:#fff;
-  text-shadow:0 2px 5px #003c27;
-  animation:particle .8s ease-out forwards;
-}
-
-@keyframes particle{
-  to{
-    transform:
-      translate(var(--x),var(--y))
-      scale(.7);
-    opacity:0;
-  }
-}
-
-/* =========================
-   UI
-========================= */
-
-.tabs{
-  display:flex;
-  gap:5px;
-  margin-bottom:10px;
-}
-
-.tab{
-  flex:1;
-  padding:9px;
-  border-radius:11px;
-  background:#e2f2df;
-  color:#285637;
-  font-size:11px;
-  font-weight:900;
-  text-align:center;
-  cursor:pointer;
-}
-
-.tab.active{
-  background:#39a852;
-  color:white;
-}
-
-.tabpage{
-  display:none;
-}
-
-.tabpage.active{
-  display:block;
-}
-
-.action{
-  width:100%;
-  padding:11px;
-  margin:4px 0;
-  border-radius:11px;
-  background:#3ba952;
-  color:white;
-  font-weight:900;
-  box-shadow:0 3px 0 #267638;
-}
-
-.action:hover{
-  filter:brightness(1.06);
-}
-
-.action:active{
-  transform:translateY(2px);
-  box-shadow:0 1px 0 #267638;
-}
-
-.action.gold{
-  background:#e9b927;
-  box-shadow:0 3px 0 #a57910;
-}
-
-.action.red{
-  background:#d64a4a;
-  box-shadow:0 3px 0 #913333;
-}
-
-.action.dark{
-  background:#244e39;
-  box-shadow:0 3px 0 #153024;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  border:1px solid #bfd5c0;
-  border-radius:10px;
-  outline:none;
-  background:white;
-}
-
-input:focus{
-  border-color:#4caf50;
-  box-shadow:0 0 0 3px #4caf5020;
-}
-
-.progress{
-  height:11px;
-  overflow:hidden;
-  border-radius:20px;
-  background:#dceadc;
-}
-
-.progress>div{
-  height:100%;
-  width:0;
-  background:linear-gradient(90deg,#40b74e,#b2f34c);
-  transition:.3s;
-}
-
-.card{
-  padding:10px;
-  border-radius:13px;
-  background:#eef8eb;
-  margin:7px 0;
-  border:1px solid #d3e6d1;
-}
-
-.row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.mini{
-  font-size:10px;
-  color:#708171;
-}
-
-.log{
-  max-height:150px;
-  overflow:auto;
-  font:10px monospace;
-  color:#baf6bf;
-  background:#102d20;
-  padding:8px;
-  border-radius:10px;
-}
-
-.log div{
-  padding:3px 0;
-  border-bottom:1px solid #ffffff0c;
-}
-
-/* =========================
-   SKINS
-========================= */
-
-.skin{
-  padding:10px;
-  margin:6px 0;
-  border-radius:13px;
-  background:#eef8eb;
-  border:2px solid transparent;
-  cursor:pointer;
-}
-
-.skin:hover{
-  background:#e2f4df;
-}
-
-.skin.selected{
-  border-color:#43ad4e;
-}
-
-.skin.locked{
-  opacity:.5;
-}
-
-.skin-icon{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#55b74b;
-  font-size:25px;
-}
-
-/* =========================
-   FRIENDS
-========================= */
-
-.friend{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  padding:9px;
-  margin:5px 0;
-  background:#eef8eb;
-  border-radius:12px;
-}
-
-.avatar{
-  width:39px;
-  height:39px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#cdecc8;
-  font-size:22px;
-}
-
-.friend-info{
-  flex:1;
-  min-width:0;
-}
-
-.friend-name{
-  font-weight:900;
-  font-size:12px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.friend-status{
-  font-size:9px;
-  color:#748175;
-}
-
-.dot{
-  display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#4ad15b;
-}
-
-.dot.off{
-  background:#929d94;
-}
-
-/* =========================
-   CLAN
-========================= */
-
-.clan{
-  overflow:hidden;
-  border-radius:15px;
-  color:white;
-  background:
-    radial-gradient(circle at 20% 20%,#79e878,transparent 28%),
-    linear-gradient(135deg,#164f31,#2d8b51);
-  padding:15px;
-}
-
-.clan h3{
-  margin:0;
-}
-
-.clan-tag{
-  font-size:10px;
-  opacity:.7;
-}
-
-.clanbar{
-  height:9px;
-  background:#ffffff2b;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:8px;
-}
-
-.clanbar div{
-  height:100%;
-  background:#e8ff73;
-}
-
-.member{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  padding:8px;
-  border-bottom:1px solid #d7e5d5;
-}
-
-.member:last-child{
-  border:0;
-}
-
-.member .avatar{
-  width:34px;
-  height:34px;
-}
-
-.role{
-  margin-left:auto;
-  padding:4px 6px;
-  background:#e4f0e1;
-  border-radius:6px;
-  font-size:9px;
-  font-weight:900;
-}
-
-/* =========================
-   ACHIEVEMENTS
-========================= */
-
-.achievement{
-  padding:9px;
-  margin:5px 0;
-  border-radius:11px;
-  background:#edf8eb;
-}
-
-.achievement.done{
-  background:#d7f5ca;
-  border:1px solid #7dcc65;
-}
-
-/* =========================
-   TOAST
-========================= */
-
-#toast{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:1000;
-  padding:12px 16px;
-  border-radius:13px;
-  background:#163e2b;
-  color:white;
-  font-size:12px;
-  font-weight:900;
-  box-shadow:0 15px 40px #0004;
-  opacity:0;
-  transform:translateY(20px);
-  pointer-events:none;
-  transition:.25s;
-}
-
-#toast.show{
-  opacity:1;
-  transform:translateY(0);
-}
-</style>
-</head>
-
-<body>
-
-<div id="app">
-
-<header class="top">
-
-  <div class="logo">
-    🐸 Frog Clicker
-  </div>
-
-  <div class="stats">
-
-    <div class="stat">
-      🪙 <b id="coins">0</b>
-    </div>
-
-    <div class="stat">
-      ⭐ Lv <b id="level">1</b>
-    </div>
-
-    <div class="stat">
-      👆 <b id="clicks">0</b>
-    </div>
-
-    <div class="stat">
-      🏆 <b id="achievements">0</b>
-    </div>
-
-  </div>
-
-</header>
-
-
-<div class="main">
-
-<div>
-
-<section class="panel">
-
-  <div class="pond">
-
-    <div class="pond-text">
-      <h1>Your Pond</h1>
-      <span>Click your frog • Unlimited energy</span>
-    </div>
-
-    <div class="lilypad lp1"></div>
-    <div class="lilypad lp2"></div>
-    <div class="lilypad lp3"></div>
-
-    <div class="frog-stage">
-
-      <div class="frog-shadow"></div>
-
-      <div
-        id="frog"
-        class="frog"
-        onclick="clickFrog(event)"
-        aria-label="Click frog"
-        role="button"
-        tabindex="0"
-      >
-
-        <div class="frog-foot left">
-          <div class="frog-toe t1"></div>
-          <div class="frog-toe t2"></div>
-        </div>
-
-        <div class="frog-foot right">
-          <div class="frog-toe t3"></div>
-          <div class="frog-toe t4"></div>
-        </div>
-
-        <div class="frog-body">
-
-          <div class="frog-belly"></div>
-
-          <div class="eye-socket left">
-            <div class="real-eye"></div>
-            <div class="eye-lid"></div>
-          </div>
-
-          <div class="eye-socket right">
-            <div class="real-eye"></div>
-            <div class="eye-lid"></div>
-          </div>
-
-          <div class="frog-nose"></div>
-
-          <div class="nostril left"></div>
-          <div class="nostril right"></div>
-
-          <div class="real-mouth"></div>
-          <div class="throat"></div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<section class="panel">
-
-  <div class="panel-title">
-    <h2>⚡ Game Mechanics</h2>
-    <span class="small">No energy system</span>
-  </div>
-
-  <div class="card">
-
-    <div class="row">
-      <b>Click Power</b>
-      <b id="power">1</b>
-    </div>
-
-    <div class="mini">
-      Coins earned per frog click
-    </div>
-
-  </div>
-
-  <button
-    class="action"
-    onclick="upgradePower()"
-  >
-    🪙 Upgrade Click Power
-  </button>
-
-  <button
-    class="action gold"
-    onclick="buyAutoFrog()"
-  >
-    🤖 Buy Auto Frog
-  </button>
-
-  <button
-    class="action dark"
-    onclick="prestige()"
-  >
-    🌟 Pond Rebirth
-  </button>
-
-</section>
-
-</div>
-
-
-<div>
-
-<section class="panel">
-
-  <div class="tabs">
-
-    <div
-      class="tab active"
-      onclick="tab('skins',this)"
-    >
-      🎨 Skins
-    </div>
-
-    <div
-      class="tab"
-      onclick="tab('social',this)"
-    >
-      👥 Social
-    </div>
-
-    <div
-      class="tab"
-      onclick="tab('clan',this)"
-    >
-      🏰 Clan
-    </div>
-
-  </div>
-
-
-<div
-  id="skins"
-  class="tabpage active"
->
-
-  <div id="skinList"></div>
-
-</div>
-
-
-<div
-  id="social"
-  class="tabpage"
->
-
-  <h3>👥 Friends</h3>
-
-  <div class="row">
-
-    <input
-      id="friendInput"
-      placeholder="Frog username"
-      maxlength="24"
-    >
-
-    <button
-      class="action"
-      style="width:auto"
-      onclick="addFriend()"
-    >
-      Add
-    </button>
-
-  </div>
-
-  <div id="friends"></div>
-
-  <h3>📨 Requests</h3>
-
-  <div id="requests"></div>
-
-</div>
-
-
-<div
-  id="clan"
-  class="tabpage"
->
-
-  <div id="clanArea"></div>
-
-</div>
-
-</section>
-
-
-<section class="panel">
-
-  <div class="panel-title">
-    <h2>🏆 Achievements</h2>
-  </div>
-
-  <div id="achievementList"></div>
-
-</section>
-
-
-<section class="panel">
-
-  <div class="panel-title">
-    <h2>📜 Activity</h2>
-  </div>
-
-  <div id="log" class="log"></div>
-
-</section>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="toast"></div>
-
-
-<script>
-"use strict";
-
-/* ============================================================
-   CONSTANTS
-============================================================ */
-
-const SAVE_KEY = "frog_clicker_complete_v2";
-
-const DEFAULT_STATS = {
-  totalCoins: 0,
-  biggestClick: 0,
-  skinsBought: 0,
-  friendsAdded: 0,
-  clanDonations: 0,
-  clanCreated: 0
-};
-
-const DEFAULT_GAME = {
-  coins: 0,
-  clicks: 0,
-  level: 1,
-  xp: 0,
-  power: 1,
-  auto: 0,
-  rebirths: 0,
-  skin: "classic",
-  unlocked: {
-    classic: true
-  },
-  friends: [],
-  requests: [
-    {
-      name: "LilyHopper",
-      level: 12,
-      online: true
-    }
-  ],
-  clan: null,
-  achievements: {},
-  statistics: {
-    ...DEFAULT_STATS
-  }
-};
-
-const G = structuredClone
-  ? structuredClone(DEFAULT_GAME)
-  : JSON.parse(JSON.stringify(DEFAULT_GAME));
-
-
-/* ============================================================
-   SKINS
-============================================================ */
-
-const SKINS = [
-
-  {
-    id:"classic",
-    name:"Green Tree Frog",
-    price:0,
-    className:"",
-    icon:"🐸",
-    description:"Your original pond frog."
-  },
-
-  {
-    id:"golden",
-    name:"Golden Frog",
-    price:2500,
-    className:"skin-golden",
-    icon:"🌟",
-    description:"A rare golden frog."
-  },
-
-  {
-    id:"blue",
-    name:"Blue Glass Frog",
-    price:10000,
-    className:"skin-blue",
-    icon:"💎",
-    description:"A beautiful tropical blue frog."
-  },
-
-  {
-    id:"red",
-    name:"Red-Eyed Frog",
-    price:25000,
-    className:"skin-red",
-    icon:"👁️",
-    description:"A colorful rainforest frog."
-  },
-
-  {
-    id:"poison",
-    name:"Poison Dart Frog",
-    price:100000,
-    className:"poison",
-    icon:"☠️",
-    description:"The legendary final frog skin."
-  }
-
+function fromLog10(x){
+if(!Number.isFinite(x))return new BigNum(0);
+const e=Math.floor(x);
+return new BigNum(Math.pow(10,x-e),e);
+}
+
+function B(x){return BN(x)}
+
+function bAdd(a,b){return B(a).add(b)}
+function bMul(a,b){return B(a).mul(b)}
+function bCmp(a,b){return B(a).cmp(b)}
+function bZero(){return new BigNum(0)}
+
+function format(x){
+const n=B(x);
+if(n.m===0)return"0";
+if(n.e<3)return Math.floor(n.toNumber()).toLocaleString();
+if(n.e<6)return Math.floor(n.toNumber()).toLocaleString();
+return n.toString();
+}
+
+/* ==========================================================
+GAME DATA
+========================================================== */
+
+const worlds=[
+["🌿","Lily Pond",1],
+["🌲","Moss Forest",2],
+["🏔️","Frog Mountain",4],
+["🏜️","Desert Oasis",8],
+["🌊","Coral Marsh",15],
+["🌋","Volcano Bog",30],
+["🌙","Moon Pond",60],
+["☁️","Sky Swamp",125],
+["🪐","Frog Planet",300],
+["✨","Rainbow Dimension",1000],
+["🌌","Galaxy Pond",5000],
+["🌀","Time Swamp",25000]
 ];
 
-
-/* ============================================================
-   ACHIEVEMENTS
-============================================================ */
-
-const ACHIEVEMENTS = [
-
-  ["first","First Ribbit","Click the frog once."],
-
-  ["100","Tiny Hopper","Reach 100 clicks."],
-
-  ["1000","Pond Regular","Reach 1,000 clicks."],
-
-  ["10000","Frog Addict","Reach 10,000 clicks."],
-
-  ["million","Millionaire","Earn 1,000,000 coins."],
-
-  ["power10","Strong Legs","Reach 10 click power."],
-
-  ["power50","Mega Hopper","Reach 50 click power."],
-
-  ["auto","Lazy Frog","Buy an Auto Frog."],
-
-  ["rebirth","New Pond","Perform a rebirth."],
-
-  ["skins","Fashion Frog","Unlock another skin."],
-
-  ["poison","Toxic Beauty","Unlock the Poison Dart Frog."],
-
-  ["friend","Social Frog","Add a friend."],
-
-  ["clan","Clan Frog","Create a clan."],
-
-  ["donate","Team Player","Donate to your clan."
-
-  ]
-
+const pets=[
+["🪰","Fly",500,1.1],
+["🐛","Worm",2500,1.25],
+["🐌","Snail",10000,1.5],
+["🦋","Butterfly",50000,1.8],
+["🐢","Turtle",250000,2.2],
+["🦆","Duck",1000000,2.8],
+["🐍","Snake",5000000,3.5],
+["🐲","Baby Dragon",50000000,5]
 ];
 
+const skinNames=[
+"Classic","Golden","Blue","Ruby","Shadow","Wizard","Ninja","Robot","Ghost","Alien",
+"Rainbow","Galaxy","Dragon","Demon","King","Queen","Crystal","Toxic","Frozen","Solar",
+"Lunar","Storm","Cyber","Pirate","Knight","Samurai","Astronaut","Volcano","Ocean","Forest",
+"Candy","Chocolate","Lemon","Mint","Bubblegum","Fire","Ice","Thunder","Star","Comet",
+"Meteor","Neon","Pixel","Glitch","Ancient","Jungle","Swamp","Desert","Arctic","Royal",
+"Diamond","Emerald","Sapphire","Amethyst","Obsidian","Pearl","Copper","Bronze","Silver","Platinum",
+"Titan","Cosmic","Void","Spirit","Phantom","Vampire","Mummy","Zombie","Werefrog","Ninja Master",
+"Mega","Ultra","Omega","Alpha","Beta","Delta","Sigma","Turbo","Hyper","Quantum",
+"Time","Space","Dimension","Portal","Magic","Legend","Mythic","Celestial","Eternal","Infinite",
+"Champion","Emperor","Overlord","Godfrog","Superfrog","Mega King","Rainbow King","Final Frog","Secret Frog","Infinity Frog"
+];
 
-/* ============================================================
-   BASIC HELPERS
-============================================================ */
+const skinIcons=["🐸","🟢","🟡","🔵","🔴","🟣","🟠","⚪","⚫","🌈","🌌","🐲","👑","💎"];
 
-function $(id){
-  return document.getElementById(id);
+const skins=skinNames.map((name,i)=>({
+name,
+icon:skinIcons[i%skinIcons.length],
+cost:fromLog10(i===0?0:2.3+i*.095),
+mult:fromLog10(i*.055)
+}));
+
+/* 500 mechanics */
+const mechA=[
+"Rapid","Golden","Lucky","Mega","Tiny","Giant","Royal","Ancient","Mystic","Turbo",
+"Crystal","Shadow","Rainbow","Cosmic","Toxic","Frozen","Electric","Solar","Lunar","Emerald"
+];
+const mechB=[
+"Clicking","Coins","Combo","Criticals","XP","Levels","Skins","Pets","Friends","Clans",
+"Quests","Chests","Worlds","Events","Prestige","Rebirth","Offline","Automation","Gems","Treasures",
+"Exploration","Jumping","Tongue Power","Frog Energy","Luck"
+];
+
+const mechanics=Array.from({length:500},(_,i)=>({
+id:i,
+name:mechA[i%20]+" "+mechB[Math.floor(i/20)]+" "+(i+1),
+level:0,
+max:10+(i%20),
+weight:.002+(i%7)*.001
+}));
+
+/* ==========================================================
+DEFAULT STATE
+========================================================== */
+
+function defaultState(){
+return{
+coins:new BigNum(0),
+gems:new BigNum(25),
+xp:new BigNum(0),
+level:1,
+prestige:0,
+clicks:0,
+criticals:0,
+combo:1,
+bestCombo:1,
+selectedSkin:0,
+ownedSkins:[0],
+ownedPets:[],
+friends:[],
+clan:null,
+world:0,
+upgrades:{
+power:0,auto:0,crit:0,combo:0,luck:0,gems:0,offline:0,
+treasure:0,energy:0,swamp:0,royal:0,portal:0,mutation:0
+},
+mech:Array(500).fill(0),
+quests:{},
+achievements:{},
+dailyDay:-1,
+dailyStreak:0,
+frenzyUntil:0,
+eventUntil:0,
+eventMult:1,
+totalEarned:new BigNum(0),
+totalPlaySeconds:0,
+lastSave:Date.now(),
+totalPrestiges:0,
+chests:0,
+rebirths:0,
+energy:100,
+maxEnergy:100
+};
 }
 
-function finiteNumber(value,fallback=0){
+let game=defaultState();
 
-  const number =
-    Number(value);
+/* ==========================================================
+SERIALIZATION
+========================================================== */
 
-  return Number.isFinite(number)
-    ? number
-    : fallback;
+function encodeState(){
+const raw=JSON.stringify(game,(key,value)=>{
+if(value instanceof BigNum)return{__bn:1,m:value.m,e:value.e};
+return value;
+});
+return raw;
 }
 
-function positiveNumber(value,fallback=0){
-
-  const number =
-    finiteNumber(
-      value,
-      fallback
-    );
-
-  return number < 0
-    ? fallback
-    : number;
+function decodeState(raw){
+const obj=JSON.parse(raw,(key,value)=>{
+if(value&&value.__bn)return new BigNum(value.m,value.e);
+return value;
+});
+return obj;
 }
 
-function format(number){
-
-  number =
-    positiveNumber(
-      number,
-      0
-    );
-
-  if(number >= 1e15){
-    return (
-      number / 1e15
-    ).toFixed(2)+"Q";
-  }
-
-  if(number >= 1e12){
-    return (
-      number / 1e12
-    ).toFixed(2)+"T";
-  }
-
-  if(number >= 1e9){
-    return (
-      number / 1e9
-    ).toFixed(2)+"B";
-  }
-
-  if(number >= 1e6){
-    return (
-      number / 1e6
-    ).toFixed(2)+"M";
-  }
-
-  if(number >= 1e3){
-    return (
-      number / 1e3
-    ).toFixed(1)+"K";
-  }
-
-  return Math.floor(number)
-    .toLocaleString();
+function saveGame(silent=true){
+game.lastSave=Date.now();
+localStorage.setItem("frogFrenzyInfinity",encodeState());
+if(!silent)toast("💾 Saved!");
 }
 
-function clamp(value,min,max){
-
-  return Math.max(
-    min,
-    Math.min(
-      max,
-      value
-    )
-  );
+function loadGame(){
+const raw=localStorage.getItem("frogFrenzyInfinity");
+if(!raw)return;
+try{
+const loaded=decodeState(raw);
+const fresh=defaultState();
+game=Object.assign(fresh,loaded);
+game.upgrades=Object.assign(fresh.upgrades,loaded.upgrades||{});
+if(!Array.isArray(game.mech))game.mech=Array(500).fill(0);
+if(game.mech.length<500)game.mech.length=500;
+if(!Array.isArray(game.ownedSkins))game.ownedSkins=[0];
+if(!game.coins||!(game.coins instanceof BigNum))game.coins=B(game.coins||0);
+if(!game.gems||!(game.gems instanceof BigNum))game.gems=B(game.gems||0);
+if(!game.xp||!(game.xp instanceof BigNum))game.xp=B(game.xp||0);
+if(!game.totalEarned||!(game.totalEarned instanceof BigNum))game.totalEarned=B(game.totalEarned||0);
+}catch(e){
+console.warn("Save was invalid; starting fresh.",e);
+}
 }
 
-function escapeHTML(value){
+/* ==========================================================
+CORE CALCULATIONS
+========================================================== */
 
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+function upgradeCost(key){
+const bases={
+power:25,auto:100,crit:250,combo:400,luck:650,gems:1000,
+offline:1500,treasure:3000,energy:5000,swamp:9000,
+royal:20000,portal:50000,mutation:100000
+};
+return B(bases[key]||100).mul(B(Math.pow(1.65,game.upgrades[key]||0)));
 }
 
-
-/* ============================================================
-   TOAST
-============================================================ */
-
-let toastTimer = null;
-
-function toast(message){
-
-  const element =
-    $("toast");
-
-  if(!element)
-    return;
-
-  element.textContent =
-    message;
-
-  element.classList.add(
-    "show"
-  );
-
-  clearTimeout(
-    toastTimer
-  );
-
-  toastTimer =
-    setTimeout(
-      ()=>{
-        element.classList.remove(
-          "show"
-        );
-      },
-      2200
-    );
+function skinMultiplier(){
+return skins[game.selectedSkin].mult;
 }
 
-
-/* ============================================================
-   LOG
-============================================================ */
-
-function log(message){
-
-  const box =
-    $("log");
-
-  if(!box)
-    return;
-
-  const item =
-    document.createElement(
-      "div"
-    );
-
-  item.textContent =
-    new Date()
-      .toLocaleTimeString()+
-    " • "+
-    message;
-
-  box.prepend(item);
-
-  while(
-    box.children.length > 40
-  ){
-
-    box.lastElementChild.remove();
-
-  }
+function worldMultiplier(){
+return B(worlds[game.world][2]);
 }
 
-
-/* ============================================================
-   SAFE SAVE
-============================================================ */
-
-function save(){
-
-  try{
-
-    localStorage.setItem(
-      SAVE_KEY,
-      JSON.stringify(G)
-    );
-
-  }catch(error){
-
-    console.warn(
-      "Game could not be saved:",
-      error
-    );
-
-  }
+function petMultiplier(){
+let result=B(1);
+for(const id of game.ownedPets){
+if(pets[id])result.mul(B(pets[id][3]));
+}
+return result;
 }
 
-
-/* ============================================================
-   SAFE LOAD + MIGRATION
-============================================================ */
-
-function load(){
-
-  let raw = null;
-
-  try{
-
-    raw =
-      localStorage.getItem(
-        SAVE_KEY
-      );
-
-  }catch(error){
-
-    console.warn(
-      "localStorage unavailable:",
-      error
-    );
-
-    return;
-
-  }
-
-  if(!raw)
-    return;
-
-  try{
-
-    const saved =
-      JSON.parse(raw);
-
-    if(
-      !saved ||
-      typeof saved !== "object"
-    ){
-
-      return;
-
-    }
-
-    /*
-      Only copy known primitive/object
-      structures. This prevents a broken
-      save from replacing the whole game.
-    */
-
-    const numericFields = [
-      "coins",
-      "clicks",
-      "level",
-      "xp",
-      "power",
-      "auto",
-      "rebirths"
-    ];
-
-    numericFields.forEach(
-      key=>{
-
-        if(
-          Object.prototype.hasOwnProperty.call(
-            saved,
-            key
-          )
-        ){
-
-          const value =
-            finiteNumber(
-              saved[key],
-              G[key]
-            );
-
-          G[key] =
-            Math.max(
-              0,
-              value
-            );
-
-        }
-
-      }
-    );
-
-
-    if(
-      typeof saved.skin === "string" &&
-      SKINS.some(
-        skin=>
-          skin.id === saved.skin
-      )
-    ){
-
-      G.skin =
-        saved.skin;
-
-    }
-
-
-    if(
-      saved.unlocked &&
-      typeof saved.unlocked === "object"
-    ){
-
-      G.unlocked = {
-        classic:true
-      };
-
-      Object.keys(
-        saved.unlocked
-      ).forEach(
-        key=>{
-
-          if(
-            SKINS.some(
-              skin=>
-                skin.id === key
-            )
-          ){
-
-            G.unlocked[key] =
-              Boolean(
-                saved.unlocked[key]
-              );
-
-          }
-
-        }
-      );
-
-    }
-
-
-    if(
-      Array.isArray(
-        saved.friends
-      )
-    ){
-
-      G.friends =
-        saved.friends
-          .filter(
-            friend=>
-              friend &&
-              typeof friend.name === "string"
-          )
-          .slice(0,100)
-          .map(
-            friend=>({
-              name:
-                friend.name
-                  .slice(0,24),
-
-              level:
-                clamp(
-                  Math.floor(
-                    finiteNumber(
-                      friend.level,
-                      1
-                    )
-                  ),
-                  1,
-                  999999
-                ),
-
-              online:
-                Boolean(
-                  friend.online
-                )
-            })
-          );
-
-    }
-
-
-    if(
-      Array.isArray(
-        saved.requests
-      )
-    ){
-
-      G.requests =
-        saved.requests
-          .filter(
-            request=>
-              request &&
-              typeof request.name === "string"
-          )
-          .slice(0,100)
-          .map(
-            request=>({
-              name:
-                request.name
-                  .slice(0,24),
-
-              level:
-                clamp(
-                  Math.floor(
-                    finiteNumber(
-                      request.level,
-                      1
-                    )
-                  ),
-                  1,
-                  999999
-                ),
-
-              online:
-                Boolean(
-                  request.online
-                )
-            })
-          );
-
-    }
-
-
-    if(
-      saved.achievements &&
-      typeof saved.achievements === "object"
-    ){
-
-      G.achievements = {};
-
-      ACHIEVEMENTS.forEach(
-        achievement=>{
-
-          const id =
-            achievement[0];
-
-          if(
-            saved.achievements[id]
-          ){
-
-            G.achievements[id] =
-              true;
-
-          }
-
-        }
-      );
-
-    }
-
-
-    if(
-      saved.statistics &&
-      typeof saved.statistics === "object"
-    ){
-
-      G.statistics = {
-        ...DEFAULT_STATS
-      };
-
-      Object.keys(
-        DEFAULT_STATS
-      ).forEach(
-        key=>{
-
-          G.statistics[key] =
-            positiveNumber(
-              saved.statistics[key],
-              DEFAULT_STATS[key]
-            );
-
-        }
-      );
-
-    }
-
-
-    if(
-      saved.clan &&
-      typeof saved.clan === "object"
-    ){
-
-      if(
-        typeof saved.clan.name === "string" &&
-        typeof saved.clan.tag === "string"
-      ){
-
-        G.clan = {
-
-          name:
-            saved.clan.name
-              .slice(0,30),
-
-          tag:
-            saved.clan.tag
-              .slice(0,5)
-              .toUpperCase(),
-
-          level:
-            Math.max(
-              1,
-              Math.floor(
-                finiteNumber(
-                  saved.clan.level,
-                  1
-                )
-              )
-            ),
-
-          xp:
-            positiveNumber(
-              saved.clan.xp,
-              0
-            ),
-
-          members:
-            Array.isArray(
-              saved.clan.members
-            )
-              ? saved.clan.members
-                  .filter(
-                    member=>
-                      member &&
-                      typeof member.name==="string"
-                  )
-                  .slice(0,50)
-              : [],
-
-          feed:
-            Array.isArray(
-              saved.clan.feed
-            )
-              ? saved.clan.feed
-                  .filter(
-                    item=>
-                      typeof item==="string"
-                  )
-                  .slice(0,30)
-              : []
-
-        };
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.warn(
-      "Save was corrupted. Starting with safe defaults.",
-      error
-    );
-
-  }
-
-  repairGame();
+function mechanicMultiplier(){
+/*
+Do NOT loop through huge objects on every click.
+The 500 mechanic levels are periodically summarized.
+*/
+return game._mechMultiplier||B(1);
 }
 
-
-/* ============================================================
-   REPAIR GAME
-============================================================ */
-
-function repairGame(){
-
-  G.coins =
-    positiveNumber(
-      G.coins,
-      0
-    );
-
-  G.clicks =
-    Math.floor(
-      positiveNumber(
-        G.clicks,
-        0
-      )
-    );
-
-  G.level =
-    Math.max(
-      1,
-      Math.floor(
-        positiveNumber(
-          G.level,
-          1
-        )
-      )
-    );
-
-  G.xp =
-    positiveNumber(
-      G.xp,
-      0
-    );
-
-  G.power =
-    Math.max(
-      1,
-      Math.floor(
-        positiveNumber(
-          G.power,
-          1
-        )
-      )
-    );
-
-  G.auto =
-    Math.floor(
-      positiveNumber(
-        G.auto,
-        0
-      )
-    );
-
-  G.rebirths =
-    Math.floor(
-      positiveNumber(
-        G.rebirths,
-        0
-      )
-    );
-
-
-  if(
-    !G.unlocked ||
-    typeof G.unlocked !== "object"
-  ){
-
-    G.unlocked = {};
-
-  }
-
-  G.unlocked.classic = true;
-
-
-  if(
-    !SKINS.some(
-      skin=>
-        skin.id === G.skin
-    )
-  ){
-
-    G.skin =
-      "classic";
-
-  }
-
-
-  if(
-    !G.friends ||
-    !Array.isArray(
-      G.friends
-    )
-  ){
-
-    G.friends = [];
-
-  }
-
-
-  if(
-    !G.requests ||
-    !Array.isArray(
-      G.requests
-    )
-  ){
-
-    G.requests = [];
-
-  }
-
-
-  if(
-    !G.achievements ||
-    typeof G.achievements !== "object"
-  ){
-
-    G.achievements = {};
-
-  }
-
-
-  if(
-    !G.statistics ||
-    typeof G.statistics !== "object"
-  ){
-
-    G.statistics = {};
-
-  }
-
-
-  Object.keys(
-    DEFAULT_STATS
-  ).forEach(
-    key=>{
-
-      G.statistics[key] =
-        positiveNumber(
-          G.statistics[key],
-          DEFAULT_STATS[key]
-        );
-
-    }
-  );
-
-
-  if(
-    G.clan &&
-    typeof G.clan === "object"
-  ){
-
-    G.clan.level =
-      Math.max(
-        1,
-        Math.floor(
-          positiveNumber(
-            G.clan.level,
-            1
-          )
-        )
-      );
-
-    G.clan.xp =
-      positiveNumber(
-        G.clan.xp,
-        0
-      );
-
-    if(
-      !Array.isArray(
-        G.clan.members
-      )
-    ){
-
-      G.clan.members = [];
-
-    }
-
-    if(
-      !Array.isArray(
-        G.clan.feed
-      )
-    ){
-
-      G.clan.feed = [];
-
-    }
-
-  }
-
+function rebuildMechanicCache(){
+let bonus=1;
+for(let i=0;i<500;i++){
+const lv=game.mech[i]||0;
+bonus+=lv*mechanics[i].weight;
+}
+game._mechMultiplier=B(bonus);
 }
 
-
-/* ============================================================
-   XP
-============================================================ */
-
-function xpRequired(){
-
-  return Math.floor(
-    100 *
-    Math.pow(
-      1.35,
-      G.level - 1
-    )
-  );
-
+function frenzyMultiplier(){
+return game.frenzyUntil>Date.now()?B(3):B(1);
 }
 
-function addXP(amount){
-
-  amount =
-    positiveNumber(
-      amount,
-      0
-    );
-
-  G.xp += amount;
-
-  let safety = 0;
-
-  while(
-    G.xp >= xpRequired() &&
-    safety < 1000
-  ){
-
-    G.xp -= xpRequired();
-
-    G.level++;
-
-    G.power++;
-
-    toast(
-      "⭐ Level "+G.level+"!"
-    );
-
-    log(
-      "Reached level "+
-      G.level
-    );
-
-    safety++;
-
-  }
-
+function eventMultiplier(){
+return game.eventUntil>Date.now()?B(game.eventMult||1):B(1);
 }
 
-
-/* ============================================================
-   CLICKING
-============================================================ */
-
-function clickFrog(event){
-
-  const earned =
-    Math.max(
-      1,
-      Math.floor(
-        finiteNumber(
-          G.power,
-          1
-        )
-      )
-    );
-
-  G.coins += earned;
-
-  G.clicks++;
-
-  G.statistics.totalCoins +=
-    earned;
-
-  G.statistics.biggestClick =
-    Math.max(
-      G.statistics.biggestClick,
-      earned
-    );
-
-  addXP(
-    Math.max(
-      1,
-      Math.ceil(
-        earned / 3
-      )
-    )
-  );
-
-  animateFrog();
-
-  if(event){
-
-    particle(
-      event.clientX,
-      event.clientY,
-      "+"+format(earned)
-    );
-
-  }
-
-  checkAchievements();
-
-  update();
-
-  save();
-
+function prestigeMultiplier(){
+return B(1+game.prestige*.25);
 }
 
+function globalMultiplier(){
+return B(1)
+.mul(worldMultiplier())
+.mul(skinMultiplier())
+.mul(petMultiplier())
+.mul(prestigeMultiplier())
+.mul(mechanicMultiplier())
+.mul(frenzyMultiplier())
+.mul(eventMultiplier())
+.mul(B(1+game.upgrades.swamp*.04))
+.mul(B(1+game.upgrades.royal*.07))
+.mul(B(1+game.upgrades.mutation*.1));
+}
 
-/* ============================================================
-   KEYBOARD ACCESS
-============================================================ */
+function clickPower(){
+return B(1)
+.mul(B(1+game.upgrades.power*.12))
+.mul(B(1+game.upgrades.combo*.05))
+.mul(globalMultiplier());
+}
 
-$("frog").addEventListener(
-  "keydown",
-  event=>{
+function autoPerSecond(){
+return clickPower()
+.mul(B(game.upgrades.auto*.4))
+.mul(B(1+game.upgrades.energy*.05));
+}
 
-    if(
-      event.key === "Enter" ||
-      event.key === " "
-    ){
+function criticalChance(){
+return Math.min(.75,.05+game.upgrades.crit*.025+game.upgrades.luck*.01);
+}
 
-      event.preventDefault();
+/* ==========================================================
+ECONOMY
+========================================================== */
 
-      clickFrog({
-        clientX:
-          window.innerWidth/2,
+function earn(amount){
+amount=B(amount);
+game.coins=game.coins.add(amount);
+game.totalEarned=game.totalEarned.add(amount);
+game.xp=game.xp.add(amount.mul(.005));
+levelCheck();
+}
 
-        clientY:
-          window.innerHeight/2
-      });
+function spend(amount){
+amount=B(amount);
+if(game.coins.cmp(amount)<0)return false;
+game.coins=game.coins.sub(amount);
+return true;
+}
 
-    }
+function levelCheck(){
+let safety=0;
+while(game.xp.cmp(B(100game.level))>=0&&safety++<1000){
+game.xp=game.xp.sub(B(100game.level));
+game.level++;
+game.gems=game.gems.add(B(5+Math.floor(game.level/5)));
+log("⭐ Level "+game.level+" reached!");
+}
+}
 
-  }
+/* ==========================================================
+CLICKING
+========================================================== */
+
+let lastClickTime=0;
+
+function frogClick(){
+const now=performance.now();
+
+if(now-lastClickTime<900){
+game.combo=Math.min(100,game.combo+.08+game.upgrades.combo*.01);
+}else{
+game.combo=Math.max(1,game.combo*.7);
+}
+lastClickTime=now;
+game.bestCombo=Math.max(game.bestCombo,game.combo);
+game.clicks++;
+
+let amount=clickPower().mul(B(game.combo));
+
+if(Math.random()<criticalChance()){
+amount=amount.mul(10);
+game.criticals++;
+floatText("💥 CRIT!");
+}
+
+if(Math.random()<.005+game.upgrades.luck*.002){
+game.gems=game.gems.add(1);
+}
+
+earn(amount);
+gainMechanic(Math.floor(Math.random()*500),1);
+
+const frog=document.getElementById("frog");
+frog.classList.remove("pop");
+void frog.offsetWidth;
+frog.classList.add("pop");
+
+if(Math.random()<.0008)randomEvent();
+
+updateFast();
+}
+
+function superJump(){
+const cost=B(10);
+if(game.gems.cmp(cost)<0){
+toast("Need 10 💎");
+return;
+}
+game.gems=game.gems.sub(cost);
+const amount=clickPower().mul(50);
+earn(amount);
+game.criticals++;
+toast("💥 SUPER JUMP +"+format(amount));
+}
+
+function frenzy(){
+const cost=B(5);
+if(game.gems.cmp(cost)<0){
+toast("Need 5 💎");
+return;
+}
+game.gems=game.gems.sub(cost);
+game.frenzyUntil=Date.now()+20000;
+toast("🔥 3x FRENZY ACTIVATED!");
+}
+
+/* ==========================================================
+MECHANICS
+========================================================== */
+
+function gainMechanic(index,amount){
+index=Math.max(0,Math.min(499,index|0));
+game.mech[index]=Math.min(
+mechanics[index].max,
+(game.mech[index]||0)+amount
 );
-
-
-/* ============================================================
-   FROG ANIMATION
-============================================================ */
-
-function animateFrog(){
-
-  const frog =
-    $("frog");
-
-  if(!frog)
-    return;
-
-  frog.classList.remove(
-    "jump"
-  );
-
-  void frog.offsetWidth;
-
-  frog.classList.add(
-    "jump"
-  );
-
-  setTimeout(
-    ()=>{
-      frog.classList.remove(
-        "jump"
-      );
-    },
-    700
-  );
-
 }
 
+/*
+Instead of calculating all 500 mechanics on every click,
+update their cache only twice per second.
+This is a major performance fix.
+*/
+let mechanicCacheTimer=0;
 
-/* ============================================================
-   PARTICLES
-============================================================ */
-
-function particle(x,y,text){
-
-  const p =
-    document.createElement(
-      "div"
-    );
-
-  p.className =
-    "particle";
-
-  p.textContent =
-    text;
-
-  p.style.left =
-    x+"px";
-
-  p.style.top =
-    y+"px";
-
-  p.style.setProperty(
-    "--x",
-    (Math.random()*80-40)+"px"
-  );
-
-  p.style.setProperty(
-    "--y",
-    (-70-Math.random()*80)+"px"
-  );
-
-  document.body.appendChild(
-    p
-  );
-
-  setTimeout(
-    ()=>{
-      p.remove();
-    },
-    850
-  );
-
+function updateMechanics(){
+let changed=false;
+for(let i=0;i<500;i++){
+if(game.mech[i]<mechanics[i].max&&Math.random()<mechanics[i].weight*.08){
+game.mech[i]++;
+changed=true;
+}
+}
+if(changed)rebuildMechanicCache();
 }
 
+/* ==========================================================
+UPGRADES
+========================================================== */
 
-/* ============================================================
-   UPGRADES
-============================================================ */
-
-function powerUpgradeCost(){
-
-  return Math.floor(
-    50 *
-    Math.pow(
-      1.55,
-      Math.max(
-        0,
-        G.power-1
-      )
-    )
-  );
-
+function buyUpgrade(key){
+const cost=upgradeCost(key);
+if(!spend(cost)){
+toast("Not enough coins!");
+return;
+}
+game.upgrades[key]++;
+rebuildMechanicCache();
+toast("⬆️ "+key+" upgraded!");
+renderUpgrades();
+updateFast();
 }
 
-function autoCost(){
+/* ==========================================================
+SKINS
+========================================================== */
 
-  return Math.floor(
-    1000 *
-    Math.pow(
-      1.7,
-      Math.max(
-        0,
-        G.auto
-      )
-    )
-  );
+function buySkin(i){
+const s=skins[i];
 
+if(game.ownedSkins.includes(i)){
+game.selectedSkin=i;
+toast("🎨 Equipped "+s.name);
+renderSkins();
+updateFast();
+return;
 }
 
-
-function upgradePower(){
-
-  const cost =
-    powerUpgradeCost();
-
-  if(
-    G.coins < cost
-  ){
-
-    toast(
-      "You need "+
-      format(cost)+
-      " coins."
-    );
-
-    return;
-
-  }
-
-  G.coins -= cost;
-
-  G.power++;
-
-  toast(
-    "💪 Click Power: "+
-    G.power
-  );
-
-  log(
-    "Upgraded Click Power to "+
-    G.power
-  );
-
-  checkAchievements();
-
-  update();
-
-  save();
-
+if(!spend(s.cost)){
+toast("Need "+format(s.cost)+" coins");
+return;
 }
 
-
-function buyAutoFrog(){
-
-  const cost =
-    autoCost();
-
-  if(
-    G.coins < cost
-  ){
-
-    toast(
-      "You need "+
-      format(cost)+
-      " coins."
-    );
-
-    return;
-
-  }
-
-  G.coins -= cost;
-
-  G.auto++;
-
-  toast(
-    "🤖 Auto Frog purchased!"
-  );
-
-  log(
-    "Bought Auto Frog #"+
-    G.auto
-  );
-
-  checkAchievements();
-
-  update();
-
-  save();
-
+game.ownedSkins.push(i);
+game.selectedSkin=i;
+toast("🎨 Unlocked "+s.name+"!");
+renderSkins();
+updateFast();
 }
 
+/* ==========================================================
+PETS
+========================================================== */
 
-/* ============================================================
-   AUTO FROGS
-============================================================ */
-
-setInterval(
-  ()=>{
-
-    if(G.auto <= 0)
-      return;
-
-    const earned =
-      Math.max(
-        1,
-        G.auto *
-        Math.max(
-          1,
-          G.power
-        )
-      );
-
-    G.coins += earned;
-
-    G.statistics.totalCoins +=
-      earned;
-
-    addXP(
-      Math.max(
-        1,
-        Math.floor(
-          G.auto / 2
-        )
-      )
-    );
-
-    checkAchievements();
-
-    update();
-
-    save();
-
-  },
-  1000
-);
-
-
-/* ============================================================
-   REBIRTH
-============================================================ */
-
-function prestige(){
-
-  if(
-    G.level < 25
-  ){
-
-    toast(
-      "Reach level 25 first."
-    );
-
-    return;
-
-  }
-
-  const confirmed =
-    window.confirm(
-      "Rebirth resets coins, level, power and Auto Frogs, but increases your permanent starting power. Continue?"
-    );
-
-  if(!confirmed)
-    return;
-
-  G.rebirths++;
-
-  G.coins = 0;
-
-  G.level = 1;
-
-  G.xp = 0;
-
-  G.power =
-    1 + G.rebirths;
-
-  G.auto = 0;
-
-  toast(
-    "🌟 Pond reborn!"
-  );
-
-  log(
-    "Performed Pond Rebirth #"+
-    G.rebirths
-  );
-
-  checkAchievements();
-
-  update();
-
-  save();
-
+function buyPet(i){
+if(game.ownedPets.includes(i)){
+toast("Already owned!");
+return;
+}
+if(!spend(B(pets[i][2]))){
+toast("Not enough coins!");
+return;
+}
+game.ownedPets.push(i);
+toast("🐾 "+pets[i][1]+" joined!");
+updateFast();
+renderPets();
 }
 
+/* ==========================================================
+WORLDS
+========================================================== */
 
-/* ============================================================
-   SKINS
-============================================================ */
-
-function renderSkins(){
-
-  const box =
-    $("skinList");
-
-  if(!box)
-    return;
-
-  box.innerHTML =
-    SKINS.map(
-      skin=>{
-
-        const unlocked =
-          Boolean(
-            G.unlocked[
-              skin.id
-            ]
-          );
-
-        const selected =
-          G.skin === skin.id;
-
-        return `
-
-          <div
-            class="skin
-              ${selected?"selected":""}
-              ${unlocked?"":"locked"}"
-            onclick="selectSkin('${skin.id}')"
-          >
-
-            <div class="row">
-
-              <div
-                style="
-                  display:flex;
-                  gap:9px;
-                  align-items:center
-                "
-              >
-
-                <div class="skin-icon">
-                  ${skin.icon}
-                </div>
-
-                <div>
-
-                  <b>
-                    ${escapeHTML(
-                      skin.name
-                    )}
-                  </b>
-
-                  <div class="mini">
-                    ${escapeHTML(
-                      skin.description
-                    )}
-                  </div>
-
-                </div>
-
-              </div>
-
-              <b>
-                ${
-                  unlocked
-                    ? "✓"
-                    : format(skin.price)
-                }
-              </b>
-
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
+function worldCost(i){
+if(i===0)return B(0);
+return fromLog10(3.7+(i-1)*.55);
 }
 
+function travel(i){
+if(i===game.world)return;
 
-function selectSkin(id){
-
-  const skin =
-    SKINS.find(
-      item=>
-        item.id === id
-    );
-
-  if(!skin)
-    return;
-
-  if(
-    !G.unlocked[id]
-  ){
-
-    if(
-      G.coins < skin.price
-    ){
-
-      toast(
-        "You need "+
-        format(skin.price)+
-        " coins."
-      );
-
-      return;
-
-    }
-
-    G.coins -=
-      skin.price;
-
-    G.unlocked[id] =
-      true;
-
-    G.statistics.skinsBought++;
-
-    toast(
-      "🎨 Unlocked "+
-      skin.name
-    );
-
-    log(
-      "Unlocked "+
-      skin.name
-    );
-
-  }
-
-  G.skin = id;
-
-  applySkin();
-
-  renderSkins();
-
-  checkAchievements();
-
-  update();
-
-  save();
-
+const required=i*10+1;
+if(game.level<required){
+toast("Need level "+required);
+return;
 }
 
-
-function applySkin(){
-
-  const frog =
-    $("frog");
-
-  if(!frog)
-    return;
-
-  frog.className =
-    "frog";
-
-  const skin =
-    SKINS.find(
-      item=>
-        item.id === G.skin
-    );
-
-  if(
-    skin &&
-    skin.className
-  ){
-
-    frog.classList.add(
-      skin.className
-    );
-
-  }
-
+const cost=worldCost(i);
+if(!spend(cost)){
+toast("Need "+format(cost)+" coins");
+return;
 }
 
-
-/* ============================================================
-   TABS
-============================================================ */
-
-function tab(id,element){
-
-  document
-    .querySelectorAll(
-      ".tab"
-    )
-    .forEach(
-      item=>
-        item.classList.remove(
-          "active"
-        )
-    );
-
-  document
-    .querySelectorAll(
-      ".tabpage"
-    )
-    .forEach(
-      item=>
-        item.classList.remove(
-          "active"
-        )
-    );
-
-  if(element){
-
-    element.classList.add(
-      "active"
-    );
-
-  }
-
-  const page =
-    $(id);
-
-  if(page){
-
-    page.classList.add(
-      "active"
-    );
-
-  }
-
+game.world=i;
+toast("🌎 "+worlds[i][1]);
+updateFast();
+renderWorlds();
 }
 
+/* ==========================================================
+FRIENDS
+========================================================== */
 
-/* ============================================================
-   FRIENDS
-============================================================ */
+function safeText(s){
+return String(s).replace(/[&<>"']/g,x=>({
+"&":"&","<":"<",">":">",'"':""","'":"'"
+}[x]));
+}
 
 function addFriend(){
-
-  const input =
-    $("friendInput");
-
-  if(!input)
-    return;
-
-  const name =
-    input.value
-      .trim()
-      .slice(0,24);
-
-  if(!name){
-
-    toast(
-      "Enter a frog username."
-    );
-
-    return;
-
-  }
-
-  if(
-    G.friends.some(
-      friend=>
-        friend.name
-          .toLowerCase() ===
-        name.toLowerCase()
-    )
-  ){
-
-    toast(
-      "Already your friend."
-    );
-
-    return;
-
-  }
-
-  G.friends.push({
-
-    name:name,
-
-    level:
-      1 +
-      Math.floor(
-        Math.random()*30
-      ),
-
-    online:
-      Math.random() > .3
-
-  });
-
-  G.statistics.friendsAdded++;
-
-  input.value = "";
-
-  renderFriends();
-
-  checkAchievements();
-
-  save();
-
-  toast(
-    "👥 Added "+name
-  );
-
+const input=document.getElementById("friendInput");
+const name=input.value.trim().slice(0,30);
+if(!name)return;
+if(game.friends.includes(name)){
+toast("Already friends!");
+return;
+}
+game.friends.push(name);
+input.value="";
+toast("👥 Friend added!");
+renderFriends();
+saveGame();
 }
 
-
-function renderFriends(){
-
-  const box =
-    $("friends");
-
-  if(!box)
-    return;
-
-  if(
-    G.friends.length === 0
-  ){
-
-    box.innerHTML =
-      `<div class="card">
-        No friends yet.
-      </div>`;
-
-    return;
-
-  }
-
-  box.innerHTML =
-    G.friends.map(
-      (friend,index)=>`
-
-        <div class="friend">
-
-          <div class="avatar">
-            🐸
-          </div>
-
-          <div class="friend-info">
-
-            <div class="friend-name">
-              ${escapeHTML(
-                friend.name
-              )}
-            </div>
-
-            <div class="friend-status">
-
-              <span
-                class="dot
-                ${friend.online?"":"off"}"
-              ></span>
-
-              ${
-                friend.online
-                  ? "Online"
-                  : "Offline"
-              }
-
-              • Level ${friend.level}
-
-            </div>
-
-          </div>
-
-          <button
-            class="action red"
-            style="width:auto"
-            onclick="removeFriend(${index})"
-          >
-            ×
-          </button>
-
-        </div>
-
-      `
-    ).join("");
-
+function removeFriend(i){
+game.friends.splice(i,1);
+renderFriends();
+saveGame();
 }
 
-
-function removeFriend(index){
-
-  if(
-    !Number.isInteger(index) ||
-    index < 0 ||
-    index >= G.friends.length
-  ){
-
-    return;
-
-  }
-
-  const name =
-    G.friends[index].name;
-
-  G.friends.splice(
-    index,
-    1
-  );
-
-  renderFriends();
-
-  save();
-
-  toast(
-    name+
-    " removed."
-  );
-
-}
-
-
-function renderRequests(){
-
-  const box =
-    $("requests");
-
-  if(!box)
-    return;
-
-  if(
-    G.requests.length === 0
-  ){
-
-    box.innerHTML =
-      `<div class="card">
-        No requests.
-      </div>`;
-
-    return;
-
-  }
-
-  box.innerHTML =
-    G.requests.map(
-      (request,index)=>`
-
-        <div class="friend">
-
-          <div class="avatar">
-            🐸
-          </div>
-
-          <div class="friend-info">
-
-            <div class="friend-name">
-              ${escapeHTML(
-                request.name
-              )}
-            </div>
-
-            <div class="friend-status">
-              Level ${request.level}
-            </div>
-
-          </div>
-
-          <button
-            class="action"
-            style="width:auto"
-            onclick="acceptRequest(${index})"
-          >
-            ✓
-          </button>
-
-        </div>
-
-      `
-    ).join("");
-
-}
-
-
-function acceptRequest(index){
-
-  if(
-    !Number.isInteger(index) ||
-    index < 0 ||
-    index >= G.requests.length
-  ){
-
-    return;
-
-  }
-
-  const request =
-    G.requests[index];
-
-  if(
-    G.friends.some(
-      friend=>
-        friend.name.toLowerCase() ===
-        request.name.toLowerCase()
-    )
-  ){
-
-    G.requests.splice(
-      index,
-      1
-    );
-
-    renderRequests();
-
-    save();
-
-    return;
-
-  }
-
-  G.friends.push({
-    name:
-      request.name,
-    level:
-      request.level,
-    online:
-      request.online
-  });
-
-  G.requests.splice(
-    index,
-    1
-  );
-
-  renderFriends();
-  renderRequests();
-
-  checkAchievements();
-
-  save();
-
-  toast(
-    "👥 Friend accepted!"
-  );
-
-}
-
-
-/* ============================================================
-   CLANS
-============================================================ */
-
-function clanXPRequired(){
-
-  if(!G.clan)
-    return 1000;
-
-  return Math.floor(
-    1000 *
-    Math.pow(
-      1.45,
-      Math.max(
-        0,
-        G.clan.level - 1
-      )
-    )
-  );
-
-}
-
+/* ==========================================================
+CLANS
+========================================================== */
 
 function createClan(){
-
-  if(G.clan){
-
-    toast(
-      "You already have a clan."
-    );
-
-    return;
-
-  }
-
-  const nameInput =
-    $("newClanName");
-
-  const tagInput =
-    $("newClanTag");
-
-  if(
-    !nameInput ||
-    !tagInput
-  ){
-
-    return;
-
-  }
-
-  const name =
-    nameInput.value
-      .trim()
-      .slice(0,30);
-
-  const tag =
-    tagInput.value
-      .trim()
-      .toUpperCase()
-      .replace(
-        /[^A-Z0-9]/g,
-        ""
-      )
-      .slice(0,5);
-
-  if(
-    !name ||
-    !tag
-  ){
-
-    toast(
-      "Enter a clan name and tag."
-    );
-
-    return;
-
-  }
-
-  G.clan = {
-
-    name:name,
-
-    tag:tag,
-
-    level:1,
-
-    xp:0,
-
-    members:[
-
-      {
-        name:"You",
-        role:"Leader",
-        level:G.level
-      },
-
-      {
-        name:"LilyHopper",
-        role:"Officer",
-        level:17
-      },
-
-      {
-        name:"BogMaster",
-        role:"Member",
-        level:11
-      },
-
-      {
-        name:"TinyTadpole",
-        role:"Member",
-        level:6
-      }
-
-    ],
-
-    feed:[
-      "You created the clan."
-    ]
-
-  };
-
-  G.statistics.clanCreated++;
-
-  checkAchievements();
-
-  renderClan();
-
-  save();
-
-  toast(
-    "🏰 Clan created!"
-  );
-
+if(game.clan){
+toast("You already have a clan!");
+return;
 }
 
+const input=document.getElementById("clanInput");
+const name=(input.value.trim()||"Ribbit Squad").slice(0,30);
+
+game.clan={
+name,
+level:1,
+xp:B(0),
+members:1,
+donated:B(0)
+};
+
+input.value="";
+toast("🏰 Clan created!");
+renderClan();
+saveGame();
+}
 
 function donateClan(){
+if(!game.clan)return;
 
-  if(!G.clan){
-
-    toast(
-      "Create a clan first."
-    );
-
-    return;
-
-  }
-
-  const maximum =
-    Math.floor(
-      positiveNumber(
-        G.coins,
-        0
-      ) * .05
-    );
-
-  const amount =
-    Math.min(
-      G.coins,
-      Math.max(
-        100,
-        maximum
-      )
-    );
-
-  if(
-    amount < 100
-  ){
-
-    toast(
-      "You need at least 100 coins."
-    );
-
-    return;
-
-  }
-
-  G.coins -= amount;
-
-  G.clan.xp += amount;
-
-  G.statistics.clanDonations++;
-
-  G.clan.feed.unshift(
-    "You donated "+
-    format(amount)+
-    " coins."
-  );
-
-  while(
-    G.clan.xp >=
-    clanXPRequired()
-  ){
-
-    G.clan.xp -=
-      clanXPRequired();
-
-    G.clan.level++;
-
-    G.clan.feed.unshift(
-      "🏆 Clan reached level "+
-      G.clan.level+"!"
-    );
-
-    toast(
-      "🏆 Clan Level Up!"
-    );
-
-  }
-
-  G.clan.feed =
-    G.clan.feed.slice(
-      0,
-      30
-    );
-
-  checkAchievements();
-
-  renderClan();
-
-  update();
-
-  save();
-
+const amount=B(1000);
+if(!spend(amount)){
+toast("Need 1,000 coins");
+return;
 }
 
+game.clan.donated=game.clan.donated.add(amount);
+game.clan.xp=game.clan.xp.add(amount);
 
-function leaveClan(){
+const target=B(5000).mul(game.clan.level);
 
-  if(!G.clan)
-    return;
-
-  if(
-    !window.confirm(
-      "Leave your clan?"
-    )
-  ){
-
-    return;
-
-  }
-
-  G.clan = null;
-
-  renderClan();
-
-  save();
-
-  toast(
-    "You left the clan."
-  );
-
+if(game.clan.xp.cmp(target)>=0){
+game.clan.xp=game.clan.xp.sub(target);
+game.clan.level++;
+game.gems=game.gems.add(10);
+toast("🏰 Clan leveled up!");
 }
 
-
-function renderClan(){
-
-  const box =
-    $("clanArea");
-
-  if(!box)
-    return;
-
-  if(!G.clan){
-
-    box.innerHTML = `
-
-      <div class="card">
-
-        <h3>🏰 Create a Clan</h3>
-
-        <p class="mini">
-          Build a frog community and
-          level your clan together.
-        </p>
-
-        <input
-          id="newClanName"
-          placeholder="Clan name"
-          maxlength="30"
-        >
-
-        <br><br>
-
-        <input
-          id="newClanTag"
-          placeholder="Tag"
-          maxlength="5"
-        >
-
-        <button
-          class="action"
-          onclick="createClan()"
-        >
-          Create Clan
-        </button>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-  const required =
-    clanXPRequired();
-
-  const percent =
-    clamp(
-      G.clan.xp /
-      required *
-      100,
-      0,
-      100
-    );
-
-  box.innerHTML = `
-
-    <div class="clan">
-
-      <h3>
-        🐸 ${escapeHTML(
-          G.clan.name
-        )}
-      </h3>
-
-      <div class="clan-tag">
-        [${escapeHTML(
-          G.clan.tag
-        )}]
-      </div>
-
-      <div style="margin-top:10px">
-        Clan Level ${G.clan.level}
-      </div>
-
-      <div
-        class="mini"
-        style="color:white"
-      >
-        ${format(G.clan.xp)}
-        /
-        ${format(required)}
-        XP
-      </div>
-
-      <div class="clanbar">
-        <div
-          style="width:${percent}%"
-        ></div>
-      </div>
-
-    </div>
-
-    <button
-      class="action"
-      onclick="donateClan()"
-    >
-      🍃 Donate Coins
-    </button>
-
-    <button
-      class="action dark"
-      onclick="leaveClan()"
-    >
-      Leave Clan
-    </button>
-
-    <h3>👥 Members</h3>
-
-    ${
-      G.clan.members.map(
-        member=>`
-
-          <div class="member">
-
-            <div class="avatar">
-              🐸
-            </div>
-
-            <div style="flex:1">
-
-              <b>
-                ${escapeHTML(
-                  member.name
-                )}
-              </b>
-
-              <div class="mini">
-                Level ${
-                  finiteNumber(
-                    member.level,
-                    1
-                  )
-                }
-              </div>
-
-            </div>
-
-            <span class="role">
-              ${escapeHTML(
-                member.role || "Member"
-              )}
-            </span>
-
-          </div>
-
-        `
-      ).join("")
-    }
-
-    <h3>📜 Clan Feed</h3>
-
-    <div class="log">
-
-      ${
-        G.clan.feed
-          .map(
-            item=>
-              `<div>
-                ${escapeHTML(item)}
-              </div>`
-          )
-          .join("")
-      }
-
-    </div>
-
-  `;
-
+renderClan();
+updateFast();
 }
 
-
-/* ============================================================
-   ACHIEVEMENTS
-============================================================ */
-
-function checkAchievements(){
-
-  const checks = {
-
-    first:
-      G.clicks >= 1,
-
-    "100":
-      G.clicks >= 100,
-
-    "1000":
-      G.clicks >= 1000,
-
-    "10000":
-      G.clicks >= 10000,
-
-    million:
-      G.statistics.totalCoins >= 1000000,
-
-    power10:
-      G.power >= 10,
-
-    power50:
-      G.power >= 50,
-
-    auto:
-      G.auto >= 1,
-
-    rebirth:
-      G.rebirths >= 1,
-
-    skins:
-      G.statistics.skinsBought >= 1,
-
-    poison:
-      Boolean(
-        G.unlocked.poison
-      ),
-
-    friend:
-      G.friends.length >= 1,
-
-    clan:
-      Boolean(G.clan),
-
-    donate:
-      G.statistics.clanDonations >= 1
-
-  };
-
-
-  ACHIEVEMENTS.forEach(
-    achievement=>{
-
-      const id =
-        achievement[0];
-
-      if(
-        checks[id] &&
-        !G.achievements[id]
-      ){
-
-        G.achievements[id] =
-          true;
-
-        toast(
-          "🏆 Achievement: "+
-          achievement[1]
-        );
-
-        log(
-          "Achievement unlocked: "+
-          achievement[1]
-        );
-
-      }
-
-    }
-  );
-
-  renderAchievements();
-
-}
-
-
-function renderAchievements(){
-
-  const box =
-    $("achievementList");
-
-  if(!box)
-    return;
-
-  box.innerHTML =
-    ACHIEVEMENTS.map(
-      achievement=>{
-
-        const done =
-          Boolean(
-            G.achievements[
-              achievement[0]
-            ]
-          );
-
-        return `
-
-          <div
-            class="
-              achievement
-              ${done?"done":""}
-            "
-          >
-
-            <div class="row">
-
-              <b>
-                ${done?"🏆":"🔒"}
-                ${escapeHTML(
-                  achievement[1]
-                )}
-              </b>
-
-              <span>
-                ${done?"✓":""}
-              </span>
-
-            </div>
-
-            <div class="mini">
-              ${escapeHTML(
-                achievement[2]
-              )}
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
-}
-
-
-/* ============================================================
-   UPDATE
-============================================================ */
-
-function update(){
-
-  $("coins").textContent =
-    format(G.coins);
-
-  $("level").textContent =
-    format(G.level);
-
-  $("clicks").textContent =
-    format(G.clicks);
-
-  $("power").textContent =
-    format(G.power);
-
-  $("achievements").textContent =
-    Object.keys(
-      G.achievements
-    ).filter(
-      key=>
-        G.achievements[key]
-    ).length;
-
-}
-
-
-/* ============================================================
-   EYE TRACKING
-============================================================ */
-
-document.addEventListener(
-  "mousemove",
-  event=>{
-
-    document
-      .querySelectorAll(
-        ".real-eye"
-      )
-      .forEach(
-        eye=>{
-
-          const rect =
-            eye.getBoundingClientRect();
-
-          const centerX =
-            rect.left +
-            rect.width / 2;
-
-          const centerY =
-            rect.top +
-            rect.height / 2;
-
-          const dx =
-            event.clientX -
-            centerX;
-
-          const dy =
-            event.clientY -
-            centerY;
-
-          const angle =
-            Math.atan2(
-              dy,
-              dx
-            );
-
-          const distance =
-            Math.min(
-              7,
-              Math.hypot(
-                dx,
-                dy
-              ) / 35
-            );
-
-          eye.style.transform =
-            `translate(
-              ${Math.cos(angle)*distance}px,
-              ${Math.sin(angle)*distance}px
-            )`;
-
-        }
-      );
-
-  }
-);
-
-
-/* ============================================================
-   RANDOM POND EVENTS
-============================================================ */
-
-const WORLD_EVENTS = [
-
-  [
-    "🪰 A fly landed on the pond!",
-    5
-  ],
-
-  [
-    "🌧️ A tiny rain shower passed by.",
-    3
-  ],
-
-  [
-    "🦋 A butterfly visited your frog.",
-    4
-  ],
-
-  [
-    "🌿 New plants grew around the pond.",
-    3
-  ],
-
-  [
-    "🐸 Your frog made a suspicious ribbit.",
-    2
-  ],
-
-  [
-    "💧 A water droplet splashed nearby.",
-    3
-  ],
-
-  [
-    "🌱 A new leaf appeared.",
-    4
-  ]
-
+/* ==========================================================
+QUESTS
+========================================================== */
+
+const quests=[
+["🐸 Click 100 frogs",()=>game.clicks>=100,B(100)],
+["🪙 Earn 10K coins",()=>game.totalEarned.cmp(B(10000))>=0,B(500)],
+["⭐ Reach level 10",()=>game.level>=10,B(1000)],
+["⬆️ Buy 10 upgrades",()=>Object.values(game.upgrades).reduce((a,b)=>a+b,0)>=10,B(2500)],
+["🎨 Collect 10 skins",()=>game.ownedSkins.length>=10,B(3000)],
+["👥 Make 3 friends",()=>game.friends.length>=3,B(2000)],
+["🏰 Create a clan",()=>!!game.clan,B(2500)],
+["🌎 Reach world 5",()=>game.world>=4,B(5000)],Already claimed
+["🐾 Collect 3 pets",()=>game.ownedPets.length>=3,B(5000)],
+["💥 Get 10 criticals",()=>game.criticals>=10,B(1500)],
+["🔥 Reach combo 10",()=>game.bestCombo>=10,B(3000)],
+["🏆 Prestige once",()=>game.prestige>=1,B(10000)]
 ];
 
-
-setInterval(
-  ()=>{
-
-    const random =
-      WORLD_EVENTS[
-        Math.floor(
-          Math.random() *
-          WORLD_EVENTS.length
-        )
-      ];
-
-    addXP(
-      random[1]
-    );
-
-    log(
-      random[0]
-    );
-
-    update();
-
-    save();
-
-  },
-  12000
-);
-
-
-/* ============================================================
-   FRIEND ONLINE SIMULATION
-============================================================ */
-
-setInterval(
-  ()=>{
-
-    G.friends.forEach(
-      friend=>{
-
-        friend.online =
-          Math.random() > .3;
-
-      }
-    );
-
-    renderFriends();
-
-    save();
-
-  },
-  15000
-);
-
-
-/* ============================================================
-   AUTOSAVE
-============================================================ */
-
-setInterval(
-  ()=>{
-    save();
-  },
-  10000
-);
-
-
-/* ============================================================
-   STARTUP
-============================================================ */
-
-function startGame(){
-
-  load();
-
-  repairGame();
-
-  applySkin();
-
-  renderSkins();
-
-  renderFriends();
-
-  renderRequests();
-
-  renderClan();
-
-  renderAchievements();
-
-  update();
-
-  log(
-    "🐸 Frog Clicker loaded successfully."
-  );
-
-  log(
-    "⚡ Energy system disabled."
-  );
-
-  save();
-
+function claimQuest(i){
+if(game.quests[i]){
+toast("Already claimed!");
+return;
+}
+if(!quests[i]1){
+toast("Quest incomplete!");
+return;
+}
+game.quests[i]=true;
+game.coins=game.coins.add(quests[i][2]);
+toast("📜 Quest reward!");
+renderQuests();
 }
 
-startGame();
+/* ==========================================================
+ACHIEVEMENTS
+========================================================== */
 
+const achievements=[
+["First Ribbit",()=>game.clicks>=1,B(10)],
+["100 Clicks",()=>game.clicks>=100,B(25)],
+["10K Clicks",()=>game.clicks>=10000,B(100)],
+["Millionaire",()=>game.totalEarned.cmp(B(1000000))>=0,B(250)],
+["Billionaire",()=>game.totalEarned.cmp(B("1e9"))>=0,B(1000)],
+["Critical Frog",()=>game.criticals>=100,B(500)],
+["Fashion Frog",()=>game.ownedSkins.length>=25,B(1000)],
+["Skin Hoarder",()=>game.ownedSkins.length>=75,B(5000)],
+["Pet Collector",()=>game.ownedPets.length>=8,B(5000)],
+["Social Frog",()=>game.friends.length>=10,B(2500)],
+["Clan Boss",()=>!!game.clan&&game.clan.level>=5,B(5000)],
+["World Traveler",()=>game.world>=8,B(5000)],
+["Level 100",()=>game.level>=100,B(10000)],
+["Prestige Frog",()=>game.prestige>=5,B(25000)],
+["Mechanic Master",()=>game.mech.filter(x=>x>0).length>=500,B(10000)]
+];
+
+function checkAchievements(){
+for(let i=0;i<achievements.length;i++){
+if(game.achievements[i])continue;
+if(achievements[i]1){
+game.achievements[i]=true;
+game.gems=game.gems.add(achievements[i][2]);
+toast("🏆 "+achievements[i][0]);
+log("🏆 Achievement unlocked: "+achievements[i][0]);
+}
+}
+}
+
+/* ==========================================================
+DAILY
+========================================================== */
+
+function today(){
+return Math.floor(Date.now()/86400000);
+}
+
+function daily(){
+const d=today();
+if(game.dailyDay===d){
+toast("Already collected today!");
+return;
+}
+
+if(game.dailyDay===d-1)game.dailyStreak++;
+else game.dailyStreak=1;
+
+game.dailyDay=d;
+
+const reward=B(1000).mul(game.dailyStreak).pow(1.05);
+game.coins=game.coins.add(reward);
+game.gems=game.gems.add(Math.min(100,game.dailyStreak*3));
+
+toast("🎁 Daily +"+format(reward));
+renderDaily();
+updateFast();
+saveGame();
+}
+
+/* ==========================================================
+EVENTS
+========================================================== */
+
+function randomEvent(){
+const events=[
+["🪰 Fly Swarm",2],
+["🌧️ Golden Rain",3],
+["🌈 Rainbow Ribbit",5],
+["👑 Royal Parade",8],
+["👽 Alien Frog",15],
+["💎 Gem Storm",20]
+];
+
+const e=events[Math.floor(Math.random()*events.length)];
+
+game.eventMult=e[1];
+game.eventUntil=Date.now()+15000;
+
+if(e[0].includes("Gem")){
+game.gems=game.gems.add(10);
+}
+
+toast("🎉 "+e[0]+" — x"+e[1]+"!");
+}
+
+/* ==========================================================
+PRESTIGE
+========================================================== */
+
+function prestige(){
+if(game.level<50){
+toast("Reach level 50 first!");
+return;
+}
+
+if(!confirm("Prestige? Your level and upgrades reset, but prestige power remains."))return;
+
+game.coins=B(0);
+game.xp=B(0);
+game.level=1;
+
+for(const k in game.upgrades)game.upgrades[k]=0;
+
+game.prestige++;
+game.totalPrestiges++;
+game.gems=game.gems.add(B(100).mul(game.prestige));
+
+rebuildMechanicCache();
+toast("🏆 PRESTIGE "+game.prestige+"!");
+render();
+saveGame();
+}
+
+/* ==========================================================
+SHOP
+========================================================== */
+
+function chest(){
+const cost=B(10);
+if(game.gems.cmp(cost)<0){
+toast("Need 10 💎");
+return;
+}
+
+game.gems=game.gems.sub(cost);
+
+const roll=Math.random();
+
+if(roll<.55){
+const reward=fromLog10(4+Math.random()*5);
+earn(reward);
+toast("🎁 "+format(reward)+" coins!");
+}else if(roll<.8){
+const reward=Math.floor(10+Math.random()*100);
+game.gems=game.gems.add(reward);
+toast("💎 +"+reward+" gems!");
+}else{
+const unowned=skins.map((_,i)=>i).filter(i=>!game.ownedSkins.includes(i));
+if(unowned.length){
+const i=unowned[Math.floor(Math.random()*unowned.length)];
+game.ownedSkins.push(i);
+toast("🎨 Chest unlocked "+skins[i].name+"!");
+}else{
+earn(fromLog10(8));
+toast("🎁 Duplicate collection reward!");
+}
+}
+
+game.chests++;
+renderShop();
+updateFast();
+}
+
+/* ==========================================================
+OFFLINE EARNINGS
+========================================================== */
+
+function applyOffline(){
+const elapsed=Math.max(0,Math.min(86400,(Date.now()-game.lastSave)/1000));
+
+if(elapsed<30)return;
+
+const offlineMult=1+game.upgrades.offline*.2;
+const reward=autoPerSecond()
+.mul(elapsed)
+.mul(offlineMult);
+
+if(reward.cmp(B(0))>0){
+game.coins=game.coins.add(reward);
+game.totalEarned=game.totalEarned.add(reward);
+setTimeout(()=>toast("🌙 Offline earnings: +"+format(reward)),500);
+}
+}
+
+/* ==========================================================
+FLOATING NUMBERS
+========================================================== */
+
+function floatText(text){
+const el=document.createElement("div");
+el.className="float";
+el.textContent=text;
+el.style.left=(35+Math.random()*30)+"%";
+el.style.top="45%";
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),750);
+}
+
+/* ==========================================================
+RENDERING
+========================================================== */
+
+function updateFast(){
+document.getElementById("coins").textContent=format(game.coins);
+document.getElementById("gems").textContent=format(game.gems);
+document.getElementById("level").textContent=game.level;
+document.getElementById("income").textContent=format(autoPerSecond());
+document.getElementById("combo").textContent=game.combo.toFixed(1);
+document.getElementById("prestige").textContent=game.prestige;
+document.getElementById("clicks").textContent=game.clicks.toLocaleString();
+document.getElementById("clickPower").textContent=format(clickPower());
+document.getElementById("comboBig").textContent=game.combo.toFixed(2);
+
+const needed=B(100*game.level);
+const ratio=needed.cmp(B(0))===0?100:
+Math.min(100,game.xp.toNumber()/Math.max(1,needed.toNumber())*100);
+
+document.getElementById("xpbar").style.width=ratio+"%";
+document.getElementById("xptext").textContent=
+format(game.xp)+" / "+format(needed);
+
+document.getElementById("frog").textContent=skins[game.selectedSkin].icon;
+document.getElementById("worldText").textContent=
+worlds[game.world][0]+" "+worlds[game.world][1]+" ×"+worlds[game.world][2];
+
+const remaining=Math.max(0,game.frenzyUntil-Date.now());
+
+document.getElementById("frenzyText").textContent=
+remaining>0?"🔥 "+Math.ceil(remaining/1000)+" seconds remaining":"";
+}
+
+function renderUpgrades(){
+const names={
+power:"🍃 Tongue Training",
+auto:"🤖 Tadpole Workers",
+crit:"💥 Critical Jumps",
+combo:"🔥 Combo Master",
+luck:"🍀 Lucky Lily",
+gems:"💎 Gem Gills",
+offline:"🌙 Dreaming Frog",
+treasure:"💰 Treasure Sense",
+energy:"⚡ Frog Energy",
+swamp:"🌿 Swamp Power",
+royal:"👑 Royal Blood",
+portal:"🌀 Portal Science",
+mutation:"🧬 Mutation Lab"
+};
+
+document.getElementById("upgradeList").innerHTML=
+Object.keys(names).map(key=>{
+const cost=upgradeCost(key);
+const lv=game.upgrades[key];
+return `
+
+<div class="card"> <h2>${names[key]}</h2> <span class="badge">Level ${lv}</span> <p class="muted">Permanent upgrade to your frog empire.</p> <button onclick="buyUpgrade('${key}')"> Buy — ${format(cost)} 🪙 </button> </div>`; }).join(""); }
+function renderSkins(){
+document.getElementById("skinList").innerHTML=
+skins.map((s,i)=>{
+const owned=game.ownedSkins.includes(i);
+return `
+
+<div class="card"> <div class="skin ${game.selectedSkin===i?"selected":""}" onclick="buySkin(${i})">${s.icon}</div> <h3>${safeText(s.name)}</h3> <span class="badge">×${format(s.mult)}</span> ${owned? `<span class="badge">OWNED</span>`: `<br><button onclick="buySkin(${i})">${format(s.cost)} 🪙</button>`} </div>`; }).join(""); }
+function renderPets(){
+document.getElementById("petList").innerHTML=
+pets.map((p,i)=>{
+const owned=game.ownedPets.includes(i);
+return `
+
+<div class="card"> <div class="big">${p[0]}</div> <h2>${p[1]}</h2> <p>Power ×${p[3]}</p> ${owned? `<span class="badge">OWNED</span>`: `<button onclick="buyPet(${i})">${format(p[2])} 🪙</button>`} </div>`; }).join(""); }
+function renderQuests(){
+document.getElementById("questList").innerHTML=
+quests.map((q,i)=>{
+const claimed=!!game.quests[i];
+const done=q1;
+
+return `
+
+<div class="card"> <h2>${q[0]}</h2> <p>Reward: ${format(q[2])} 🪙</p> <span class="badge"> ${claimed?"CLAIMED":done?"COMPLETE":"IN PROGRESS"} </span> <button onclick="claimQuest(${i})" ${claimed||!done?"disabled":""}> Claim </button> </div>`; }).join(""); }
+function renderFriends(){
+const list=document.getElementById("friendList");
+
+if(!game.friends.length){
+list.innerHTML=<div class="card">No frog friends yet.</div>;
+return;
+}
+
+list.innerHTML=game.friends.map((name,i)=>`
+
+<div class="card"> <h2>🐸 ${safeText(name)}</h2> <span class="badge">Online</span> <span class="badge">Frog Buddy</span> <br><br> <button onclick="removeFriend(${i})">Remove</button> </div> `).join(""); }
+function renderClan(){
+const list=document.getElementById("clanList");
+
+if(!game.clan){
+list.innerHTML=`
+
+<div class="card"> <h2>🌱 No Clan</h2> <p>Create your own clan.</p> </div>`; return; }
+const target=B(5000).mul(game.clan.level);
+
+list.innerHTML=`
+
+<div class="card"> <h2>🏰 ${safeText(game.clan.name)}</h2> <span class="badge">Level ${game.clan.level}</span> <span class="badge">${game.clan.members} member</span> <p>Clan XP: ${format(game.clan.xp)} / ${format(target)}</p> <p>Donated: ${format(game.clan.donated)} 🪙</p> <button onclick="donateClan()">Donate 1,000 🪙</button> </div>`; }
+function renderWorlds(){
+document.getElementById("worldList").innerHTML=
+worlds.map((w,i)=>{
+const cost=worldCost(i);
+return `
+
+<div class="card"> <h2>${w[0]} ${w[1]}</h2> <p>Multiplier ×${w[2]}</p> <p>Required level: ${i*10+1}</p> <button onclick="travel(${i})" ${i===game.world?"disabled":""}> ${i===game.world?"CURRENT":format(cost)+" 🪙"} </button> </div>`; }).join(""); }
+function renderMechanics(){
+/*
+Only render the 500 cards when this tab is opened.
+This avoids unnecessary DOM work while clicking.
+/
+document.getElementById("mechanicList").innerHTML=
+mechanics.map((m,i)=>{
+const lv=game.mech[i]||0;
+const percent=Math.min(100,lv/m.max100);
+
+return `
+
+<div class="card"> <h3>⚙️ ${m.name}</h3> <small>Level ${lv}/${m.max}</small> <div class="bar" style="margin-top:7px"> <div class="fill" style="width:${percent}%"></div> </div> </div>`; }).join(""); }
+function renderAchievements(){
+document.getElementById("achievementList").innerHTML=
+achievements.map((a,i)=>{
+const unlocked=!!game.achievements[i];
+return `
+
+<div class="card"> <h2>${unlocked?"🏆":"🔒"} ${a[0]}</h2> <p>Reward: ${format(a[2])} 💎</p> <span class="badge">${unlocked?"UNLOCKED":"LOCKED"}</span> </div>`; }).join(""); }
+function renderShop(){
+document.getElementById("shopList").innerHTML=`
+
+<div class="card"> <h2>🎁 Mystery Chest</h2> <p>Coins, gems or a skin.</p> <button onclick="chest()">Open — 10 💎</button> </div> <div class="card"> <h2>🔥 Frenzy</h2> <p>3× earnings for 20 seconds.</p> <button onclick="frenzy()">5 💎</button> </div> <div class="card"> <h2>🏆 Prestige</h2> <p>Permanent prestige multiplier.</p> <button onclick="prestige()">Prestige</button> </div>`; }
+function renderDaily(){
+const ready=game.dailyDay!==today();
+document.getElementById("dailyText").textContent=
+ready?
+"Your reward is ready! Streak: "+game.dailyStreak:
+"Come back tomorrow. Streak: "+game.dailyStreak;
+
+document.getElementById("dailyButton").disabled=!ready;
+}
+
+function renderStats(){
+const active=game.mech.filter(x=>x>0).length;
+
+const data=[
+["🐸 Total Clicks",game.clicks.toLocaleString()],
+["🪙 Total Earned",format(game.totalEarned)],
+["💥 Criticals",game.criticals.toLocaleString()],
+["🔥 Best Combo",game.bestCombo.toFixed(2)],
+["🎨 Skins",game.ownedSkins.length+"/100"],
+["🐾 Pets",game.ownedPets.length+"/"+pets.length],
+["👥 Friends",game.friends.length],
+["🏰 Clan",game.clan?game.clan.name:"None"],
+["⚙️ Active Mechanics",active+"/500"],
+["📜 Quests",Object.keys(game.quests).length+"/"+quests.length],
+["🏆 Achievements",Object.keys(game.achievements).length+"/"+achievements.length],
+["🌎 World",worlds[game.world][1]],
+["🏆 Prestiges",game.prestige],
+["🎁 Chests",game.chests],
+["⏱️ Play Time",Math.floor(game.totalPlaySeconds/60)+" minutes"]
+];
+
+document.getElementById("statsList").innerHTML=
+data.map(x=>`
+
+<div class="card"> <h3>${x[0]}</h3> <div class="big">${safeText(x[1])}</div> </div>`).join(""); }
+function log(message){
+const el=document.getElementById("log");
+el.innerHTML="<div>"+message+"</div>"+el.innerHTML;
+const children=el.children;
+while(children.length>12)el.removeChild(children[children.length-1]);
+}
+
+/* ==========================================================
+TABS
+========================================================== */
+
+function openTab(id){
+document.querySelectorAll("main>section")
+.forEach(s=>s.classList.add("hidden"));
+
+document.getElementById(id).classList.remove("hidden");
+
+if(id==="upgrades")renderUpgrades();
+if(id==="skins")renderSkins();
+if(id==="pets")renderPets();
+if(id==="quests")renderQuests();
+if(id==="friends")renderFriends();
+if(id==="clans")renderClan();
+if(id==="worlds")renderWorlds();
+if(id==="mechanics")renderMechanics();
+if(id==="achievements")renderAchievements();
+if(id==="shop")renderShop();
+if(id==="stats")renderStats();
+
+updateFast();
+}
+
+/* ==========================================================
+IMPORT / EXPORT
+========================================================== */
+
+function exportSave(){
+const encoded=btoa(unescape(encodeURIComponent(encodeState())));
+prompt("Copy this save code:",encoded);
+}
+
+function importSave(){
+const code=prompt("Paste save code:");
+if(!code)return;
+
+try{
+const raw=decodeURIComponent(escape(atob(code)));
+game=decodeState(raw);
+
+if(!game.upgrades)game.upgrades=defaultState().upgrades;
+if(!game.mech||game.mech.length!==500)game.mech=Array(500).fill(0);
+rebuildMechanicCache();
+saveGame();
+renderAll();
+toast("📥 Save imported!");
+}catch(e){
+toast("❌ Invalid save");
+}
+}
+
+function resetGame(){
+if(!confirm("Delete your entire frog empire?"))return;
+localStorage.removeItem("frogFrenzyInfinity");
+location.reload();
+}
+
+/* ==========================================================
+PERFORMANCE-SAFE GAME LOOP
+========================================================== */
+
+let lastTick=performance.now();
+let lastUI=0;
+let lastMechanics=0;
+let lastSave=0;
+
+function tick(){
+const now=performance.now();
+let dt=(now-lastTick)/1000;
+
+/*
+Clamp dt so leaving a tab open doesn't produce a giant
+single-frame calculation.
+*/
+dt=Math.max(0,Math.min(dt,5));
+lastTick=now;
+
+game.totalPlaySeconds+=dt;
+
+const income=autoPerSecond().mul(dt);
+
+if(income.cmp(B(0))>0){
+game.coins=game.coins.add(income);
+game.totalEarned=game.totalEarned.add(income);
+game.xp=game.xp.add(income.mul(.002));
+levelCheck();
+}
+
+if(now-lastClickTime>1200){
+game.combo=Math.max(1,game.combo-.15);
+}
+
+if(now-lastMechanics>500){
+lastMechanics=now;
+updateMechanics();
+}
+
+if(now-lastUI>200){
+lastUI=now;
+updateFast();
+checkAchievements();
+}
+
+if(now-lastSave>15000){
+lastSave=now;
+saveGame();
+}
+
+requestAnimationFrame(tick);
+}
+
+/* ==========================================================
+INITIALIZATION
+========================================================== */
+
+loadGame();
+applyOffline();
+rebuildMechanicCache();
+
+function renderAll(){
+updateFast();
+renderUpgrades();
+renderSkins();
+renderPets();
+renderQuests();
+renderFriends();
+renderClan();
+renderWorlds();
+renderAchievements();
+renderShop();
+renderStats();
+}
+
+renderAll();
+
+log("🐸 Welcome to Frog Frenzy Infinity!");
+log("⚙️ 500 game mechanics loaded.");
+log("🎨 100 skins loaded.");
+log("🚀 Big-number mode enabled.");
+
+document.getElementById("frog").addEventListener("pointerdown",e=>{
+e.preventDefault();
+frogClick();
+});
+
+document.addEventListener("keydown",e=>{
+if(e.code==="Space"){
+e.preventDefault();
+frogClick();
+}
+});
+
+window.addEventListener("beforeunload",()=>saveGame());
+
+/* Save every 15 seconds without blocking clicking. */
+setInterval(()=>saveGame(),15000);
+
+requestAnimationFrame(tick);
 </script>
 
-</body>
-</html>
+</body> </html>
