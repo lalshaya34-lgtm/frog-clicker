@@ -2,976 +2,839 @@
 
 /*
   FROG FRENZY
-  500 MECHANICS
-  50 CATEGORIES × 10 MECHANICS
+  EXACTLY 500 MECHANICS
+  50 categories × 10 mechanics
 */
 
 const MECHANIC_CATEGORIES = [
 
-  {
-    name:"🐸 Clicking",
-    icon:"🐸",
-    descriptions:[
-      "Increases base click power.",
-      "Improves critical-hit chance.",
-      "Improves perfect-click rewards.",
-      "Improves charged-click rewards.",
-      "Improves golden-click frequency.",
-      "Improves jump-click rewards.",
-      "Improves rapid-click bonuses.",
-      "Improves chain bonuses.",
-      "Improves lucky-click frequency.",
-      "Improves mega-ribbit rewards."
-    ]
-  },
+{
+ name:"🐸 Clicking",
+ effects:[
+  ["Combo","combo",.08],
+  ["Critical Clicks","crit",.002],
+  ["Perfect Clicks","perfect",.015],
+  ["Charged Clicks","charged",.05],
+  ["Golden Clicks","golden",.002],
+  ["Jump Clicks","jump",.03],
+  ["Rapid Click Bonus","rapid",.02],
+  ["Chain Clicks","chain",.015],
+  ["Lucky Clicks","lucky",.01],
+  ["Mega Ribbit","mega",.0002]
+ ]
+},
 
-  {
-    name:"💰 Economy",
-    icon:"💰",
-    descriptions:[
-      "Increases coin income.",
-      "Increases gem income.",
-      "Improves passive interest.",
-      "Improves coin multipliers.",
-      "Improves gem multipliers.",
-      "Improves treasure chance.",
-      "Improves earning streaks.",
-      "Improves market bonuses.",
-      "Improves shop discounts.",
-      "Improves wealth rewards."
-    ]
-  },
+{
+ name:"💰 Economy",
+ effects:[
+  ["Coin Generation","coins",.02],
+  ["Gem Generation","gems",.01],
+  ["Interest","interest",.001],
+  ["Coin Multiplier","coinMult",.01],
+  ["Gem Multiplier","gemMult",.01],
+  ["Treasure Chance","treasure",.002],
+  ["Coin Streak","streak",.01],
+  ["Market Power","market",.01],
+  ["Shop Discount","discount",.005],
+  ["Wealth Power","wealth",.01]
+ ]
+},
 
-  {
-    name:"🐾 Pets",
-    icon:"🐾",
-    descriptions:[
-      "Improves pet collecting.",
-      "Improves pet leveling.",
-      "Improves pet XP.",
-      "Improves pet rarity bonuses.",
-      "Improves pet abilities.",
-      "Improves pet fusion.",
-      "Improves pet evolution.",
-      "Improves pet team bonuses.",
-      "Improves pet multipliers.",
-      "Improves pet quest rewards."
-    ]
-  },
+{
+ name:"🐾 Pets",
+ effects:[
+  ["Pet Collecting","petCollect",1],
+  ["Pet Leveling","petLevel",.05],
+  ["Pet XP","petXP",.05],
+  ["Pet Rarity","petRare",.01],
+  ["Pet Abilities","petAbility",.02],
+  ["Pet Fusion","petFusion",.02],
+  ["Pet Evolution","petEvolution",.02],
+  ["Pet Teams","petTeam",.02],
+  ["Pet Bonuses","petBonus",.03],
+  ["Pet Quests","petQuest",1]
+ ]
+},
 
-  {
-    name:"🎨 Skins",
-    icon:"🎨",
-    descriptions:[
-      "Improves skin collection.",
-      "Improves skin rarity.",
-      "Improves skin leveling.",
-      "Improves skin bonuses.",
-      "Improves animated-skin bonuses.",
-      "Improves seasonal skins.",
-      "Improves secret-skin discovery.",
-      "Improves skin crafting.",
-      "Improves skin-set bonuses.",
-      "Improves skin mastery."
-    ]
-  },
+{
+ name:"🎨 Skins",
+ effects:[
+  ["Skin Collecting","skinCollect",1],
+  ["Skin Rarity","skinRare",.01],
+  ["Skin Levels","skinLevel",.02],
+  ["Skin Bonuses","skinBonus",.02],
+  ["Animated Skins","animated",.01],
+  ["Seasonal Skins","seasonal",1],
+  ["Secret Skins","secret",1],
+  ["Skin Crafting","skinCraft",.02],
+  ["Skin Sets","skinSet",.03],
+  ["Skin Mastery","skinMastery",.02]
+ ]
+},
 
-  {
-    name:"🧬 Evolution",
-    icon:"🧬",
-    descriptions:[
-      "Reduces evolution requirements.",
-      "Improves mutation chances.",
-      "Improves mutation branches.",
-      "Improves frog-form bonuses.",
-      "Improves evolution stats.",
-      "Improves evolution XP.",
-      "Improves evolution abilities.",
-      "Improves rare mutations.",
-      "Improves evolution challenges.",
-      "Improves evolution mastery."
-    ]
-  },
+{
+ name:"🧬 Evolution",
+ effects:[
+  ["Evolution Power","evolution",.05],
+  ["Mutations","mutation",.02],
+  ["Mutation Branches","mutationBranch",.02],
+  ["Frog Forms","forms",.05],
+  ["Stat Upgrades","stats",.02],
+  ["Evolution XP","evolutionXP",.03],
+  ["Evolution Abilities","evolutionAbility",.02],
+  ["Rare Mutations","rareMutation",.005],
+  ["Evolution Challenges","evolutionChallenge",1],
+  ["Evolution Mastery","evolutionMastery",.02]
+ ]
+},
 
-  {
-    name:"🌎 Worlds",
-    icon:"🌎",
-    descriptions:[
-      "Reduces world requirements.",
-      "Increases world multipliers.",
-      "Improves exploration rewards.",
-      "Improves hidden-area discovery.",
-      "Improves world-event rewards.",
-      "Improves world treasure.",
-      "Improves world-boss rewards.",
-      "Improves world quest rewards.",
-      "Improves collectibles.",
-      "Improves world mastery."
-    ]
-  },
+{
+ name:"🌎 Worlds",
+ effects:[
+  ["World Unlocking","worldUnlock",1],
+  ["World Multipliers","worldMult",.05],
+  ["Exploration","explore",.03],
+  ["Hidden Areas","hiddenArea",.01],
+  ["World Events","worldEvent",.01],
+  ["Treasure Locations","worldTreasure",.01],
+  ["World Bosses","worldBoss",.02],
+  ["World Quests","worldQuest",1],
+  ["World Collectibles","worldCollect",1],
+  ["World Mastery","worldMastery",.02]
+ ]
+},
 
-  {
-    name:"👹 Bosses",
-    icon:"👹",
-    descriptions:[
-      "Increases boss damage.",
-      "Reduces boss health.",
-      "Improves damage scaling.",
-      "Improves critical boss damage.",
-      "Improves boss phase rewards.",
-      "Improves boss loot.",
-      "Improves mini-boss rewards.",
-      "Improves boss streaks.",
-      "Improves boss achievements.",
-      "Improves boss difficulty rewards."
-    ]
-  },
+{
+ name:"👹 Bosses",
+ effects:[
+  ["Bosses","boss",1],
+  ["Boss Health","bossHealth",.01],
+  ["Boss Damage","bossDamage",.05],
+  ["Critical Damage","bossCrit",.05],
+  ["Boss Phases","bossPhase",.02],
+  ["Boss Rewards","bossReward",.03],
+  ["Mini Bosses","miniBoss",1],
+  ["Boss Streaks","bossStreak",.02],
+  ["Boss Achievements","bossAchievement",1],
+  ["Boss Difficulty","bossDifficulty",.01]
+ ]
+},
 
-  {
-    name:"⚔️ Combat",
-    icon:"⚔️",
-    descriptions:[
-      "Increases attack speed.",
-      "Increases attack power.",
-      "Improves critical attacks.",
-      "Improves combo attacks.",
-      "Improves dodge chance.",
-      "Improves armor.",
-      "Improves damage reflection.",
-      "Improves healing.",
-      "Improves battle rewards.",
-      "Improves combat mastery."
-    ]
-  },
+{
+ name:"⚔️ Combat",
+ effects:[
+  ["Attack Speed","attackSpeed",.02],
+  ["Defense","defense",.02],
+  ["Armor","armor",.02],
+  ["Dodge","dodge",.005],
+  ["Lifesteal","lifesteal",.005],
+  ["Combo Damage","combatCombo",.02],
+  ["Battle Rage","rage",.01],
+  ["Victory Bonus","victory",.02],
+  ["Battle XP","battleXP",.03],
+  ["Combat Mastery","combatMastery",.02]
+ ]
+},
 
-  {
-    name:"🔨 Crafting",
-    icon:"🔨",
-    descriptions:[
-      "Improves material drops.",
-      "Unlocks more recipes.",
-      "Improves equipment crafting.",
-      "Improves equipment leveling.",
-      "Improves equipment rarity.",
-      "Improves equipment upgrades.",
-      "Improves potion crafting.",
-      "Improves crafting mastery.",
-      "Improves salvage rewards.",
-      "Improves legendary crafting."
-    ]
-  },
+{
+ name:"🔨 Crafting",
+ effects:[
+  ["Materials","materials",.03],
+  ["Recipes","recipes",1],
+  ["Equipment","equipment",.02],
+  ["Equipment Levels","equipmentLevel",.03],
+  ["Equipment Rarity","equipmentRare",.01],
+  ["Equipment Upgrades","equipmentUpgrade",.02],
+  ["Potions","potions",1],
+  ["Crafting Mastery","craftMastery",.02],
+  ["Salvaging","salvage",.02],
+  ["Legendary Crafting","legendaryCraft",.01]
+ ]
+},
 
-  {
-    name:"👥 Friends",
-    icon:"👥",
-    descriptions:[
-      "Increases friend capacity.",
-      "Improves friend bonuses.",
-      "Improves friend gifts.",
-      "Improves friend quests.",
-      "Improves friend XP.",
-      "Improves friend rewards.",
-      "Improves friend streaks.",
-      "Improves friend discoveries.",
-      "Improves friend events.",
-      "Improves social mastery."
-    ]
-  },
+{
+ name:"👥 Friends",
+ effects:[
+  ["Friend Collection","friendCollect",1],
+  ["Friend Power","friendPower",.02],
+  ["Friend Gifts","friendGift",.02],
+  ["Friend XP","friendXP",.02],
+  ["Friend Streaks","friendStreak",.02],
+  ["Friend Quests","friendQuest",1],
+  ["Friend Events","friendEvent",.02],
+  ["Friend Bonuses","friendBonus",.02],
+  ["Friend Milestones","friendMilestone",1],
+  ["Friend Mastery","friendMastery",.02]
+ ]
+},
 
-  {
-    name:"🏰 Clans",
-    icon:"🏰",
-    descriptions:[
-      "Increases clan capacity.",
-      "Improves clan XP.",
-      "Improves clan levels.",
-      "Improves clan upgrades.",
-      "Improves clan challenges.",
-      "Improves clan rewards.",
-      "Improves clan donations.",
-      "Improves clan quests.",
-      "Improves clan events.",
-      "Improves clan mastery."
-    ]
-  },
+{
+ name:"🏰 Clans",
+ effects:[
+  ["Clan Creation","clanCreate",1],
+  ["Clan XP","clanXP",.03],
+  ["Clan Levels","clanLevel",.02],
+  ["Clan Upgrades","clanUpgrade",.02],
+  ["Clan Challenges","clanChallenge",1],
+  ["Clan Quests","clanQuest",1],
+  ["Clan Donations","clanDonation",.02],
+  ["Clan Rewards","clanReward",.03],
+  ["Clan Raids","clanRaid",.02],
+  ["Clan Mastery","clanMastery",.02]
+ ]
+},
 
-  {
-    name:"🏆 Achievements",
-    icon:"🏆",
-    descriptions:[
-      "Increases achievement rewards.",
-      "Improves achievement gems.",
-      "Improves achievement XP.",
-      "Improves achievement bonuses.",
-      "Improves hidden achievements.",
-      "Improves rare achievements.",
-      "Improves streak achievements.",
-      "Improves collection achievements.",
-      "Improves combat achievements.",
-      "Improves achievement mastery."
-    ]
-  },
+{
+ name:"🏆 Achievements",
+ effects:[
+  ["Achievement Points","achievement",1],
+  ["Milestone Rewards","milestone",.01],
+  ["Click Achievements","clickAchievement",1],
+  ["Coin Achievements","coinAchievement",1],
+  ["Pet Achievements","petAchievement",1],
+  ["Skin Achievements","skinAchievement",1],
+  ["World Achievements","worldAchievement",1],
+  ["Boss Achievements II","bossAchievement2",1],
+  ["Social Achievements","socialAchievement",1],
+  ["Achievement Mastery","achievementMastery",.02]
+ ]
+},
 
-  {
-    name:"📜 Quests",
-    icon:"📜",
-    descriptions:[
-      "Increases quest rewards.",
-      "Improves quest XP.",
-      "Improves quest coins.",
-      "Improves quest gems.",
-      "Improves daily quests.",
-      "Improves weekly quests.",
-      "Improves secret quests.",
-      "Improves chain quests.",
-      "Improves boss quests.",
-      "Improves quest mastery."
-    ]
-  },
+{
+ name:"📜 Quests",
+ effects:[
+  ["Daily Quests","dailyQuest",1],
+  ["Weekly Quests","weeklyQuest",1],
+  ["Click Quests","clickQuest",1],
+  ["Coin Quests","coinQuest",1],
+  ["Pet Quests II","petQuest2",1],
+  ["Skin Quests","skinQuest",1],
+  ["World Quests II","worldQuest2",1],
+  ["Boss Quests","bossQuest",1],
+  ["Craft Quests","craftQuest",1],
+  ["Quest Mastery","questMastery",.02]
+ ]
+},
 
-  {
-    name:"⭐ Levels",
-    icon:"⭐",
-    descriptions:[
-      "Increases XP gain.",
-      "Reduces XP requirements.",
-      "Improves level rewards.",
-      "Improves level-up gems.",
-      "Improves level-up coins.",
-      "Improves level milestones.",
-      "Improves level streaks.",
-      "Improves level bonuses.",
-      "Improves high-level rewards.",
-      "Improves level mastery."
-    ]
-  },
+{
+ name:"⭐ Levels",
+ effects:[
+  ["Level XP","levelXP",.03],
+  ["Level Rewards","levelReward",.02],
+  ["Level Multipliers","levelMult",.01],
+  ["Level Streaks","levelStreak",.01],
+  ["Level Milestones","levelMilestone",1],
+  ["Level Challenges","levelChallenge",1],
+  ["Level Boosts","levelBoost",.02],
+  ["Level Luck","levelLuck",.01],
+  ["Level Mastery","levelMastery",.02],
+  ["Maximum Levels","maxLevel",100]
+ ]
+},
 
-  {
-    name:"🔥 Combos",
-    icon:"🔥",
-    descriptions:[
-      "Increases combo growth.",
-      "Slows combo decay.",
-      "Increases maximum combo.",
-      "Improves combo rewards.",
-      "Improves combo criticals.",
-      "Improves combo chains.",
-      "Improves combo streaks.",
-      "Improves combo milestones.",
-      "Improves combo events.",
-      "Improves combo mastery."
-    ]
-  },
+{
+ name:"🔥 Combos",
+ effects:[
+  ["Combo Duration","comboDuration",.03],
+  ["Combo Power","comboPower",.03],
+  ["Combo Crits","comboCrit",.01],
+  ["Combo Rewards","comboReward",.02],
+  ["Combo Chains","comboChain",.02],
+  ["Combo Streaks","comboStreak",.02],
+  ["Combo Luck","comboLuck",.01],
+  ["Combo Speed","comboSpeed",.02],
+  ["Combo Mastery","comboMastery",.02],
+  ["Ultimate Combo","ultimateCombo",.01]
+ ]
+},
 
-  {
-    name:"💎 Gems",
-    icon:"💎",
-    descriptions:[
-      "Increases gem drops.",
-      "Improves gem criticals.",
-      "Improves gem treasures.",
-      "Improves gem events.",
-      "Improves gem streaks.",
-      "Improves gem quests.",
-      "Improves gem achievements.",
-      "Improves gem shop value.",
-      "Improves gem conversion.",
-      "Improves gem mastery."
-    ]
-  },
+{
+ name:"💎 Gems",
+ effects:[
+  ["Gem Drops","gemDrop",.02],
+  ["Gem Chests","gemChest",.02],
+  ["Gem Luck","gemLuck",.01],
+  ["Gem Multiplier II","gemMult2",.02],
+  ["Gem Streaks","gemStreak",.02],
+  ["Gem Mining","gemMining",.02],
+  ["Gem Treasure","gemTreasure",.02],
+  ["Gem Events","gemEvent",.02],
+  ["Gem Mastery","gemMastery",.02],
+  ["Infinite Gems","infiniteGem",.01]
+ ]
+},
 
-  {
-    name:"🎁 Rewards",
-    icon:"🎁",
-    descriptions:[
-      "Increases random rewards.",
-      "Improves reward rarity.",
-      "Improves reward size.",
-      "Improves reward streaks.",
-      "Improves reward chests.",
-      "Improves reward rolls.",
-      "Improves reward luck.",
-      "Improves reward doubling.",
-      "Improves reward events.",
-      "Improves reward mastery."
-    ]
-  },
+{
+ name:"🎁 Rewards",
+ effects:[
+  ["Reward Luck","rewardLuck",.02],
+  ["Reward Size","rewardSize",.03],
+  ["Reward Chains","rewardChain",.02],
+  ["Reward Streaks","rewardStreak",.02],
+  ["Reward Chests","rewardChest",.01],
+  ["Reward Keys","rewardKey",1],
+  ["Reward Tickets","rewardTicket",1],
+  ["Reward Multipliers","rewardMult",.02],
+  ["Reward Events","rewardEvent",.02],
+  ["Reward Mastery","rewardMastery",.02]
+ ]
+},
 
-  {
-    name:"🎲 Random Events",
-    icon:"🎲",
-    descriptions:[
-      "Increases event frequency.",
-      "Increases event duration.",
-      "Improves event multipliers.",
-      "Improves event rewards.",
-      "Improves rare events.",
-      "Improves secret events.",
-      "Improves event luck.",
-      "Improves event chains.",
-      "Improves event streaks.",
-      "Improves event mastery."
-    ]
-  },
+{
+ name:"🎲 Random Events",
+ effects:[
+  ["Event Luck","eventLuck",.02],
+  ["Event Duration","eventDuration",.02],
+  ["Event Power","eventPower",.03],
+  ["Event Rewards","eventReward",.03],
+  ["Rare Events","rareEvent",.005],
+  ["Secret Events","secretEvent",.002],
+  ["Event Chains","eventChain",.02],
+  ["Event Streaks","eventStreak",.02],
+  ["Event Tickets","eventTicket",1],
+  ["Event Mastery","eventMastery",.02]
+ ]
+},
 
-  {
-    name:"🗺️ Exploration",
-    icon:"🗺️",
-    descriptions:[
-      "Improves exploration speed.",
-      "Improves exploration rewards.",
-      "Improves exploration luck.",
-      "Improves hidden discoveries.",
-      "Improves map treasures.",
-      "Improves rare locations.",
-      "Improves exploration events.",
-      "Improves exploration quests.",
-      "Improves exploration collectibles.",
-      "Improves exploration mastery."
-    ]
-  },
+{
+ name:"🗺️ Exploration",
+ effects:[
+  ["Explore Rewards","exploreReward",.03],
+  ["Explore Luck","exploreLuck",.02],
+  ["Explore Speed","exploreSpeed",.02],
+  ["Explore XP","exploreXP",.03],
+  ["Explore Chests","exploreChest",.02],
+  ["Explore Maps","exploreMap",1],
+  ["Explore Secrets","exploreSecret",.01],
+  ["Explore Events","exploreEvent",.02],
+  ["Explore Streaks","exploreStreak",.02],
+  ["Explore Mastery","exploreMastery",.02]
+ ]
+},
 
-  {
-    name:"🏪 Shops",
-    icon:"🏪",
-    descriptions:[
-      "Reduces shop prices.",
-      "Improves shop stock.",
-      "Improves rare stock.",
-      "Improves shop refreshes.",
-      "Improves shop discounts.",
-      "Improves secret items.",
-      "Improves shop luck.",
-      "Improves shop events.",
-      "Improves shop rewards.",
-      "Improves shop mastery."
-    ]
-  },
+{
+ name:"🏪 Shops",
+ effects:[
+  ["Shop Slots","shopSlots",1],
+  ["Shop Luck","shopLuck",.02],
+  ["Shop Discounts","shopDiscount",.005],
+  ["Shop Refresh","shopRefresh",.02],
+  ["Shop Rarity","shopRare",.01],
+  ["Shop Treasure","shopTreasure",.02],
+  ["Shop Events","shopEvent",.02],
+  ["Shop Tickets","shopTicket",1],
+  ["Shop Multipliers","shopMult",.02],
+  ["Shop Mastery","shopMastery",.02]
+ ]
+},
 
-  {
-    name:"📈 Upgrades",
-    icon:"📈",
-    descriptions:[
-      "Improves upgrade power.",
-      "Reduces upgrade costs.",
-      "Improves upgrade scaling.",
-      "Improves critical upgrades.",
-      "Improves free upgrades.",
-      "Improves rare upgrades.",
-      "Improves upgrade streaks.",
-      "Improves upgrade resets.",
-      "Improves upgrade rewards.",
-      "Improves upgrade mastery."
-    ]
-  },
+{
+ name:"📈 Upgrades",
+ effects:[
+  ["Upgrade Power","upgradePower",.03],
+  ["Upgrade Cost","upgradeCost",-.005],
+  ["Upgrade Luck","upgradeLuck",.01],
+  ["Upgrade Speed","upgradeSpeed",.02],
+  ["Upgrade Crits","upgradeCrit",.01],
+  ["Upgrade Chains","upgradeChain",.02],
+  ["Upgrade Rewards","upgradeReward",.03],
+  ["Upgrade Slots","upgradeSlots",1],
+  ["Upgrade Tiers","upgradeTier",1],
+  ["Upgrade Mastery","upgradeMastery",.02]
+ ]
+},
 
-  {
-    name:"♻️ Prestige",
-    icon:"♻️",
-    descriptions:[
-      "Improves prestige gain.",
-      "Reduces prestige requirements.",
-      "Improves prestige multipliers.",
-      "Improves prestige rewards.",
-      "Improves prestige gems.",
-      "Improves prestige XP.",
-      "Improves prestige streaks.",
-      "Improves prestige upgrades.",
-      "Improves prestige events.",
-      "Improves prestige mastery."
-    ]
-  },
+{
+ name:"♻️ Prestige",
+ effects:[
+  ["Prestige Power","prestigePower",.03],
+  ["Prestige Coins","prestigeCoins",.03],
+  ["Prestige Gems","prestigeGems",.02],
+  ["Prestige Luck","prestigeLuck",.01],
+  ["Prestige Rewards","prestigeReward",.03],
+  ["Prestige XP","prestigeXP",.03],
+  ["Prestige Speed","prestigeSpeed",.02],
+  ["Prestige Slots","prestigeSlots",1],
+  ["Prestige Mastery","prestigeMastery",.02],
+  ["Prestige Infinity","prestigeInfinity",.01]
+ ]
+},
 
-  {
-    name:"🌌 Ascension",
-    icon:"🌌",
-    descriptions:[
-      "Improves ascension gain.",
-      "Reduces ascension requirements.",
-      "Improves ascension multipliers.",
-      "Improves ascension rewards.",
-      "Improves ascension gems.",
-      "Improves ascension XP.",
-      "Improves ascension streaks.",
-      "Improves ascension upgrades.",
-      "Improves ascension events.",
-      "Improves ascension mastery."
-    ]
-  },
+{
+ name:"🌌 Ascension",
+ effects:[
+  ["Ascension Power","ascensionPower",.05],
+  ["Ascension Coins","ascensionCoins",.05],
+  ["Ascension Gems","ascensionGems",.03],
+  ["Ascension Luck","ascensionLuck",.02],
+  ["Ascension Rewards","ascensionReward",.05],
+  ["Ascension XP","ascensionXP",.04],
+  ["Ascension Speed","ascensionSpeed",.03],
+  ["Ascension Slots","ascensionSlots",1],
+  ["Ascension Mastery","ascensionMastery",.03],
+  ["Cosmic Power","cosmicPower",.05]
+ ]
+},
 
-  {
-    name:"♾️ Rebirth",
-    icon:"♾️",
-    descriptions:[
-      "Improves rebirth gain.",
-      "Reduces rebirth requirements.",
-      "Improves rebirth multipliers.",
-      "Improves rebirth rewards.",
-      "Improves rebirth gems.",
-      "Improves rebirth XP.",
-      "Improves rebirth streaks.",
-      "Improves rebirth upgrades.",
-      "Improves rebirth events.",
-      "Improves rebirth mastery."
-    ]
-  },
+{
+ name:"♾️ Rebirth",
+ effects:[
+  ["Rebirth Power","rebirthPower",.1],
+  ["Rebirth Coins","rebirthCoins",.1],
+  ["Rebirth Gems","rebirthGems",.05],
+  ["Rebirth Luck","rebirthLuck",.03],
+  ["Rebirth Rewards","rebirthReward",.1],
+  ["Rebirth XP","rebirthXP",.08],
+  ["Rebirth Speed","rebirthSpeed",.05],
+  ["Rebirth Slots","rebirthSlots",1],
+  ["Rebirth Mastery","rebirthMastery",.05],
+  ["Infinite Rebirth","infiniteRebirth",.02]
+ ]
+},
 
-  {
-    name:"🧪 Potions",
-    icon:"🧪",
-    descriptions:[
-      "Improves potion duration.",
-      "Improves potion strength.",
-      "Reduces potion costs.",
-      "Improves rare potions.",
-      "Improves potion drops.",
-      "Improves potion stacking.",
-      "Improves potion crafting.",
-      "Improves potion discovery.",
-      "Improves potion events.",
-      "Improves potion mastery."
-    ]
-  },
+{
+ name:"🧪 Potions",
+ effects:[
+  ["Coin Potion","coinPotion",.03],
+  ["Gem Potion","gemPotion",.02],
+  ["Luck Potion","luckPotion",.02],
+  ["Speed Potion","speedPotion",.02],
+  ["Crit Potion","critPotion",.02],
+  ["Combo Potion","comboPotion",.02],
+  ["XP Potion","xpPotion",.03],
+  ["Boss Potion","bossPotion",.03],
+  ["Mega Potion","megaPotion",.05],
+  ["Potion Mastery","potionMastery",.02]
+ ]
+},
 
-  {
-    name:"🪄 Magic",
-    icon:"🪄",
-    descriptions:[
-      "Increases magic power.",
-      "Improves spell duration.",
-      "Reduces spell cooldowns.",
-      "Improves spell criticals.",
-      "Improves rare spells.",
-      "Improves magic drops.",
-      "Improves magic crafting.",
-      "Improves magic events.",
-      "Improves magic combos.",
-      "Improves magic mastery."
-    ]
-  },
+{
+ name:"🪄 Magic",
+ effects:[
+  ["Magic Power","magicPower",.03],
+  ["Magic Luck","magicLuck",.02],
+  ["Magic Coins","magicCoins",.03],
+  ["Magic Gems","magicGems",.02],
+  ["Magic Crits","magicCrit",.01],
+  ["Magic XP","magicXP",.03],
+  ["Magic Events","magicEvent",.02],
+  ["Magic Chests","magicChest",.02],
+  ["Magic Spells","magicSpell",1],
+  ["Magic Mastery","magicMastery",.02]
+ ]
+},
 
-  {
-    name:"🏠 Frog Houses",
-    icon:"🏠",
-    descriptions:[
-      "Increases house capacity.",
-      "Improves house income.",
-      "Improves house upgrades.",
-      "Improves house decorations.",
-      "Improves house bonuses.",
-      "Improves house storage.",
-      "Improves house pets.",
-      "Improves house events.",
-      "Improves house rewards.",
-      "Improves house mastery."
-    ]
-  },
+{
+ name:"🏠 Frog Houses",
+ effects:[
+  ["House Level","houseLevel",.02],
+  ["House Coins","houseCoins",.02],
+  ["House Gems","houseGems",.02],
+  ["House Luck","houseLuck",.01],
+  ["House Energy","houseEnergy",.03],
+  ["House Pets","housePets",.02],
+  ["House Storage","houseStorage",10],
+  ["House Rooms","houseRooms",1],
+  ["House Decoration","houseDecor",.02],
+  ["House Mastery","houseMastery",.02]
+ ]
+},
 
-  {
-    name:"🌳 Farming",
-    icon:"🌳",
-    descriptions:[
-      "Improves crop growth.",
-      "Improves crop yield.",
-      "Improves rare crops.",
-      "Improves seed drops.",
-      "Improves farming speed.",
-      "Improves farming luck.",
-      "Improves farm upgrades.",
-      "Improves farm events.",
-      "Improves farm quests.",
-      "Improves farming mastery."
-    ]
-  },
+{
+ name:"🌳 Farming",
+ effects:[
+  ["Seed Drops","seedDrop",.02],
+  ["Crop Growth","cropGrowth",.03],
+  ["Crop Value","cropValue",.03],
+  ["Rare Crops","rareCrop",.01],
+  ["Golden Crops","goldCrop",.005],
+  ["Farm Luck","farmLuck",.02],
+  ["Farm XP","farmXP",.03],
+  ["Farm Slots","farmSlots",1],
+  ["Farm Events","farmEvent",.02],
+  ["Farm Mastery","farmMastery",.02]
+ ]
+},
 
-  {
-    name:"🌱 Gardening",
-    icon:"🌱",
-    descriptions:[
-      "Improves plant growth.",
-      "Improves plant value.",
-      "Improves rare plants.",
-      "Improves seed quality.",
-      "Improves watering.",
-      "Improves fertilizer.",
-      "Improves garden upgrades.",
-      "Improves garden events.",
-      "Improves garden discoveries.",
-      "Improves garden mastery."
-    ]
-  },
+{
+ name:"🌱 Gardening",
+ effects:[
+  ["Plant Growth","plantGrowth",.03],
+  ["Plant Value","plantValue",.03],
+  ["Flower Luck","flowerLuck",.01],
+  ["Flower Rarity","flowerRare",.01],
+  ["Garden XP","gardenXP",.03],
+  ["Garden Coins","gardenCoins",.03],
+  ["Garden Gems","gardenGems",.02],
+  ["Garden Slots","gardenSlots",1],
+  ["Garden Events","gardenEvent",.02],
+  ["Garden Mastery","gardenMastery",.02]
+ ]
+},
 
-  {
-    name:"🎣 Fishing",
-    icon:"🎣",
-    descriptions:[
-      "Improves fishing speed.",
-      "Improves fish value.",
-      "Improves rare fish.",
-      "Improves treasure catches.",
-      "Improves fishing luck.",
-      "Improves fishing gear.",
-      "Improves fishing streaks.",
-      "Improves fishing events.",
-      "Improves fishing quests.",
-      "Improves fishing mastery."
-    ]
-  },
+{
+ name:"🎣 Fishing",
+ effects:[
+  ["Fish Chance","fishChance",.03],
+  ["Rare Fish","rareFish",.01],
+  ["Golden Fish","goldFish",.005],
+  ["Fish Value","fishValue",.03],
+  ["Fishing Speed","fishSpeed",.03],
+  ["Fishing XP","fishXP",.03],
+  ["Fishing Luck","fishLuck",.02],
+  ["Fishing Chests","fishChest",.02],
+  ["Fishing Events","fishEvent",.02],
+  ["Fishing Mastery","fishMastery",.02]
+ ]
+},
 
-  {
-    name:"🏗️ Building",
-    icon:"🏗️",
-    descriptions:[
-      "Reduces building costs.",
-      "Improves building speed.",
-      "Improves building health.",
-      "Improves building income.",
-      "Improves rare buildings.",
-      "Improves building upgrades.",
-      "Improves construction rewards.",
-      "Improves building events.",
-      "Improves building storage.",
-      "Improves building mastery."
-    ]
-  },
+{
+ name:"🏗️ Building",
+ effects:[
+  ["Building Speed","buildSpeed",.03],
+  ["Building Cost","buildCost",-.005],
+  ["Building Power","buildPower",.03],
+  ["Building XP","buildXP",.03],
+  ["Building Slots","buildSlots",1],
+  ["Building Luck","buildLuck",.01],
+  ["Building Rewards","buildReward",.03],
+  ["Building Events","buildEvent",.02],
+  ["Building Levels","buildLevel",.02],
+  ["Building Mastery","buildMastery",.02]
+ ]
+},
 
-  {
-    name:"🚂 Transportation",
-    icon:"🚂",
-    descriptions:[
-      "Improves travel speed.",
-      "Reduces travel costs.",
-      "Improves vehicle capacity.",
-      "Improves vehicle income.",
-      "Improves rare vehicles.",
-      "Improves vehicle upgrades.",
-      "Improves travel discoveries.",
-      "Improves travel events.",
-      "Improves travel rewards.",
-      "Improves transportation mastery."
-    ]
-  },
+{
+ name:"🚂 Transportation",
+ effects:[
+  ["Travel Speed","travelSpeed",.03],
+  ["Travel Cost","travelCost",-.005],
+  ["Travel Rewards","travelReward",.03],
+  ["Vehicle Luck","vehicleLuck",.02],
+  ["Vehicle Power","vehiclePower",.03],
+  ["Vehicle XP","vehicleXP",.03],
+  ["Vehicle Slots","vehicleSlots",1],
+  ["Vehicle Rarity","vehicleRare",.01],
+  ["Vehicle Events","vehicleEvent",.02],
+  ["Vehicle Mastery","vehicleMastery",.02]
+ ]
+},
 
-  {
-    name:"🏝️ Islands",
-    icon:"🏝️",
-    descriptions:[
-      "Improves island income.",
-      "Improves island exploration.",
-      "Improves island resources.",
-      "Improves island treasures.",
-      "Improves island discoveries.",
-      "Improves island upgrades.",
-      "Improves island events.",
-      "Improves island quests.",
-      "Improves island collectibles.",
-      "Improves island mastery."
-    ]
-  },
+{
+ name:"🏝️ Islands",
+ effects:[
+  ["Island Unlocks","islandUnlock",1],
+  ["Island Power","islandPower",.04],
+  ["Island Coins","islandCoins",.03],
+  ["Island Gems","islandGems",.02],
+  ["Island Luck","islandLuck",.02],
+  ["Island Chests","islandChest",.02],
+  ["Island Events","islandEvent",.02],
+  ["Island Secrets","islandSecret",.01],
+  ["Island Quests","islandQuest",1],
+  ["Island Mastery","islandMastery",.02]
+ ]
+},
 
-  {
-    name:"🌋 Dungeons",
-    icon:"🌋",
-    descriptions:[
-      "Improves dungeon damage.",
-      "Improves dungeon rewards.",
-      "Improves dungeon treasure.",
-      "Improves dungeon luck.",
-      "Improves dungeon rooms.",
-      "Improves dungeon bosses.",
-      "Improves dungeon keys.",
-      "Improves dungeon events.",
-      "Improves dungeon streaks.",
-      "Improves dungeon mastery."
-    ]
-  },
+{
+ name:"🌋 Dungeons",
+ effects:[
+  ["Dungeon Damage","dungeonDamage",.04],
+  ["Dungeon Health","dungeonHealth",.03],
+  ["Dungeon Rewards","dungeonReward",.04],
+  ["Dungeon Keys","dungeonKey",1],
+  ["Dungeon Luck","dungeonLuck",.02],
+  ["Dungeon Chests","dungeonChest",.02],
+  ["Dungeon Rooms","dungeonRoom",1],
+  ["Dungeon Bosses","dungeonBoss",.03],
+  ["Dungeon Streaks","dungeonStreak",.02],
+  ["Dungeon Mastery","dungeonMastery",.02]
+ ]
+},
 
-  {
-    name:"🏟️ Challenges",
-    icon:"🏟️",
-    descriptions:[
-      "Improves challenge rewards.",
-      "Improves challenge XP.",
-      "Improves challenge coins.",
-      "Improves challenge gems.",
-      "Improves challenge streaks.",
-      "Improves challenge difficulty rewards.",
-      "Improves challenge luck.",
-      "Improves challenge events.",
-      "Improves secret challenges.",
-      "Improves challenge mastery."
-    ]
-  },
+{
+ name:"🏟️ Challenges",
+ effects:[
+  ["Challenge Power","challengePower",.03],
+  ["Challenge Rewards","challengeReward",.03],
+  ["Challenge XP","challengeXP",.03],
+  ["Challenge Luck","challengeLuck",.02],
+  ["Challenge Speed","challengeSpeed",.02],
+  ["Challenge Streaks","challengeStreak",.02],
+  ["Challenge Tiers","challengeTier",1],
+  ["Challenge Keys","challengeKey",1],
+  ["Challenge Events","challengeEvent",.02],
+  ["Challenge Mastery","challengeMastery",.02]
+ ]
+},
 
-  {
-    name:"🏁 Races",
-    icon:"🏁",
-    descriptions:[
-      "Improves race speed.",
-      "Improves race rewards.",
-      "Improves race boosts.",
-      "Improves race luck.",
-      "Improves race streaks.",
-      "Improves race prizes.",
-      "Improves race events.",
-      "Improves race shortcuts.",
-      "Improves race collectibles.",
-      "Improves race mastery."
-    ]
-  },
+{
+ name:"🏁 Races",
+ effects:[
+  ["Race Speed","raceSpeed",.04],
+  ["Race Acceleration","raceAccel",.03],
+  ["Race Rewards","raceReward",.03],
+  ["Race XP","raceXP",.03],
+  ["Race Luck","raceLuck",.02],
+  ["Race Streaks","raceStreak",.02],
+  ["Race Tickets","raceTicket",1],
+  ["Race Classes","raceClass",1],
+  ["Race Events","raceEvent",.02],
+  ["Race Mastery","raceMastery",.02]
+ ]
+},
 
-  {
-    name:"🥇 Tournaments",
-    icon:"🥇",
-    descriptions:[
-      "Improves tournament points.",
-      "Improves tournament rewards.",
-      "Improves tournament streaks.",
-      "Improves tournament bonuses.",
-      "Improves tournament luck.",
-      "Improves tournament prizes.",
-      "Improves tournament events.",
-      "Improves tournament quests.",
-      "Improves tournament achievements.",
-      "Improves tournament mastery."
-    ]
-  },
+{
+ name:"🥇 Tournaments",
+ effects:[
+  ["Tournament Power","tournamentPower",.04],
+  ["Tournament Rewards","tournamentReward",.04],
+  ["Tournament XP","tournamentXP",.03],
+  ["Tournament Luck","tournamentLuck",.02],
+  ["Tournament Tickets","tournamentTicket",1],
+  ["Tournament Ranks","tournamentRank",1],
+  ["Tournament Streaks","tournamentStreak",.02],
+  ["Tournament Events","tournamentEvent",.02],
+  ["Tournament Chests","tournamentChest",.02],
+  ["Tournament Mastery","tournamentMastery",.02]
+ ]
+},
 
-  {
-    name:"🎰 Minigames",
-    icon:"🎰",
-    descriptions:[
-      "Improves minigame rewards.",
-      "Improves minigame luck.",
-      "Improves minigame scores.",
-      "Improves minigame streaks.",
-      "Improves minigame prizes.",
-      "Improves minigame tickets.",
-      "Improves minigame events.",
-      "Improves minigame bonuses.",
-      "Improves secret minigames.",
-      "Improves minigame mastery."
-    ]
-  },
+{
+ name:"🎰 Minigames",
+ effects:[
+  ["Minigame Luck","miniLuck",.02],
+  ["Minigame Rewards","miniReward",.04],
+  ["Minigame XP","miniXP",.03],
+  ["Minigame Speed","miniSpeed",.03],
+  ["Minigame Tickets","miniTicket",1],
+  ["Minigame Streaks","miniStreak",.02],
+  ["Minigame Secrets","miniSecret",.01],
+  ["Minigame Events","miniEvent",.02],
+  ["Minigame Keys","miniKey",1],
+  ["Minigame Mastery","miniMastery",.02]
+ ]
+},
 
-  {
-    name:"🎵 Music",
-    icon:"🎵",
-    descriptions:[
-      "Improves music bonuses.",
-      "Improves rhythm rewards.",
-      "Improves song streaks.",
-      "Improves music XP.",
-      "Improves music coins.",
-      "Improves music gems.",
-      "Improves rare songs.",
-      "Improves music events.",
-      "Improves music combos.",
-      "Improves music mastery."
-    ]
-  },
+{
+ name:"🎵 Music",
+ effects:[
+  ["Music Power","musicPower",.02],
+  ["Music Luck","musicLuck",.01],
+  ["Music Coins","musicCoins",.02],
+  ["Music Gems","musicGems",.02],
+  ["Music XP","musicXP",.02],
+  ["Music Combo","musicCombo",.02],
+  ["Music Energy","musicEnergy",.02],
+  ["Music Events","musicEvent",.02],
+  ["Music Songs","musicSongs",1],
+  ["Music Mastery","musicMastery",.02]
+ ]
+},
 
-  {
-    name:"🐸 Frog Collection",
-    icon:"🐸",
-    descriptions:[
-      "Improves collection capacity.",
-      "Improves collection rarity.",
-      "Improves collection rewards.",
-      "Improves collection luck.",
-      "Improves collection bonuses.",
-      "Improves rare frog discovery.",
-      "Improves collection quests.",
-      "Improves collection events.",
-      "Improves collection sets.",
-      "Improves collection mastery."
-    ]
-  },
+{
+ name:"🐸 Frog Collection",
+ effects:[
+  ["Frog Count","frogCount",1],
+  ["Frog Rarity","frogRare",.01],
+  ["Frog Power","frogPower",.03],
+  ["Frog Luck","frogLuck",.02],
+  ["Frog XP","frogXP",.03],
+  ["Frog Coins","frogCoins",.03],
+  ["Frog Gems","frogGems",.02],
+  ["Frog Sets","frogSet",1],
+  ["Frog Secrets","frogSecret",.01],
+  ["Frog Mastery","frogMastery",.02]
+ ]
+},
 
-  {
-    name:"🥚 Eggs",
-    icon:"🥚",
-    descriptions:[
-      "Improves egg hatch speed.",
-      "Improves egg luck.",
-      "Improves egg rarity.",
-      "Improves egg rewards.",
-      "Improves egg discounts.",
-      "Improves shiny eggs.",
-      "Improves secret eggs.",
-      "Improves egg events.",
-      "Improves egg streaks.",
-      "Improves egg mastery."
-    ]
-  },
+{
+ name:"🥚 Eggs",
+ effects:[
+  ["Egg Luck","eggLuck",.02],
+  ["Egg Speed","eggSpeed",.03],
+  ["Egg Rarity","eggRare",.01],
+  ["Egg Slots","eggSlots",1],
+  ["Egg Hatch Power","hatchPower",.03],
+  ["Egg XP","eggXP",.03],
+  ["Egg Coins","eggCoins",.03],
+  ["Egg Gems","eggGems",.02],
+  ["Egg Events","eggEvent",.02],
+  ["Egg Mastery","eggMastery",.02]
+ ]
+},
 
-  {
-    name:"💍 Equipment",
-    icon:"💍",
-    descriptions:[
-      "Improves equipment power.",
-      "Improves equipment rarity.",
-      "Improves equipment upgrades.",
-      "Improves equipment durability.",
-      "Improves equipment bonuses.",
-      "Improves equipment drops.",
-      "Improves equipment crafting.",
-      "Improves equipment sets.",
-      "Improves legendary equipment.",
-      "Improves equipment mastery."
-    ]
-  },
+{
+ name:"💍 Equipment",
+ effects:[
+  ["Equipment Power","equipPower",.04],
+  ["Equipment Luck","equipLuck",.02],
+  ["Equipment XP","equipXP",.03],
+  ["Equipment Slots","equipSlots",1],
+  ["Equipment Crit","equipCrit",.02],
+  ["Equipment Speed","equipSpeed",.02],
+  ["Equipment Coins","equipCoins",.03],
+  ["Equipment Gems","equipGems",.02],
+  ["Equipment Sets","equipSet",1],
+  ["Equipment Mastery","equipMastery",.02]
+ ]
+},
 
-  {
-    name:"🛡️ Gear",
-    icon:"🛡️",
-    descriptions:[
-      "Improves gear power.",
-      "Improves gear defense.",
-      "Improves gear rarity.",
-      "Improves gear upgrades.",
-      "Improves gear bonuses.",
-      "Improves gear drops.",
-      "Improves gear crafting.",
-      "Improves gear sets.",
-      "Improves legendary gear.",
-      "Improves gear mastery."
-    ]
-  },
+{
+ name:"🛡️ Gear",
+ effects:[
+  ["Gear Damage","gearDamage",.04],
+  ["Gear Defense","gearDefense",.03],
+  ["Gear Health","gearHealth",.03],
+  ["Gear Crit","gearCrit",.02],
+  ["Gear Luck","gearLuck",.02],
+  ["Gear Speed","gearSpeed",.02],
+  ["Gear Rarity","gearRare",.01],
+  ["Gear XP","gearXP",.03],
+  ["Gear Sets","gearSet",1],
+  ["Gear Mastery","gearMastery",.02]
+ ]
+},
 
-  {
-    name:"🔮 Artifacts",
-    icon:"🔮",
-    descriptions:[
-      "Improves artifact power.",
-      "Improves artifact rarity.",
-      "Improves artifact bonuses.",
-      "Improves artifact discovery.",
-      "Improves artifact drops.",
-      "Improves artifact upgrades.",
-      "Improves artifact sets.",
-      "Improves ancient artifacts.",
-      "Improves artifact events.",
-      "Improves artifact mastery."
-    ]
-  },
+{
+ name:"🔮 Artifacts",
+ effects:[
+  ["Artifact Power","artifactPower",.05],
+  ["Artifact Luck","artifactLuck",.03],
+  ["Artifact Coins","artifactCoins",.04],
+  ["Artifact Gems","artifactGems",.03],
+  ["Artifact XP","artifactXP",.04],
+  ["Artifact Slots","artifactSlots",1],
+  ["Artifact Rarity","artifactRare",.01],
+  ["Artifact Fusion","artifactFusion",.02],
+  ["Artifact Secrets","artifactSecret",.01],
+  ["Artifact Mastery","artifactMastery",.03]
+ ]
+},
 
-  {
-    name:"🌦️ Weather",
-    icon:"🌦️",
-    descriptions:[
-      "Improves sunny-weather bonuses.",
-      "Improves rain bonuses.",
-      "Improves storm rewards.",
-      "Improves snow rewards.",
-      "Improves fog discoveries.",
-      "Improves rainbow events.",
-      "Improves weather duration.",
-      "Improves weather luck.",
-      "Improves rare weather.",
-      "Improves weather mastery."
-    ]
-  },
+{
+ name:"🌦️ Weather",
+ effects:[
+  ["Rain Bonus","rainBonus",.03],
+  ["Sun Bonus","sunBonus",.03],
+  ["Storm Bonus","stormBonus",.05],
+  ["Snow Bonus","snowBonus",.03],
+  ["Fog Luck","fogLuck",.02],
+  ["Rainbow Bonus","rainbowBonus",.05],
+  ["Weather Duration","weatherDuration",.02],
+  ["Weather Luck","weatherLuck",.02],
+  ["Weather Events","weatherEvent",.02],
+  ["Weather Mastery","weatherMastery",.02]
+ ]
+},
 
-  {
-    name:"🕐 Time Events",
-    icon:"🕐",
-    descriptions:[
-      "Improves hourly rewards.",
-      "Improves timed bonuses.",
-      "Improves time-event duration.",
-      "Improves time-event luck.",
-      "Improves countdown rewards.",
-      "Improves speed events.",
-      "Improves slow-time bonuses.",
-      "Improves time treasures.",
-      "Improves rare time events.",
-      "Improves time mastery."
-    ]
-  },
+{
+ name:"🕐 Time Events",
+ effects:[
+  ["Hour Bonus","hourBonus",.02],
+  ["Minute Bonus","minuteBonus",.01],
+  ["Night Bonus","nightBonus",.03],
+  ["Day Bonus","dayBonus",.03],
+  ["Weekend Bonus","weekendBonus",.05],
+  ["Time Luck","timeLuck",.02],
+  ["Time Rewards","timeReward",.03],
+  ["Time Streaks","timeStreak",.02],
+  ["Time Events","timeEvent",.02],
+  ["Time Mastery","timeMastery",.02]
+ ]
+},
 
-  {
-    name:"📅 Seasons",
-    icon:"📅",
-    descriptions:[
-      "Improves seasonal XP.",
-      "Improves seasonal coins.",
-      "Improves seasonal gems.",
-      "Improves seasonal quests.",
-      "Improves seasonal rewards.",
-      "Improves seasonal skins.",
-      "Improves seasonal events.",
-      "Improves seasonal collectibles.",
-      "Improves seasonal milestones.",
-      "Improves seasonal mastery."
-    ]
-  },
+{
+ name:"📅 Seasons",
+ effects:[
+  ["Season Power","seasonPower",.03],
+  ["Season Rewards","seasonReward",.03],
+  ["Season XP","seasonXP",.03],
+  ["Season Luck","seasonLuck",.02],
+  ["Season Tokens","seasonToken",1],
+  ["Season Levels","seasonLevel",1],
+  ["Season Quests","seasonQuest",1],
+  ["Season Skins","seasonSkin",1],
+  ["Season Events","seasonEvent",.02],
+  ["Season Mastery","seasonMastery",.02]
+ ]
+},
 
-  {
-    name:"🎃 Festivals",
-    icon:"🎃",
-    descriptions:[
-      "Improves festival rewards.",
-      "Improves festival coins.",
-      "Improves festival gems.",
-      "Improves festival tickets.",
-      "Improves festival luck.",
-      "Improves festival skins.",
-      "Improves festival quests.",
-      "Improves festival events.",
-      "Improves festival collectibles.",
-      "Improves festival mastery."
-    ]
-  },
+{
+ name:"🎃 Festivals",
+ effects:[
+  ["Festival Coins","festivalCoins",.04],
+  ["Festival Gems","festivalGems",.03],
+  ["Festival Luck","festivalLuck",.02],
+  ["Festival XP","festivalXP",.03],
+  ["Festival Tickets","festivalTicket",1],
+  ["Festival Skins","festivalSkin",1],
+  ["Festival Pets","festivalPet",1],
+  ["Festival Chests","festivalChest",.02],
+  ["Festival Events","festivalEvent",.02],
+  ["Festival Mastery","festivalMastery",.02]
+ ]
+},
 
-  {
-    name:"🏅 Mastery",
-    icon:"🏅",
-    descriptions:[
-      "Improves overall mastery gain.",
-      "Improves mastered-mechanic bonuses.",
-      "Improves mastery XP.",
-      "Improves mastery coins.",
-      "Improves mastery gems.",
-      "Improves mastery streaks.",
-      "Improves mastery rewards.",
-      "Improves mastery milestones.",
-      "Improves mastery challenges.",
-      "Improves ultimate mastery."
-    ]
-  },
+{
+ name:"🏅 Mastery",
+ effects:[
+  ["Click Mastery","clickMastery",.02],
+  ["Economy Mastery","economyMastery",.02],
+  ["Pet Mastery","petMastery",.02],
+  ["Skin Mastery II","skinMastery2",.02],
+  ["World Mastery II","worldMastery2",.02],
+  ["Combat Mastery II","combatMastery2",.02],
+  ["Craft Mastery II","craftMastery2",.02],
+  ["Social Mastery","socialMastery",.02],
+  ["Progression Mastery","progressMastery",.02],
+  ["Grand Mastery","grandMastery",.03]
+ ]
+},
 
-  {
-    name:"🌟 Secrets",
-    icon:"🌟",
-    descriptions:[
-      "Improves secret discovery.",
-      "Improves hidden rewards.",
-      "Improves secret luck.",
-      "Improves secret events.",
-      "Improves secret quests.",
-      "Improves secret skins.",
-      "Improves secret pets.",
-      "Improves secret worlds.",
-      "Improves secret bosses.",
-      "Improves secret mastery."
-    ]
-  }
+{
+ name:"🌟 Secrets",
+ effects:[
+  ["Secret Coins","secretCoins",.05],
+  ["Secret Gems","secretGems",.03],
+  ["Secret Luck","secretLuck",.03],
+  ["Secret Power","secretPower",.05],
+  ["Secret XP","secretXP",.04],
+  ["Secret Chests","secretChest",.02],
+  ["Secret Pets","secretPet",1],
+  ["Secret Skins","secretSkin",1],
+  ["Secret Worlds","secretWorld",1],
+  ["Ultimate Secret","ultimateSecret",.05]
+ ]
+
+}
 
 ];
 
-
 /*
-  Give every mechanic a unique ID.
-
-  50 categories × 10 mechanics = 500.
+  Convert the compact database into 500 individual mechanics.
 */
-const MECHANICS = [];
 
-let mechanicID = 0;
+const MECHANICS = [];
 
 for(const category of MECHANIC_CATEGORIES){
 
-  for(let slot=0;slot<10;slot++){
+  for(const item of category.effects){
 
     MECHANICS.push({
-      id:mechanicID,
-      number:mechanicID+1,
+      id:MECHANICS.length + 1,
       category:category.name,
-      categoryIcon:category.icon,
-      slot,
-      name:category.descriptions[slot],
-      level:0,
-      maxLevel:100,
-      power:1 + slot * 0.25
+      name:item[0],
+      type:item[1],
+      value:item[2]
     });
 
-    mechanicID++;
-
   }
 
 }
 
-
-/*
-  Sanity check.
-*/
 if(MECHANICS.length !== 500){
-
   throw new Error(
-    "Frog Frenzy requires exactly 500 mechanics."
+    "FATAL: Expected 500 mechanics, found "+MECHANICS.length
   );
-
-}
-
-
-/*
-  Each mechanic contributes a lightweight numerical modifier.
-  No 500 individual intervals are used.
-*/
-function mechanicLevel(id){
-
-  if(!window.game || !Array.isArray(window.game.mechanics)){
-    return 0;
-  }
-
-  return window.game.mechanics[id] || 0;
-}
-
-
-function mechanicBonus(id){
-
-  const level=mechanicLevel(id);
-
-  return 1 + level * 0.01;
-}
-
-
-/*
-  Returns the combined bonus of a category.
-*/
-function categoryBonus(categoryIndex){
-
-  const start=categoryIndex*10;
-
-  let total=1;
-
-  for(let i=0;i<10;i++){
-
-    total*=mechanicBonus(start+i);
-
-  }
-
-  return total;
-}
-
-
-/*
-  Returns total mastery progress.
-*/
-function totalMechanicLevels(){
-
-  if(!window.game)
-    return 0;
-
-  return window.game.mechanics.reduce(
-    (sum,value)=>sum+value,
-    0
-  );
-
-}
-
-
-/*
-  Count mechanics that have been used/unlocked.
-*/
-function unlockedMechanics(){
-
-  if(!window.game)
-    return 0;
-
-  return window.game.mechanics.filter(
-    value=>value>0
-  ).length;
-
 }
