@@ -1,97 +1,396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#07120a">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07130a">
 <title>🐸 Frog Frenzy 500</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+:root{
+  --bg:#07130a;
+  --panel:#0e2113;
+  --panel2:#122b18;
+  --line:#285b34;
+  --green:#6dff78;
+  --text:#edffed;
+  --muted:#91b89a;
+  --gold:#ffd65a;
+  --blue:#55c7ff;
+  --red:#ff6c6c;
+  --purple:#c28cff;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 50% -10%,#236d36 0,#102d17 27%,#07130a 65%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  color:white;
+  background:#174c25;
+  border:1px solid #4a9857;
+  border-radius:10px;
+  padding:10px 13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.12s;
+}
+
+button:hover{
+  background:#246b34;
+  transform:translateY(-1px);
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
+}
+
+input{
+  width:100%;
+  color:white;
+  background:#071009;
+  border:1px solid #397146;
+  border-radius:9px;
+  padding:10px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#75e985;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#061008ee;
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid #24572f;
+  padding:10px;
+}
+
+.title{
+  color:var(--green);
+  font-weight:900;
+  font-size:25px;
+}
+
+.stats{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:8px;
+}
+
+.stat{
+  background:#102416;
+  border:1px solid #285b34;
+  border-radius:9px;
+  padding:7px 10px;
+  font-size:14px;
+}
+
+nav{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  padding:9px 0 2px;
+  scrollbar-width:thin;
+}
+
+nav button{
+  white-space:nowrap;
+}
+
+main{
+  max-width:1350px;
+  margin:auto;
+  padding:14px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+
+.card{
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:14px;
+  box-shadow:0 8px 25px #0005;
+}
+
+.hero{
+  text-align:center;
+}
+
+.frog{
+  display:inline-block;
+  font-size:145px;
+  line-height:1;
+  cursor:pointer;
+  user-select:none;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.frog.bounce{
+  animation:frogBounce .12s;
+}
+
+@keyframes frogBounce{
+  0%{transform:scale(1)}
+  45%{transform:scale(.82) rotate(-4deg)}
+  100%{transform:scale(1)}
+}
+
+.big{
+  font-size:28px;
+  font-weight:900;
+}
+
+.huge{
+  font-size:65px;
+  line-height:1.1;
+}
+
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  align-items:center;
+}
+
+.center{
+  text-align:center;
+}
+
+.bar{
+  height:12px;
+  background:#020403;
+  border-radius:20px;
+  overflow:hidden;
+  margin:7px 0;
+}
+
+.fill{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#42df62,#baff70);
+  transition:width .15s;
+}
+
+.blue{
+  background:linear-gradient(90deg,#278cff,#75ddff);
+}
+
+.gold{
+  background:linear-gradient(90deg,#ffad25,#fff078);
+}
+
+.purple{
+  background:linear-gradient(90deg,#8747ff,#e6a3ff);
+}
+
+.red{
+  background:linear-gradient(90deg,#ff4747,#ff9a65);
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#173a20;
+  border:1px solid #326b40;
+  font-size:11px;
+  margin:2px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:12px;
+}
+
+.notice{
+  background:#102c17;
+  border:1px solid #326c40;
+  padding:12px;
+  border-radius:10px;
+}
+
+.mechanic{
+  min-height:205px;
+}
+
+.locked{
+  opacity:.55;
+}
+
+.current{
+  border-color:var(--gold);
+  box-shadow:0 0 20px #ffe35c22;
+}
+
+.shopBtn{
+  width:100%;
+  margin-top:7px;
+}
+
+.item{
+  padding:9px 0;
+  border-bottom:1px solid #1b3d23;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%);
+  z-index:100;
+  display:none;
+  background:#173d20;
+  border:1px solid #72e981;
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:800;
+  box-shadow:0 10px 30px #0008;
+}
+
+.float{
+  position:fixed;
+  z-index:99;
+  pointer-events:none;
+  color:#b9ff78;
+  font-weight:900;
+  animation:floatUp .8s forwards;
+}
+
+@keyframes floatUp{
+  to{
+    transform:translateY(-90px);
+    opacity:0;
+  }
+}
+
+@media(max-width:600px){
+  .title{font-size:20px}
+  .frog{font-size:105px}
+  main{padding:8px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
 
 <header>
-  <div class="logo">🐸 FROG FRENZY 500</div>
+  <div class="title">🐸 FROG FRENZY 500</div>
 
   <div class="stats">
-    <span>🪙 <b id="coins">0</b></span>
-    <span>💎 <b id="gems">0</b></span>
-    <span>⚡ <b id="energy">100</b></span>
-    <span>⭐ Lv <b id="level">1</b></span>
-    <span>🔥 x<b id="combo">1.00</b></span>
-    <span>🏆 <b id="prestige">0</b></span>
-    <span>🌌 <b id="rebirth">0</b></span>
+    <div class="stat">🪙 <span id="coins">0</span></div>
+    <div class="stat">💎 <span id="gems">25</span></div>
+    <div class="stat">⚡ <span id="energy">100</span></div>
+    <div class="stat">⭐ Lv <span id="level">1</span></div>
+    <div class="stat">🔥 x<span id="combo">1.00</span></div>
+    <div class="stat">🏆 <span id="prestige">0</span></div>
+    <div class="stat">🌌 <span id="ascension">0</span></div>
+    <div class="stat">♾️ <span id="rebirth">0</span></div>
+    <div class="stat">⚙️ <span id="activeMechanics">0</span>/500</div>
   </div>
-</header>
 
-<nav id="tabs">
-  <button data-tab="home">🐸 Home</button>
-  <button data-tab="mechanics">⚙️ 500 Mechanics</button>
-  <button data-tab="pets">🐾 Pets</button>
-  <button data-tab="skins">🎨 Skins</button>
-  <button data-tab="worlds">🌎 Worlds</button>
-  <button data-tab="bosses">👹 Bosses</button>
-  <button data-tab="crafting">🔨 Crafting</button>
-  <button data-tab="social">👥 Social</button>
-  <button data-tab="progression">🏆 Progression</button>
-</nav>
+  <nav>
+    <button onclick="showPage('home')">🐸 Home</button>
+    <button onclick="showPage('mechanics')">⚙️ 500</button>
+    <button onclick="showPage('shop')">🛒 Shop</button>
+    <button onclick="showPage('pets')">🐾 Pets</button>
+    <button onclick="showPage('skins')">🎨 Skins</button>
+    <button onclick="showPage('worlds')">🌎 Worlds</button>
+    <button onclick="showPage('bosses')">👹 Bosses</button>
+    <button onclick="showPage('social')">👥 Social</button>
+    <button onclick="showPage('quests')">📜 Quests</button>
+    <button onclick="showPage('progress')">🏆 Progress</button>
+  </nav>
+</header>
 
 <main>
 
-<section id="home" class="page">
-  <div class="home-grid">
+<section id="home" class="page active">
+  <div class="grid">
 
-    <div class="panel frog-panel">
-      <div id="worldLabel">🌿 Lily Pond</div>
+    <div class="card hero">
+      <div class="muted" id="worldName">🌿 Lily Pond</div>
 
-      <button id="frog" aria-label="Click frog">🐸</button>
+      <div id="frog" class="frog" role="button" aria-label="Click frog">🐸</div>
 
-      <div class="power">
-        <b id="clickPower">1</b> 🪙 / click
+      <div class="big">
+        <span id="clickPower">1</span> 🪙 / click
       </div>
 
-      <div class="row">
-        <button id="megaButton">💥 Mega Jump</button>
-        <button id="frenzyButton">🔥 Frenzy</button>
+      <p>🔥 Combo: <b id="comboBig">1.00</b></p>
+
+      <div class="row" style="justify-content:center">
+        <button onclick="clickFrog()">🐸 RIBBIT!</button>
+        <button onclick="megaClick()">💥 Mega</button>
+        <button onclick="frenzy()">🔥 Frenzy</button>
       </div>
 
-      <div>Clicks: <b id="clicks">0</b></div>
+      <p>Clicks: <b id="clicks">0</b></p>
 
-      <div class="bar">
-        <i id="xpBar"></i>
-      </div>
-
-      <small id="xpText">0 / 100 XP</small>
+      <div class="muted">XP</div>
+      <div class="bar"><div id="xpBar" class="fill"></div></div>
+      <div id="xpText">0 / 100</div>
     </div>
 
-    <div class="panel">
-      <h2>🔥 Combo</h2>
-      <div class="big">x<span id="comboBig">1.00</span></div>
-      <p>Best: <b id="bestCombo">1.00</b></p>
-      <p>Criticals: <b id="criticals">0</b></p>
-    </div>
-
-    <div class="panel">
+    <div class="card">
       <h2>⚡ Energy</h2>
-      <div class="bar">
-        <i id="energyBar"></i>
-      </div>
-      <p><span id="energyText">100 / 100</span></p>
-      <button id="energyButton">Restore — 2 💎</button>
+      <div class="bar"><div id="energyBar" class="fill blue"></div></div>
+      <p id="energyText">100 / 100</p>
+      <button onclick="restoreEnergy()">Restore — 2 💎</button>
     </div>
 
-    <div class="panel">
+    <div class="card">
       <h2>🎁 Daily Reward</h2>
-      <p id="dailyText">Loading...</p>
-      <button id="dailyButton">Collect</button>
+      <p id="dailyText"></p>
+      <button id="dailyBtn" onclick="dailyReward()">Collect</button>
     </div>
 
-    <div class="panel">
-      <h2>🎉 Event</h2>
+    <div class="card">
+      <h2>🎲 Random Event</h2>
       <p id="eventText">No event.</p>
-      <button id="eventButton">🎲 Start Event</button>
+      <button onclick="randomEvent()">Start Event</button>
     </div>
 
-    <div class="panel">
+    <div class="card">
       <h2>📢 Activity</h2>
       <div id="activity"></div>
     </div>
@@ -99,94 +398,2291 @@
   </div>
 </section>
 
-<section id="mechanics" class="page hidden">
-  <div class="page-title">
-    <h1>⚙️ 500 Mechanics</h1>
-    <input id="mechanicSearch" placeholder="Search mechanics...">
+<section id="mechanics" class="page">
+  <h1>⚙️ 500 Game Mechanics</h1>
+  <div class="notice">
+    <b>Exactly 500 mechanics.</b><br>
+    50 categories × 10 mechanics. Each mechanic has its own level from 0–100.
   </div>
-  <div id="mechanicCategories"></div>
+  <br>
+  <div id="mechanicsGrid" class="grid"></div>
 </section>
 
-<section id="pets" class="page hidden">
+<section id="shop" class="page">
+  <h1>🛒 Frog Shop</h1>
+  <div id="shopGrid" class="grid"></div>
+</section>
+
+<section id="pets" class="page">
   <h1>🐾 Pets</h1>
-  <div id="petsGrid" class="card-grid"></div>
+  <div id="petsGrid" class="grid"></div>
 </section>
 
-<section id="skins" class="page hidden">
-  <h1>🎨 Skins</h1>
-  <div id="skinsGrid" class="card-grid"></div>
+<section id="skins" class="page">
+  <h1>🎨 Frog Skins</h1>
+  <div id="skinsGrid" class="grid"></div>
 </section>
 
-<section id="worlds" class="page hidden">
+<section id="worlds" class="page">
   <h1>🌎 Worlds</h1>
-  <div id="worldsGrid" class="card-grid"></div>
+  <div id="worldsGrid" class="grid"></div>
 </section>
 
-<section id="bosses" class="page hidden">
+<section id="bosses" class="page">
   <h1>👹 Bosses</h1>
-  <div id="bossesGrid" class="card-grid"></div>
+  <div id="bossesGrid" class="grid"></div>
 </section>
 
-<section id="crafting" class="page hidden">
-  <h1>🔨 Crafting</h1>
-  <div id="craftGrid" class="card-grid"></div>
-</section>
+<section id="social" class="page">
+  <h1>👥 Friends & Clans</h1>
 
-<section id="social" class="page hidden">
-
-  <div class="card-grid">
-
-    <div class="panel">
+  <div class="grid">
+    <div class="card">
       <h2>👥 Friends</h2>
-      <input id="friendName" placeholder="Friend name">
-      <button id="addFriend">Add Friend</button>
+      <input id="friendName" maxlength="30" placeholder="Friend name">
+      <br><br>
+      <button onclick="addFriend()">Add Friend</button>
       <div id="friendsList"></div>
     </div>
 
-    <div class="panel">
+    <div class="card">
       <h2>🏰 Clan</h2>
-      <input id="clanName" placeholder="Clan name">
-      <button id="createClan">Create Clan</button>
-      <div id="clanInfo"></div>
+      <input id="clanName" maxlength="30" placeholder="Clan name">
+      <br><br>
+      <button onclick="createClan()">Create Clan</button>
+      <div id="clanPanel"></div>
     </div>
-
   </div>
-
 </section>
 
-<section id="progression" class="page hidden">
+<section id="quests" class="page">
+  <h1>📜 Quests & Achievements</h1>
+  <div id="questsGrid" class="grid"></div>
+</section>
+
+<section id="progress" class="page">
   <h1>🏆 Progression</h1>
 
-  <div class="card-grid">
+  <div class="grid">
+    <div class="card">
+      <h2>⭐ Level</h2>
+      <p>Level <b id="progressLevel">1</b></p>
+    </div>
 
-    <div class="panel">
+    <div class="card">
       <h2>🏆 Prestige</h2>
-      <p>Requires level 100.</p>
-      <button id="prestigeButton">Prestige</button>
+      <p id="prestigeInfo"></p>
+      <button onclick="prestige()">Prestige</button>
     </div>
 
-    <div class="panel">
-      <h2>🌌 Rebirth</h2>
-      <p>Requires 10 prestige.</p>
-      <button id="rebirthButton">Rebirth</button>
+    <div class="card">
+      <h2>🌌 Ascension</h2>
+      <p id="ascensionInfo"></p>
+      <button onclick="ascend()">Ascend</button>
     </div>
 
-    <div class="panel">
-      <h2>📊 Statistics</h2>
-      <div id="statistics"></div>
+    <div class="card">
+      <h2>♾️ Rebirth</h2>
+      <p id="rebirthInfo"></p>
+      <button onclick="rebirth()">Rebirth</button>
     </div>
 
+    <div class="card">
+      <h2>🏰 Clan</h2>
+      <p id="progressClan">No clan</p>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Mastery</h2>
+      <p id="masteryInfo"></p>
+    </div>
+
+    <div class="card">
+      <h2>💾 Save</h2>
+      <button onclick="saveGame()">Save Game</button>
+      <button onclick="resetGame()">Reset Game</button>
+    </div>
   </div>
 </section>
 
 </main>
 
-<div id="toast"></div>
+<div id="toast" class="toast"></div>
 
-<script src="mechanics.js"></script>
-<script src="content.js"></script>
-<script src="save.js"></script>
-<script src="game.js"></script>
+<script>
+"use strict";
 
+/* =========================================================
+   BIG NUMBER
+   ========================================================= */
+
+class BigNum{
+  constructor(m=0,e=0){
+    if(m instanceof BigNum){
+      this.m=m.m;
+      this.e=m.e;
+    }else if(typeof m==="object" && m!==null){
+      this.m=Number(m.m)||0;
+      this.e=Number(m.e)||0;
+    }else{
+      this.m=Number(m)||0;
+      this.e=Number(e)||0;
+    }
+    this.normalize();
+  }
+
+  normalize(){
+    if(!Number.isFinite(this.m)){
+      this.m=this.m<0?-9.999999:9.999999;
+      this.e=308;
+    }
+
+    if(this.m===0){
+      this.e=0;
+      return this;
+    }
+
+    const p=Math.floor(Math.log10(Math.abs(this.m)));
+
+    if(Number.isFinite(p)){
+      this.m/=Math.pow(10,p);
+      this.e+=p;
+    }
+
+    return this;
+  }
+
+  add(x){
+    x=BN(x);
+
+    if(!x.m)return new BigNum(this);
+    if(!this.m)return new BigNum(x);
+
+    const d=this.e-x.e;
+
+    if(d>15)return new BigNum(this);
+    if(d<-15)return new BigNum(x);
+
+    if(d>=0){
+      return new BigNum(
+        this.m+x.m*Math.pow(10,-d),
+        this.e
+      );
+    }
+
+    return new BigNum(
+      x.m+this.m*Math.pow(10,d),
+      x.e
+    );
+  }
+
+  sub(x){
+    x=BN(x);
+
+    if(this.cmp(x)<0)return new BigNum(0);
+
+    return this.add(
+      new BigNum(-x.m,x.e)
+    );
+  }
+
+  mul(x){
+    x=BN(x);
+
+    if(!this.m || !x.m)return new BigNum(0);
+
+    return new BigNum(
+      this.m*x.m,
+      this.e+x.e
+    );
+  }
+
+  div(x){
+    x=BN(x);
+
+    if(!x.m)return new BigNum(0);
+
+    return new BigNum(
+      this.m/x.m,
+      this.e-x.e
+    );
+  }
+
+  cmp(x){
+    x=BN(x);
+
+    if(!this.m && !x.m)return 0;
+    if(!this.m)return -1;
+    if(!x.m)return 1;
+
+    if(this.e!==x.e)
+      return this.e>x.e?1:-1;
+
+    return this.m>x.m?1:this.m<x.m?-1:0;
+  }
+
+  num(){
+    if(this.e>308)return Infinity;
+    return this.m*Math.pow(10,this.e);
+  }
+
+  str(){
+    if(!this.m)return "0";
+
+    if(this.e<6){
+      const n=this.num();
+      if(Number.isFinite(n))
+        return Math.floor(n).toLocaleString();
+    }
+
+    return this.m.toFixed(2)+"e"+this.e;
+  }
+}
+
+function BN(x){
+  return x instanceof BigNum ? new BigNum(x) : new BigNum(x);
+}
+
+function fmt(x){
+  return BN(x).str();
+}
+
+/* =========================================================
+   MECHANICS — EXACTLY 500
+   ========================================================= */
+
+const categories=[
+["🐸","Clicking",["Combo","Critical Clicks","Perfect Clicks","Charged Clicks","Golden Clicks","Jump Clicks","Rapid Click Bonus","Chain Clicks","Lucky Clicks","Mega Ribbit"]],
+["💰","Economy",["Coin Income","Gem Income","Interest","Coin Multipliers","Gem Multipliers","Treasure Drops","Coin Streaks","Market Prices","Shop Discounts","Wealth Milestones"]],
+["🐾","Pets",["Pet Collecting","Pet Leveling","Pet XP","Pet Rarity","Pet Abilities","Pet Fusion","Pet Evolution","Pet Teams","Pet Bonuses","Pet Quests"]],
+["🎨","Skins",["Skin Collecting","Skin Rarity","Skin Levels","Skin Bonuses","Animated Skins","Seasonal Skins","Secret Skins","Skin Crafting","Skin Sets","Skin Mastery"]],
+["🧬","Evolution",["Evolution","Mutations","Mutation Branches","Frog Forms","Stat Upgrades","Evolution XP","Evolution Abilities","Rare Mutations","Evolution Challenges","Evolution Mastery"]],
+["🌎","Worlds",["World Unlocking","World Multipliers","Exploration","Hidden Areas","World Events","Treasure Locations","World Bosses","World Quests","World Collectibles","World Mastery"]],
+["👹","Bosses",["Bosses","Boss Health","Boss Damage","Critical Damage","Boss Phases","Boss Rewards","Mini Bosses","Boss Streaks","Boss Achievements","Boss Difficulty"]],
+["🔨","Crafting",["Materials","Recipes","Equipment","Equipment Levels","Equipment Rarity","Equipment Upgrades","Potions","Crafting Mastery","Salvaging","Legendary Crafting"]],
+["👥","Social",["Friends","Friend Bonuses","Friend Gifts","Friend Quests","Clans","Clan XP","Clan Levels","Clan Upgrades","Clan Challenges","Clan Rewards"]],
+["🏆","Progression",["Levels","XP","Quests","Achievements","Daily Rewards","Streaks","Prestige","Ascension","Rebirth","Mastery"]],
+["🔥","Combos",["Combo Chains","Combo Time","Combo Decay","Combo Shields","Combo Bursts","Combo Rewards","Combo Criticals","Combo Banking","Combo Extensions","Ultimate Combo"]],
+["💎","Gems",["Gem Mining","Gem Chests","Gem Rain","Gem Streaks","Gem Crits","Gem Luck","Gem Storage","Gem Boosts","Gem Finder","Gem Mastery"]],
+["🎁","Rewards",["Reward Chests","Rare Rewards","Bonus Rewards","Reward Chains","Reward Luck","Reward Doubling","Reward Rerolls","Reward Keys","Reward Levels","Reward Mastery"]],
+["🎲","Random Events",["Rain Events","Golden Events","Gem Events","Frog Events","Boss Events","Luck Events","Double Events","Triple Events","Chaos Events","Mega Events"]],
+["🗺️","Exploration",["Map Discovery","Area Discovery","Hidden Paths","Secret Rooms","Treasure Maps","Explorer XP","Explorer Levels","Map Completion","Rare Discoveries","Explorer Mastery"]],
+["🏪","Shops",["Basic Shop","Rare Shop","Epic Shop","Legendary Shop","Daily Shop","Secret Shop","Discount Shop","Rotating Shop","Black Market","Shop Mastery"]],
+["📈","Upgrades",["Click Upgrade","Auto Upgrade","Critical Upgrade","Combo Upgrade","Energy Upgrade","Luck Upgrade","Pet Upgrade","World Upgrade","Boss Upgrade","Upgrade Mastery"]],
+["♻️","Prestige",["Prestige Points","Prestige Power","Prestige Upgrades","Prestige Tokens","Prestige Shop","Prestige Quests","Prestige Levels","Prestige Challenges","Prestige Rewards","Prestige Mastery"]],
+["🌌","Ascension",["Ascension Points","Ascension Power","Ascension Upgrades","Ascension Tokens","Ascension Shop","Ascension Quests","Ascension Levels","Ascension Challenges","Ascension Rewards","Ascension Mastery"]],
+["♾️","Rebirth",["Rebirth Points","Rebirth Power","Rebirth Upgrades","Rebirth Tokens","Rebirth Shop","Rebirth Quests","Rebirth Levels","Rebirth Challenges","Rebirth Rewards","Rebirth Mastery"]],
+["🧪","Potions",["Health Potion","Luck Potion","Coin Potion","Gem Potion","Frenzy Potion","XP Potion","Critical Potion","Combo Potion","Mega Potion","Potion Mastery"]],
+["🪄","Magic",["Magic Power","Magic Energy","Magic Spells","Magic Crits","Magic Luck","Magic Shields","Magic Bursts","Magic Chests","Magic Levels","Magic Mastery"]],
+["🏠","Frog Houses",["House Building","House Levels","House Rooms","House Furniture","House Storage","House Income","House Pets","House Decorations","House Visitors","House Mastery"]],
+["🌳","Farming",["Seeds","Planting","Growing","Harvesting","Crop Quality","Rare Crops","Crop Mutations","Farm XP","Farm Levels","Farm Mastery"]],
+["🌱","Gardening",["Garden Slots","Flower Growing","Flower Colors","Flower Rarity","Flower Crossbreeding","Garden Bonuses","Garden XP","Garden Levels","Garden Events","Garden Mastery"]],
+["🎣","Fishing",["Fishing","Fish Rarity","Fish Size","Fishing Rods","Fishing Bait","Fishing Spots","Rare Fish","Fishing Streaks","Fishing XP","Fishing Mastery"]],
+["🏗️","Building",["Building","Building Levels","Building Materials","Building Speed","Building Quality","Building Bonuses","Building Plans","Rare Buildings","Building Sets","Building Mastery"]],
+["🚂","Transportation",["Frog Cart","Frog Boat","Frog Train","Frog Airship","Frog Rocket","Travel Speed","Travel Discounts","Travel Routes","Secret Routes","Travel Mastery"]],
+["🏝️","Islands",["Island Discovery","Island Levels","Island Resources","Island Buildings","Island Quests","Island Events","Island Treasures","Island Bosses","Island Collectibles","Island Mastery"]],
+["🌋","Dungeons",["Dungeon Entry","Dungeon Floors","Dungeon Rooms","Dungeon Traps","Dungeon Chests","Dungeon Keys","Dungeon Bosses","Dungeon Loot","Dungeon Difficulty","Dungeon Mastery"]],
+["🏟️","Challenges",["Daily Challenges","Weekly Challenges","Speed Challenges","Click Challenges","Luck Challenges","Boss Challenges","Pet Challenges","World Challenges","Secret Challenges","Challenge Mastery"]],
+["🏁","Races",["Frog Racing","Race Speed","Race Boosts","Race Tracks","Race Rewards","Race Rankings","Race Streaks","Race Tickets","Race Events","Race Mastery"]],
+["🥇","Tournaments",["Tournament Entry","Tournament Points","Tournament Rounds","Tournament Rewards","Tournament Rankings","Tournament Tickets","Tournament Boosts","Tournament Events","Tournament Prizes","Tournament Mastery"]],
+["🎰","Minigames",["Coin Flip","Lily Jump","Frog Match","Fly Catch","Bubble Pop","Frog Dash","Memory Game","Treasure Hunt","Target Game","Minigame Mastery"]],
+["🎵","Music",["Music Tracks","Music Levels","Music Bonuses","Rhythm Combos","Music Unlocks","Rare Tracks","Music Events","Music Collections","Music Rewards","Music Mastery"]],
+["🐸","Frog Collection",["Frog Types","Frog Rarities","Frog Sizes","Frog Colors","Frog Abilities","Frog Families","Frog Sets","Rare Frogs","Secret Frogs","Collection Mastery"]],
+["🥚","Eggs",["Egg Hatching","Egg Rarity","Egg Luck","Egg Speed","Egg Slots","Egg Boosts","Golden Eggs","Mystery Eggs","Legendary Eggs","Egg Mastery"]],
+["💍","Equipment",["Equipment Slots","Equipment Power","Equipment Levels","Equipment Rarity","Equipment Sets","Equipment Bonuses","Equipment Fusion","Equipment Refining","Equipment Transmutation","Equipment Mastery"]],
+["🛡️","Gear",["Gear Slots","Gear Stats","Gear Levels","Gear Rarity","Gear Sets","Gear Upgrades","Gear Fusion","Gear Crafting","Gear Salvaging","Gear Mastery"]],
+["🔮","Artifacts",["Artifact Discovery","Artifact Rarity","Artifact Power","Artifact Levels","Artifact Sets","Artifact Bonuses","Artifact Fusion","Artifact Awakening","Ancient Artifacts","Artifact Mastery"]],
+["🌦️","Weather",["Rain","Storms","Sunshine","Fog","Snow","Heatwaves","Rainbow Weather","Golden Weather","Meteor Weather","Weather Mastery"]],
+["🕐","Time Events",["Morning Bonus","Night Bonus","Hourly Bonus","Minute Bonus","Time Streaks","Time Chests","Time Boosts","Time Challenges","Time Secrets","Time Mastery"]],
+["📅","Seasons",["Spring","Summer","Autumn","Winter","Season XP","Season Levels","Season Rewards","Season Quests","Season Skins","Season Mastery"]],
+["🎃","Festivals",["Frog Festival","Harvest Festival","Winter Festival","Spring Festival","Summer Festival","Lantern Festival","Moon Festival","Rainbow Festival","Golden Festival","Festival Mastery"]],
+["🏅","Mastery",["Click Mastery","Economy Mastery","Pet Mastery","Skin Mastery","World Mastery","Combat Mastery","Crafting Mastery","Social Mastery","Progression Mastery","Grand Mastery"]],
+["🌟","Secrets",["Secret Areas","Secret Codes","Secret Frogs","Secret Skins","Secret Pets","Secret Bosses","Secret Chests","Secret Quests","Secret Achievements","Secret Mastery"]]
+];
+
+const mechanicList=[];
+
+for(const cat of categories){
+  for(const name of cat[2]){
+    mechanicList.push({
+      category:cat[1],
+      icon:cat[0],
+      name
+    });
+  }
+}
+
+if(mechanicList.length!==500){
+  throw new Error("Mechanic count is "+mechanicList.length+", expected 500.");
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+const skins=[
+["🐸","Classic",1,0],
+["🟡","Golden",2,1000],
+["🔵","Ocean",3,5000],
+["🔴","Ruby",5,25000],
+["🟣","Mystic",8,100000],
+["⚫","Shadow",12,500000],
+["🤖","Robot",20,2000000],
+["👻","Ghost",30,10000000],
+["👽","Alien",50,50000000],
+["🌈","Rainbow",80,250000000],
+["🐲","Dragon",150,1000000000],
+["👑","King",300,100000000000]
+];
+
+const pets=[
+["🪰","Fly",1.2,500],
+["🐛","Worm",1.4,3000],
+["🐌","Snail",1.7,15000],
+["🦋","Butterfly",2.2,100000],
+["🐢","Turtle",3,500000],
+["🦆","Duck",4,2500000],
+["🐍","Snake",6,15000000],
+["🐲","Baby Dragon",10,100000000]
+];
+
+const worlds=[
+["🌿","Lily Pond",1,0],
+["🌲","Moss Forest",2,1000],
+["🏔️","Frog Mountain",4,10000],
+["🏜️","Desert Oasis",8,100000],
+["🌊","Coral Marsh",16,1000000],
+["🌋","Volcano Bog",32,10000000],
+["🌙","Moon Pond",70,100000000],
+["☁️","Sky Swamp",150,10000000000],
+["🪐","Frog Planet",350,1000000000000],
+["🌈","Rainbow Dimension",1000,100000000000000]
+];
+
+const bosses=[
+["🟢","Slime Toad",1e5,1000],
+["👹","Swamp Monster",1e8,10000],
+["🐲","Dragon Toad",1e12,100000],
+["👽","Alien Frog",1e18,1000000],
+["🌌","Galaxy Beast",1e25,10000000],
+["♾️","Infinity Boss",1e35,100000000]
+];
+
+const shopItems=[
+["👅","Titan Tongue",1e3,1.5],
+["🍀","Lucky Charm",1e4,1.25],
+["🪷","Magic Lily",1e5,2],
+["👑","Frog Crown",1e7,3],
+["💍","Luck Ring",1e9,2],
+["🔮","Void Orb",1e12,5],
+["🪽","Sky Boots",1e15,8],
+["⚡","Thunder Tongue",1e20,15]
+];
+
+const quests=[
+["🐸 First Ribbit",1,100],
+["👆 100 Clicks",100,1000],
+["👆 1,000 Clicks",1000,10000],
+["💰 Earn 1M Coins",1000000,50000],
+["🐾 Own 1 Pet",1,2500],
+["🎨 Own 3 Skins",3,10000],
+["🌎 Reach World 3",3,25000],
+["👹 Defeat a Boss",1,50000],
+["👥 Add 3 Friends",3,10000],
+["⭐ Reach Level 25",25,100000],
+["⭐ Reach Level 100",100,1000000],
+["⚙️ Activate 100 Mechanics",100,500000],
+["⚙️ Activate 250 Mechanics",250,5000000],
+["⚙️ Activate 500 Mechanics",500,50000000]
+];
+
+const randomEvents=[
+["🪰 Fly Swarm",2,20],
+["🌧️ Golden Rain",4,25],
+["🌈 Rainbow Storm",8,30],
+["👽 Alien Invasion",15,35],
+["💎 Gem Meteor",25,40],
+["🔥 Lava Festival",50,45]
+];
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+function newGame(){
+  return {
+    coins:new BigNum(0),
+    gems:new BigNum(25),
+    xp:new BigNum(0),
+    totalCoins:new BigNum(0),
+
+    level:1,
+    clicks:0,
+
+    energy:100,
+    maxEnergy:100,
+
+    combo:1,
+    bestCombo:1,
+
+    prestige:0,
+    ascension:0,
+    rebirth:0,
+
+    world:0,
+    skin:0,
+
+    pets:{},
+    ownedSkins:[0],
+
+    friends:[],
+    clan:null,
+
+    mechanics:Array(500).fill(0),
+
+    eventUntil:0,
+    eventMultiplier:1,
+    eventName:"",
+
+    dailyDay:-1,
+    dailyStreak:0,
+
+    bossKills:0,
+    quests:[],
+
+    lastSave:Date.now()
+  };
+}
+
+let game=newGame();
+let purchasedItems={};
+
+let lastClick=0;
+let lastUI=0;
+let lastPassive=performance.now();
+let lastSave=0;
+let saveInProgress=false;
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function mechanicLevel(i){
+  return Number(game.mechanics[i])||0;
+}
+
+function activate(i,amount=1){
+  if(i<0||i>=500)return;
+  game.mechanics[i]=Math.min(
+    100,
+    mechanicLevel(i)+amount
+  );
+}
+
+function activeMechanics(){
+  let n=0;
+  for(let i=0;i<500;i++){
+    if(mechanicLevel(i)>0)n++;
+  }
+  return n;
+}
+
+function mechanicMultiplier(){
+  let total=0;
+
+  for(let i=0;i<500;i++){
+    const lv=mechanicLevel(i);
+    if(lv>0){
+      total+=lv*(1+(i%10)*0.025);
+    }
+  }
+
+  return 1+total*0.001;
+}
+
+function petMultiplier(){
+  let result=1;
+
+  for(const key of Object.keys(game.pets)){
+    const i=Number(key);
+    const pet=pets[i];
+
+    if(!pet)continue;
+
+    result*=pet[2]+game.pets[key]*0.05;
+  }
+
+  return result;
+}
+
+function coinMultiplier(){
+  let m=1;
+
+  m*=worlds[game.world][2];
+  m*=skins[game.skin][2];
+
+  m*=1+game.prestige*0.5;
+  m*=1+game.ascension*3;
+  m*=1+game.rebirth*10;
+
+  m*=petMultiplier();
+  m*=mechanicMultiplier();
+
+  for(const i of Object.keys(purchasedItems)){
+    const count=Number(purchasedItems[i])||0;
+    if(shopItems[i]){
+      m*=Math.pow(shopItems[i][3],count);
+    }
+  }
+
+  if(Date.now()<game.eventUntil){
+    m*=game.eventMultiplier;
+  }
+
+  return m;
+}
+
+function clickPower(){
+  let p=1;
+
+  p+=game.level*0.25;
+  p+=mechanicLevel(16)*0.5;
+  p+=mechanicLevel(6)*0.2;
+  p+=mechanicLevel(8)*0.1;
+
+  return new BigNum(p*coinMultiplier());
+}
+
+function criticalChance(){
+  return Math.min(
+    0.8,
+    0.05+
+    game.level*0.0005+
+    mechanicLevel(1)*0.002+
+    mechanicLevel(108)*0.001+
+    mechanicLevel(398)*0.001
+  );
+}
+
+/* =========================================================
+   EARNING / XP
+   ========================================================= */
+
+function earn(amount, giveXP=true){
+  const reward=BN(amount);
+
+  game.coins=game.coins.add(reward);
+  game.totalCoins=game.totalCoins.add(reward);
+
+  if(giveXP){
+    let xpGain=1;
+
+    const n=reward.num();
+
+    if(Number.isFinite(n) && n>1){
+      xpGain=Math.max(
+        1,
+        Math.min(
+          1000000,
+          Math.floor(Math.log10(n)+1)
+        )
+      );
+    }else if(reward.e>0){
+      xpGain=Math.max(
+        1,
+        Math.min(1000000,reward.e+1)
+      );
+    }
+
+    game.xp=game.xp.add(xpGain);
+    checkLevel();
+  }
+}
+
+function checkLevel(){
+  let safety=0;
+
+  while(
+    game.xp.cmp(new BigNum(100*game.level))>=0 &&
+    safety<1000
+  ){
+    game.xp=game.xp.sub(
+      new BigNum(100*game.level)
+    );
+
+    game.level++;
+
+    game.gems=game.gems.add(
+      2+Math.floor(game.level/10)
+    );
+
+    activate(90);
+
+    if(game.level%10===0){
+      log("⭐ Reached level "+game.level);
+    }
+
+    safety++;
+  }
+}
+
+/* =========================================================
+   CLICKING
+   ========================================================= */
+
+function clickFrog(){
+  if(game.energy<=0){
+    toast("⚡ Out of energy!");
+    return;
+  }
+
+  game.energy=Math.max(
+    0,
+    game.energy-0.25
+  );
+
+  const now=performance.now();
+  const rapid=(now-lastClick)<700;
+
+  if(rapid){
+    game.combo=Math.min(
+      100,
+      game.combo+0.15
+    );
+
+    activate(0);
+    activate(6);
+  }else{
+    game.combo=Math.max(
+      1,
+      game.combo-0.2
+    );
+  }
+
+  lastClick=now;
+  game.bestCombo=Math.max(
+    game.bestCombo,
+    game.combo
+  );
+
+  let reward=clickPower().mul(game.combo);
+
+  if(Math.random()<criticalChance()){
+    reward=reward.mul(10);
+    activate(1);
+    float("💥 CRITICAL!");
+  }
+
+  if(rapid && Math.random()<0.1){
+    reward=reward.mul(2);
+    activate(2);
+    float("✨ PERFECT!");
+  }
+
+  if(game.clicks%25===24){
+    reward=reward.mul(5);
+    activate(3);
+    float("⚡ CHARGED!");
+  }
+
+  if(Math.random()<0.006){
+    reward=reward.mul(20);
+    activate(4);
+    float("🟡 GOLDEN!");
+  }
+
+  if(game.clicks%50===49){
+    reward=reward.mul(3);
+    activate(5);
+  }
+
+  if(game.clicks%10===9){
+    reward=reward.mul(1.5);
+    activate(7);
+  }
+
+  if(Math.random()<0.04){
+    reward=reward.mul(3);
+    activate(8);
+  }
+
+  if(Math.random()<0.001){
+    reward=reward.mul(100);
+    activate(9);
+    float("🐸 MEGA RIBBIT!");
+  }
+
+  activate(
+    Math.floor(game.clicks/10)%500
+  );
+
+  earn(reward,true);
+  game.clicks++;
+
+  animateFrog();
+
+  /* UI is updated only on the normal 200ms loop.
+     This is what prevents high-speed clicking from
+     rebuilding the page hundreds of times per second. */
+}
+
+/* =========================================================
+   SPECIAL ACTIONS
+   ========================================================= */
+
+function megaClick(){
+  if(game.gems.cmp(5)<0){
+    toast("Need 5 💎");
+    return;
+  }
+
+  game.gems=game.gems.sub(5);
+
+  earn(
+    clickPower().mul(100),
+    true
+  );
+
+  activate(9);
+  float("💥 MEGA CLICK!");
+}
+
+function frenzy(){
+  if(game.gems.cmp(10)<0){
+    toast("Need 10 💎");
+    return;
+  }
+
+  game.gems=game.gems.sub(10);
+
+  game.eventUntil=Date.now()+30000;
+  game.eventMultiplier=5;
+  game.eventName="🔥 FROG FRENZY";
+
+  toast("🔥 5× Frenzy for 30 seconds!");
+}
+
+function restoreEnergy(){
+  if(game.gems.cmp(2)<0){
+    toast("Need 2 💎");
+    return;
+  }
+
+  game.gems=game.gems.sub(2);
+  game.energy=game.maxEnergy;
+
+  toast("⚡ Energy restored!");
+}
+
+/* =========================================================
+   PASSIVE
+   ========================================================= */
+
+function passiveTick(){
+  const passive=clickPower()
+    .mul(0.15)
+    .mul(1+activeMechanics()*0.01);
+
+  /* Passive income should give some XP, but not use
+     a broken huge-number -> Number conversion. */
+  earn(passive,true);
+
+  game.energy=Math.min(
+    game.maxEnergy,
+    game.energy+0.8
+  );
+
+  const index=
+    Math.floor(Date.now()/1000)%500;
+
+  activate(index);
+
+  if(performance.now()-lastClick>1500){
+    game.combo=Math.max(
+      1,
+      game.combo-0.1
+    );
+  }
+}
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+function randomEvent(){
+  const e=randomEvents[
+    Math.floor(Math.random()*randomEvents.length)
+  ];
+
+  game.eventName=e[0];
+  game.eventMultiplier=e[1];
+  game.eventUntil=Date.now()+e[2]*1000;
+
+  activate(130);
+  activate(131);
+
+  toast(
+    e[0]+" ×"+e[1]
+  );
+}
+
+/* =========================================================
+   DAILY
+   ========================================================= */
+
+function today(){
+  return Math.floor(Date.now()/86400000);
+}
+
+function dailyReward(){
+  const d=today();
+
+  if(game.dailyDay===d){
+    toast("Already collected!");
+    return;
+  }
+
+  if(game.dailyDay===d-1){
+    game.dailyStreak++;
+  }else{
+    game.dailyStreak=1;
+  }
+
+  game.dailyDay=d;
+
+  const reward=new BigNum(
+    1000*
+    game.dailyStreak*
+    game.dailyStreak
+  );
+
+  earn(reward,true);
+
+  game.gems=game.gems.add(
+    game.dailyStreak*2
+  );
+
+  activate(94);
+  activate(95);
+
+  toast(
+    "🎁 +"+fmt(reward)+" 🪙"
+  );
+}
+
+/* =========================================================
+   PETS
+   ========================================================= */
+
+function buyPet(i){
+  const pet=pets[i];
+  if(!pet)return;
+
+  const level=Number(game.pets[i])||0;
+
+  const cost=new BigNum(
+    pet[3]*(level+1)
+  );
+
+  if(!spend(cost)){
+    toast("Not enough coins!");
+    return;
+  }
+
+  game.pets[i]=level+1;
+
+  activate(20);
+  activate(21);
+  activate(22);
+  activate(23);
+
+  if(level>=5)activate(24);
+  if(level>=10)activate(25);
+
+  if(Object.keys(game.pets).length>=3)
+    activate(27);
+
+  toast("🐾 "+pet[1]+" leveled up!");
+  renderPets();
+  update();
+}
+
+/* =========================================================
+   SPENDING
+   ========================================================= */
+
+function spend(cost){
+  const c=BN(cost);
+
+  if(game.coins.cmp(c)<0)
+    return false;
+
+  game.coins=game.coins.sub(c);
+  return true;
+}
+
+/* =========================================================
+   SKINS
+   ========================================================= */
+
+function equipSkin(i){
+  const skin=skins[i];
+  if(!skin)return;
+
+  if(game.ownedSkins.includes(i)){
+    game.skin=i;
+
+    activate(30);
+    activate(33);
+
+    renderSkins();
+    update();
+    return;
+  }
+
+  const cost=new BigNum(skin[3]);
+
+  if(!spend(cost)){
+    toast("Need "+fmt(cost)+" 🪙");
+    return;
+  }
+
+  game.ownedSkins.push(i);
+  game.skin=i;
+
+  activate(30);
+  activate(31);
+  activate(32);
+  activate(33);
+  activate(37);
+
+  if(i>=6)activate(34);
+  if(i>=8)activate(35);
+  if(i>=10)activate(36);
+
+  if(game.ownedSkins.length>=3)
+    activate(38);
+
+  activate(39);
+
+  toast("🎨 "+skin[1]+" unlocked!");
+
+  renderSkins();
+  update();
+}
+
+/* =========================================================
+   WORLDS
+   ========================================================= */
+
+function travelWorld(i){
+  const world=worlds[i];
+  if(!world)return;
+
+  if(i===game.world){
+    toast("Already here!");
+    return;
+  }
+
+  if(game.level<i*10+1){
+    toast("Need level "+(i*10+1));
+    return;
+  }
+
+  const cost=new BigNum(world[3]);
+
+  if(!spend(cost)){
+    toast("Need "+fmt(cost)+" 🪙");
+    return;
+  }
+
+  game.world=i;
+
+  for(let n=50;n<60;n++)
+    activate(n);
+
+  toast("🌎 "+world[1]);
+
+  renderWorlds();
+  update();
+}
+
+/* =========================================================
+   BOSSES
+   ========================================================= */
+
+function bossDamage(){
+  return clickPower()
+    .mul(100)
+    .mul(1+mechanicLevel(63)*0.05);
+}
+
+function fightBoss(i){
+  const boss=bosses[i];
+  if(!boss)return;
+
+  const health=new BigNum(boss[2]);
+
+  if(bossDamage().cmp(health)<0){
+    toast(
+      "Need "+fmt(health)+" damage!"
+    );
+    return;
+  }
+
+  let reward=health.mul(boss[3]);
+
+  reward=reward.mul(
+    1+mechanicLevel(66)*0.1
+  );
+
+  earn(reward,true);
+
+  game.gems=game.gems.add(
+    Math.max(
+      1,
+      Math.floor(boss[3]/10)
+    )
+  );
+
+  game.bossKills++;
+
+  for(let n=60;n<70;n++)
+    activate(n);
+
+  toast(
+    "👹 Defeated "+boss[1]+"!"
+  );
+
+  renderBosses();
+}
+
+/* =========================================================
+   SHOP
+   ========================================================= */
+
+function buyShop(i){
+  const item=shopItems[i];
+  if(!item)return;
+
+  const count=Number(purchasedItems[i])||0;
+
+  /* Use BigNum here so shop costs don't break later. */
+  const cost=new BigNum(
+    item[2]
+  ).mul(
+    Math.pow(1.15,count)
+  );
+
+  if(!spend(cost)){
+    toast("Need "+fmt(cost)+" 🪙");
+    return;
+  }
+
+  purchasedItems[i]=count+1;
+
+  activate(160);
+  activate(170);
+
+  toast("🛒 Bought "+item[1]);
+
+  renderShop();
+  update();
+}
+
+/* =========================================================
+   SOCIAL
+   ========================================================= */
+
+function addFriend(){
+  const input=document.getElementById("friendName");
+  const name=input.value.trim().slice(0,30);
+
+  if(!name)return;
+
+  if(game.friends.includes(name)){
+    toast("Already added!");
+    return;
+  }
+
+  game.friends.push(name);
+  input.value="";
+
+  activate(80);
+  activate(81);
+
+  if(game.friends.length>=3)activate(82);
+  if(game.friends.length>=5)activate(83);
+
+  toast("👥 Friend added!");
+  renderSocial();
+}
+
+function createClan(){
+  if(game.clan){
+    toast("You already have a clan!");
+    return;
+  }
+
+  const input=document.getElementById("clanName");
+  const name=
+    (input.value.trim()||"Ribbit Squad")
+    .slice(0,30);
+
+  game.clan={
+    name,
+    level:1,
+    xp:new BigNum(0),
+    members:1
+  };
+
+  input.value="";
+
+  activate(84);
+  activate(85);
+
+  toast("🏰 Clan created!");
+  renderSocial();
+}
+
+function donateClan(){
+  if(!game.clan){
+    toast("Create a clan first!");
+    return;
+  }
+
+  const cost=new BigNum(10000);
+
+  if(!spend(cost)){
+    toast("Need 10,000 coins!");
+    return;
+  }
+
+  game.clan.xp=
+    BN(game.clan.xp).add(cost);
+
+  activate(85);
+  activate(87);
+
+  const needed=new BigNum(
+    50000*game.clan.level
+  );
+
+  if(BN(game.clan.xp).cmp(needed)>=0){
+    game.clan.xp=
+      BN(game.clan.xp).sub(needed);
+
+    game.clan.level++;
+
+    game.gems=
+      game.gems.add(20);
+
+    activate(86);
+    activate(88);
+    activate(89);
+
+    toast("🏰 Clan leveled up!");
+  }else{
+    toast("🏰 Clan XP increased!");
+  }
+
+  renderSocial();
+  update();
+}
+
+/* =========================================================
+   QUESTS
+   ========================================================= */
+
+function questProgress(i){
+  switch(i){
+    case 0:return game.clicks;
+    case 1:return game.clicks;
+    case 2:return game.clicks;
+    case 3:return game.totalCoins.num();
+    case 4:return Object.keys(game.pets).length;
+    case 5:return game.ownedSkins.length;
+    case 6:return game.world+1;
+    case 7:return game.bossKills;
+    case 8:return game.friends.length;
+    case 9:return game.level;
+    case 10:return game.level;
+    case 11:return activeMechanics();
+    case 12:return activeMechanics();
+    case 13:return activeMechanics();
+    default:return 0;
+  }
+}
+
+function claimQuest(i){
+  if(game.quests.includes(i)){
+    toast("Already claimed!");
+    return;
+  }
+
+  const q=quests[i];
+
+  if(questProgress(i)<q[1]){
+    toast("Not completed yet!");
+    return;
+  }
+
+  game.quests.push(i);
+
+  earn(new BigNum(q[2]),true);
+
+  activate(92);
+
+  toast("📜 Quest complete!");
+  renderQuests();
+}
+
+/* =========================================================
+   PRESTIGE / ASCENSION / REBIRTH
+   ========================================================= */
+
+function prestige(){
+  if(game.level<100){
+    toast("Need level 100!");
+    return;
+  }
+
+  if(!confirm(
+    "Prestige resets coins and level. Continue?"
+  ))return;
+
+  game.coins=new BigNum(0);
+  game.xp=new BigNum(0);
+  game.level=1;
+  game.prestige++;
+
+  game.gems=game.gems.add(
+    100*game.prestige
+  );
+
+  activate(96);
+
+  toast(
+    "🏆 Prestige "+game.prestige+"!"
+  );
+
+  update();
+}
+
+function ascend(){
+  if(game.prestige<10){
+    toast("Need 10 Prestige!");
+    return;
+  }
+
+  game.prestige=0;
+  game.ascension++;
+
+  game.coins=new BigNum(0);
+  game.xp=new BigNum(0);
+  game.level=1;
+
+  game.gems=game.gems.add(
+    1000*game.ascension
+  );
+
+  activate(97);
+
+  toast(
+    "🌌 Ascension "+game.ascension+"!"
+  );
+
+  update();
+}
+
+function rebirth(){
+  if(game.ascension<5){
+    toast("Need 5 Ascensions!");
+    return;
+  }
+
+  game.ascension=0;
+  game.prestige=0;
+  game.rebirth++;
+
+  game.coins=new BigNum(0);
+  game.xp=new BigNum(0);
+  game.level=1;
+
+  game.gems=game.gems.add(10000);
+
+  activate(98);
+
+  toast(
+    "♾️ Rebirth "+game.rebirth+"!"
+  );
+
+  update();
+}
+
+/* =========================================================
+   SAVE / LOAD
+   ========================================================= */
+
+function serialize(value){
+  if(value instanceof BigNum){
+    return {
+      __big:true,
+      m:value.m,
+      e:value.e
+    };
+  }
+
+  if(Array.isArray(value)){
+    return value.map(serialize);
+  }
+
+  if(value && typeof value==="object"){
+    const out={};
+
+    for(const key of Object.keys(value)){
+      out[key]=serialize(value[key]);
+    }
+
+    return out;
+  }
+
+  return value;
+}
+
+function deserialize(value){
+  if(
+    value &&
+    value.__big===true &&
+    Number.isFinite(Number(value.m)) &&
+    Number.isFinite(Number(value.e))
+  ){
+    return new BigNum(
+      Number(value.m),
+      Number(value.e)
+    );
+  }
+
+  if(Array.isArray(value)){
+    return value.map(deserialize);
+  }
+
+  if(value && typeof value==="object"){
+    for(const key of Object.keys(value)){
+      value[key]=deserialize(value[key]);
+    }
+  }
+
+  return value;
+}
+
+function saveGame(){
+  if(saveInProgress)return;
+
+  saveInProgress=true;
+
+  try{
+    game.lastSave=Date.now();
+
+    localStorage.setItem(
+      "frogFrenzy500",
+      JSON.stringify(serialize(game))
+    );
+
+    localStorage.setItem(
+      "frogFrenzy500Items",
+      JSON.stringify(purchasedItems)
+    );
+  }catch(error){
+    console.error("Save failed:",error);
+  }finally{
+    saveInProgress=false;
+  }
+}
+
+function loadGame(){
+  try{
+    const raw=
+      localStorage.getItem("frogFrenzy500");
+
+    if(raw){
+      const parsed=
+        deserialize(JSON.parse(raw));
+
+      const fresh=newGame();
+
+      game=Object.assign(
+        fresh,
+        parsed
+      );
+
+      /* Repair old/corrupt saves. */
+      if(!(game.coins instanceof BigNum))
+        game.coins=BN(game.coins);
+
+      if(!(game.gems instanceof BigNum))
+        game.gems=BN(game.gems);
+
+      if(!(game.xp instanceof BigNum))
+        game.xp=BN(game.xp);
+
+      if(!(game.totalCoins instanceof BigNum))
+        game.totalCoins=BN(game.totalCoins);
+
+      if(!Array.isArray(game.mechanics))
+        game.mechanics=[];
+
+      game.mechanics.length=500;
+
+      for(let i=0;i<500;i++){
+        game.mechanics[i]=Math.max(
+          0,
+          Math.min(
+            100,
+            Number(game.mechanics[i])||0
+          )
+        );
+      }
+
+      if(!Array.isArray(game.ownedSkins))
+        game.ownedSkins=[0];
+
+      if(!game.ownedSkins.includes(0))
+        game.ownedSkins.unshift(0);
+
+      if(!Array.isArray(game.friends))
+        game.friends=[];
+
+      if(!Array.isArray(game.quests))
+        game.quests=[];
+
+      game.level=Math.max(
+        1,
+        Number(game.level)||1
+      );
+
+      game.energy=Math.max(
+        0,
+        Math.min(
+          Number(game.maxEnergy)||100,
+          Number(game.energy)||0
+        )
+      );
+
+      game.maxEnergy=100;
+
+      game.world=Math.max(
+        0,
+        Math.min(
+          worlds.length-1,
+          Number(game.world)||0
+        )
+      );
+
+      game.skin=Math.max(
+        0,
+        Math.min(
+          skins.length-1,
+          Number(game.skin)||0
+        )
+      );
+
+      game.pets=
+        game.pets &&
+        typeof game.pets==="object"
+        ?game.pets:{};
+
+      game.prestige=
+        Math.max(0,Number(game.prestige)||0);
+
+      game.ascension=
+        Math.max(0,Number(game.ascension)||0);
+
+      game.rebirth=
+        Math.max(0,Number(game.rebirth)||0);
+
+      game.clicks=
+        Math.max(0,Number(game.clicks)||0);
+
+      game.bossKills=
+        Math.max(0,Number(game.bossKills)||0);
+    }
+
+    const itemRaw=
+      localStorage.getItem(
+        "frogFrenzy500Items"
+      );
+
+    if(itemRaw){
+      const parsed=JSON.parse(itemRaw);
+
+      if(parsed && typeof parsed==="object"){
+        purchasedItems=parsed;
+      }
+    }
+
+  }catch(error){
+    console.error("Load failed:",error);
+
+    game=newGame();
+    purchasedItems={};
+  }
+}
+
+/* =========================================================
+   OFFLINE PROGRESS
+   ========================================================= */
+
+function offlineProgress(){
+  const elapsed=Math.max(
+    0,
+    (Date.now()-Number(game.lastSave||Date.now()))/1000
+  );
+
+  const seconds=Math.min(
+    86400,
+    elapsed
+  );
+
+  if(seconds<30)return;
+
+  const reward=
+    clickPower()
+    .mul(seconds)
+    .mul(0.05);
+
+  if(reward.cmp(0)>0){
+    earn(reward,true);
+
+    setTimeout(
+      ()=>toast(
+        "🌙 Offline reward: +"+
+        fmt(reward)+" 🪙"
+      ),
+      500
+    );
+  }
+}
+
+/* =========================================================
+   RENDERING
+   ========================================================= */
+
+function escapeHTML(value){
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function mechanicDescription(i){
+  const effects=[
+    "Improves clicking and combo progression.",
+    "Adds chances for bonus rewards.",
+    "Builds progress toward stronger bonuses.",
+    "Raises overall frog power.",
+    "Improves luck-related effects.",
+    "Creates special milestone rewards.",
+    "Strengthens rapid gameplay.",
+    "Improves chain bonuses.",
+    "Improves rare reward chances.",
+    "Contributes to ultimate frog power."
+  ];
+
+  return effects[i%effects.length];
+}
+
+function renderMechanics(){
+  const grid=
+    document.getElementById("mechanicsGrid");
+
+  const chunks=[];
+
+  for(let i=0;i<500;i++){
+    const m=mechanicList[i];
+    const lv=mechanicLevel(i);
+
+    chunks.push(`
+      <div class="card mechanic ${lv===0?"locked":""}">
+        <span class="badge">
+          ${m.icon} ${escapeHTML(m.category)}
+        </span>
+
+        <h3>${i+1}. ${escapeHTML(m.name)}</h3>
+
+        <div class="bar">
+          <div class="fill"
+               style="width:${lv}%"></div>
+        </div>
+
+        <p>Level <b>${lv}</b>/100</p>
+
+        <p class="small muted">
+          ${mechanicDescription(i)}
+        </p>
+
+        <button
+          class="shopBtn"
+          onclick="activateMechanic(${i})">
+          Train Mechanic
+        </button>
+      </div>
+    `);
+  }
+
+  grid.innerHTML=chunks.join("");
+}
+
+function activateMechanic(i){
+  const lv=mechanicLevel(i);
+
+  if(lv>=100){
+    toast("Already max level!");
+    return;
+  }
+
+  const cost=new BigNum(
+    10*Math.pow(
+      1+lv,
+      1.3
+    )
+  );
+
+  if(!spend(cost)){
+    toast(
+      "Need "+fmt(cost)+" coins!"
+    );
+    return;
+  }
+
+  activate(i);
+
+  toast(
+    "⚙️ "+
+    mechanicList[i].name+
+    " Lv "+
+    mechanicLevel(i)
+  );
+
+  renderMechanics();
+  update();
+}
+
+function renderShop(){
+  document.getElementById("shopGrid").innerHTML=
+    shopItems.map((item,i)=>{
+      const count=Number(purchasedItems[i])||0;
+
+      const cost=
+        new BigNum(item[2])
+        .mul(Math.pow(1.15,count));
+
+      const multiplier=
+        Math.pow(item[3],count);
+
+      return `
+        <div class="card">
+          <div class="huge">${item[0]}</div>
+          <h2>${escapeHTML(item[1])}</h2>
+
+          <p>Purchases: ${count}</p>
+
+          <p>
+            Permanent multiplier:
+            ×${multiplier.toFixed(2)}
+          </p>
+
+          <button onclick="buyShop(${i})">
+            Buy — ${fmt(cost)} 🪙
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function renderPets(){
+  document.getElementById("petsGrid").innerHTML=
+    pets.map((pet,i)=>{
+      const lv=Number(game.pets[i])||0;
+
+      const cost=new BigNum(
+        pet[3]*(lv+1)
+      );
+
+      return `
+        <div class="card">
+          <div class="huge">${pet[0]}</div>
+          <h2>${escapeHTML(pet[1])}</h2>
+
+          <p>Level: <b>${lv}</b></p>
+
+          <p>
+            Multiplier:
+            ×${(pet[2]+lv*.05).toFixed(2)}
+          </p>
+
+          <button onclick="buyPet(${i})">
+            🐾 Upgrade — ${fmt(cost)} 🪙
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function renderSkins(){
+  document.getElementById("skinsGrid").innerHTML=
+    skins.map((skin,i)=>{
+      const owned=
+        game.ownedSkins.includes(i);
+
+      return `
+        <div class="card ${game.skin===i?"current":""}">
+          <div class="huge">${skin[0]}</div>
+          <h2>${escapeHTML(skin[1])}</h2>
+
+          <p>Multiplier ×${skin[2]}</p>
+
+          <p>
+            ${
+              owned
+              ?"✅ Owned"
+              :"🔒 "+fmt(new BigNum(skin[3]))+" 🪙"
+            }
+          </p>
+
+          <button onclick="equipSkin(${i})">
+            ${owned?"Equip":"Unlock"}
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function renderWorlds(){
+  document.getElementById("worldsGrid").innerHTML=
+    worlds.map((world,i)=>{
+      const requiredLevel=i*10+1;
+
+      return `
+        <div class="card ${game.world===i?"current":""}">
+          <div class="huge">${world[0]}</div>
+
+          <h2>${escapeHTML(world[1])}</h2>
+
+          <p>Multiplier ×${world[2]}</p>
+
+          <p>Required level: ${requiredLevel}</p>
+
+          <p>
+            Travel:
+            ${fmt(new BigNum(world[3]))} 🪙
+          </p>
+
+          <button onclick="travelWorld(${i})">
+            ${game.world===i?"CURRENT":"Travel"}
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function renderBosses(){
+  document.getElementById("bossesGrid").innerHTML=
+    bosses.map((boss,i)=>{
+      return `
+        <div class="card">
+          <div class="huge">${boss[0]}</div>
+
+          <h2>${escapeHTML(boss[1])}</h2>
+
+          <p>❤️ Health: ${fmt(new BigNum(boss[2]))}</p>
+
+          <p>
+            ⚔️ Your damage:
+            ${fmt(bossDamage())}
+          </p>
+
+          <p>🪙 Reward multiplier: ${boss[3]}×</p>
+
+          <button onclick="fightBoss(${i})">
+            ⚔️ Fight Boss
+          </button>
+        </div>
+      `;
+    }).join("")+
+    `
+      <div class="card">
+        <h2>👹 Boss Record</h2>
+        <div class="big">${game.bossKills}</div>
+        <p>Bosses defeated</p>
+      </div>
+    `;
+}
+
+function renderSocial(){
+  const friends=
+    game.friends.length
+    ?game.friends.map(
+      f=>`
+        <div class="item">
+          🐸 ${escapeHTML(f)}
+        </div>
+      `
+    ).join("")
+    :`<p class="muted">No friends yet.</p>`;
+
+  document.getElementById("friendsList").innerHTML=
+    friends;
+
+  if(game.clan){
+    document.getElementById("clanPanel").innerHTML=`
+      <div class="item">
+        🏰 <b>${escapeHTML(game.clan.name)}</b>
+      </div>
+
+      <p>Level ${game.clan.level}</p>
+
+      <p>XP: ${fmt(game.clan.xp)}</p>
+
+      <button onclick="donateClan()">
+        Donate 10,000 🪙
+      </button>
+    `;
+  }else{
+    document.getElementById("clanPanel").innerHTML=
+      `<p class="muted">You do not have a clan.</p>`;
+  }
+}
+
+function renderQuests(){
+  document.getElementById("questsGrid").innerHTML=
+    quests.map((q,i)=>{
+      const progress=questProgress(i);
+      const done=progress>=q[1];
+      const claimed=game.quests.includes(i);
+
+      return `
+        <div class="card">
+          <h2>${q[0]}</h2>
+
+          <p>
+            Progress:
+            ${Math.min(progress,q[1]).toLocaleString()}
+            /
+            ${q[1].toLocaleString()}
+          </p>
+
+          <div class="bar">
+            <div
+              class="fill"
+              style="width:${Math.min(
+                100,
+                progress/q[1]*100
+              )}%">
+            </div>
+          </div>
+
+          <p>
+            Reward:
+            ${q[2].toLocaleString()} 🪙
+          </p>
+
+          <button
+            ${!done||claimed?"disabled":""}
+            onclick="claimQuest(${i})">
+            ${
+              claimed
+              ?"CLAIMED"
+              :done
+              ?"CLAIM"
+              :"IN PROGRESS"
+            }
+          </button>
+        </div>
+      `;
+    }).join("");
+}
+
+function renderProgress(){
+  document.getElementById("progressLevel").textContent=
+    game.level;
+
+  document.getElementById("prestigeInfo").textContent=
+    "Current prestige: "+
+    game.prestige+
+    ". Requires level 100.";
+
+  document.getElementById("ascensionInfo").textContent=
+    "Current ascension: "+
+    game.ascension+
+    ". Requires 10 prestige.";
+
+  document.getElementById("rebirthInfo").textContent=
+    "Current rebirth: "+
+    game.rebirth+
+    ". Requires 5 ascensions.";
+
+  document.getElementById("masteryInfo").textContent=
+    activeMechanics()+
+    "/500 mechanics activated.";
+
+  document.getElementById("progressClan").textContent=
+    game.clan
+    ?"🏰 "+game.clan.name+
+      " — Level "+game.clan.level
+    :"No clan";
+}
+
+/* =========================================================
+   MAIN UI UPDATE
+   ========================================================= */
+
+function update(){
+  document.getElementById("coins").textContent=
+    fmt(game.coins);
+
+  document.getElementById("gems").textContent=
+    fmt(game.gems);
+
+  document.getElementById("energy").textContent=
+    Math.floor(game.energy);
+
+  document.getElementById("level").textContent=
+    game.level;
+
+  document.getElementById("combo").textContent=
+    game.combo.toFixed(2);
+
+  document.getElementById("comboBig").textContent=
+    game.combo.toFixed(2);
+
+  document.getElementById("clicks").textContent=
+    game.clicks.toLocaleString();
+
+  document.getElementById("clickPower").textContent=
+    fmt(clickPower());
+
+  document.getElementById("activeMechanics").textContent=
+    activeMechanics();
+
+  document.getElementById("prestige").textContent=
+    game.prestige;
+
+  document.getElementById("ascension").textContent=
+    game.ascension;
+
+  document.getElementById("rebirth").textContent=
+    game.rebirth;
+
+  document.getElementById("frog").textContent=
+    skins[game.skin][0];
+
+  document.getElementById("worldName").textContent=
+    worlds[game.world][0]+" "+
+    worlds[game.world][1];
+
+  const xpNeed=new BigNum(
+    100*game.level
+  );
+
+  let xpRatio=0;
+
+  if(game.xp.e<308 && xpNeed.e<308){
+    const a=game.xp.num();
+    const b=xpNeed.num();
+
+    if(Number.isFinite(a)&&Number.isFinite(b)){
+      xpRatio=Math.min(
+        100,
+        Math.max(
+          0,
+          a/Math.max(1,b)*100
+        )
+      );
+    }
+  }
+
+  document.getElementById("xpBar").style.width=
+    xpRatio+"%";
+
+  document.getElementById("xpText").textContent=
+    fmt(game.xp)+" / "+fmt(xpNeed);
+
+  document.getElementById("energyBar").style.width=
+    (
+      game.energy/
+      game.maxEnergy*
+      100
+    )+"%";
+
+  document.getElementById("energyText").textContent=
+    Math.floor(game.energy)+
+    " / "+
+    game.maxEnergy;
+
+  const remaining=
+    Math.max(
+      0,
+      game.eventUntil-Date.now()
+    );
+
+  document.getElementById("eventText").textContent=
+    remaining
+    ?game.eventName+
+      " ×"+
+      game.eventMultiplier+
+      " — "+
+      Math.ceil(remaining/1000)+"s"
+    :"No event.";
+
+  const ready=
+    game.dailyDay!==today();
+
+  document.getElementById("dailyText").textContent=
+    ready
+    ?"Ready! Streak: "+game.dailyStreak
+    :"Collected! Streak: "+game.dailyStreak;
+
+  document.getElementById("dailyBtn").disabled=
+    !ready;
+}
+
+/* =========================================================
+   VISUALS
+   ========================================================= */
+
+function animateFrog(){
+  const frog=document.getElementById("frog");
+
+  frog.classList.remove("bounce");
+
+  void frog.offsetWidth;
+
+  frog.classList.add("bounce");
+}
+
+function float(message){
+  const el=document.createElement("div");
+
+  el.className="float";
+  el.textContent=message;
+
+  el.style.left=
+    (35+Math.random()*30)+"%";
+
+  el.style.top="45%";
+
+  document.body.appendChild(el);
+
+  setTimeout(
+    ()=>el.remove(),
+    800
+  );
+}
+
+let toastTimer=0;
+
+function toast(message){
+  const el=document.getElementById("toast");
+
+  el.textContent=message;
+  el.style.display="block";
+
+  clearTimeout(toastTimer);
+
+  toastTimer=setTimeout(
+    ()=>el.style.display="none",
+    1800
+  );
+}
+
+function log(message){
+  const box=document.getElementById("activity");
+
+  box.innerHTML=
+    `<div class="item">${escapeHTML(message)}</div>`+
+    box.innerHTML;
+
+  while(box.children.length>8){
+    box.lastElementChild.remove();
+  }
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+function showPage(id){
+  document
+    .querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.remove("active");
+    });
+
+  const page=document.getElementById(id);
+
+  if(!page)return;
+
+  page.classList.add("active");
+
+  if(id==="mechanics")renderMechanics();
+  if(id==="shop")renderShop();
+  if(id==="pets")renderPets();
+  if(id==="skins")renderSkins();
+  if(id==="worlds")renderWorlds();
+  if(id==="bosses")renderBosses();
+  if(id==="social")renderSocial();
+  if(id==="quests")renderQuests();
+  if(id==="progress")renderProgress();
+
+  update();
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetGame(){
+  if(!confirm(
+    "Delete ALL Frog Frenzy progress?"
+  ))return;
+
+  localStorage.removeItem(
+    "frogFrenzy500"
+  );
+
+  localStorage.removeItem(
+    "frogFrenzy500Items"
+  );
+
+  game=newGame();
+  purchasedItems={};
+
+  renderMechanics();
+  renderShop();
+  renderPets();
+  renderSkins();
+  renderWorlds();
+  renderBosses();
+  renderSocial();
+  renderQuests();
+  renderProgress();
+
+  update();
+
+  toast("Game reset.");
+}
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+document
+  .getElementById("frog")
+  .addEventListener(
+    "pointerdown",
+    event=>{
+      event.preventDefault();
+      clickFrog();
+    },
+    {passive:false}
+  );
+
+document.addEventListener(
+  "keydown",
+  event=>{
+    if(
+      event.code==="Space" &&
+      !event.repeat &&
+      document.activeElement.tagName!=="INPUT"
+    ){
+      event.preventDefault();
+      clickFrog();
+    }
+  }
+);
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadGame();
+
+offlineProgress();
+
+log("🐸 Frog Frenzy 500 loaded!");
+log("⚙️ Exactly 500 mechanics ready!");
+log("💾 Save system ready!");
+
+renderMechanics();
+renderShop();
+renderPets();
+renderSkins();
+renderWorlds();
+renderBosses();
+renderSocial();
+renderQuests();
+renderProgress();
+update();
+
+/* =========================================================
+   GAME LOOP
+   ========================================================= */
+
+function gameLoop(now){
+  if(now-lastPassive>=1000){
+    const ticks=Math.min(
+      5,
+      Math.floor(
+        (now-lastPassive)/1000
+      )
+    );
+
+    for(let i=0;i<ticks;i++){
+      passiveTick();
+    }
+
+    lastPassive=now;
+  }
+
+  /*
+    The game state can update extremely quickly,
+    but DOM updates happen only about 5 times/sec.
+    This is important for avoiding lag during clicking.
+  */
+  if(now-lastUI>=200){
+    update();
+    lastUI=now;
+  }
+
+  if(now-lastSave>=15000){
+    saveGame();
+    lastSave=now;
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame(gameLoop);
+
+/* Save when leaving. */
+window.addEventListener(
+  "beforeunload",
+  ()=>{
+    saveGame();
+  }
+);
+
+/* Backup save every 30 seconds. */
+setInterval(
+  ()=>{
+    saveGame();
+  },
+  30000
+);
+
+</script>
 </body>
 </html>
